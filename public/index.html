@@ -385,6 +385,15 @@
     <h1>가수튜브 <span class="acc">🎵</span></h1>
     <p class="sub">좋아하는 트로트·아이돌 가수의 <strong>유튜브 채널</strong>로 한 번에!<br>최신 영상·히트곡 차트·방송 일정까지 큰 글씨로</p>
     <div class="notice">💡 버튼을 누르면 유튜브·트위터·인스타그램 앱 또는 사이트가 열립니다</div>
+  <div style="margin:18px auto 0;max-width:680px;background:linear-gradient(135deg,#2b2620,#4a3f31);border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;" onclick="playTodaySong()">
+    <div style="font-size:34px;">🎁</div>
+    <div style="flex:1;text-align:left;">
+      <div style="color:#e5c68f;font-size:12px;font-weight:800;letter-spacing:1px;">오늘의 노래</div>
+      <div id="todaySongTitle" style="color:#faf7f2;font-size:18px;font-weight:900;margin-top:2px;">불러오는 중...</div>
+      <div id="todaySongSub" style="color:#c9bda8;font-size:13px;">이 사이트에서 바로 들을 수 있어요</div>
+    </div>
+    <div style="background:#8a6d3b;color:#fff;border-radius:999px;padding:11px 18px;font-size:14px;font-weight:800;white-space:nowrap;">🎵 듣기</div>
+  </div>
     <div style="margin-top:14px;display:flex;justify-content:center;gap:8px;align-items:center;position:relative;">
       <span style="font-size:14px;color:#6b6355;font-weight:700;">🔠 글자 크기:</span>
       <button onclick="setFont(0)" class="font-btn" id="fontBtn0" style="padding:8px 14px;border-radius:999px;border:2px solid #e5ded2;background:#fffdf8;font-size:14px;font-weight:800;cursor:pointer;">가</button>
@@ -489,6 +498,15 @@
     </p>
     <p style="margin-top:6px; font-size:13px; color:#9a9081;">유튜브·X·인스타그램 영상과 소식은 각 서비스에서 제공됩니다 · 본 사이트는 비공식 팬 편의 사이트입니다</p>
   </footer>
+</div>
+
+<!-- 뉴스 읽기 모달 -->
+<div class="modal" id="newsModal" onclick="closeNewsModal()">
+  <div class="sd-box" style="max-width:640px;" onclick="event.stopPropagation()">
+    <div class="sd-head"><div class="sd-title">📰 기사 읽기</div>
+      <button class="sd-close" onclick="closeNewsModal()">✕</button></div>
+    <div id="newsModalBody" style="padding:20px;font-size:15px;line-height:1.8;"></div>
+  </div>
 </div>
 
 <!-- 가수 상세 모달 -->
@@ -661,13 +679,27 @@ function setTab(t) {
 // 히트곡 차트
 function loadChart() {
   document.getElementById('chartList').innerHTML = HITS.map(function(h, i) {
-    return '<div class="chart-item" onclick="playHit(' + i + ')">' +
+    return '<div class="chart-item">' +
       '<div class="chart-rank">' + (i + 1) + '</div>' +
-      '<div class="chart-info"><div class="chart-song">' + h.t + '</div><div class="chart-singer">' + h.s + '</div></div>' +
-      '<div class="chart-play">▶</div></div>';
+      '<div class="chart-info" onclick="playHit(' + i + ')"><div class="chart-song">' + h.t + '</div><div class="chart-singer">' + h.s + '</div></div>' +
+      '<div class="chart-play" style="display:flex;flex-direction:column;gap:4px;">' +
+      '<button onclick="playHitSite(' + i + ')" style="background:#8a6d3b;color:#fff;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">🎵 여기서</button>' +
+      '<button onclick="playHit(' + i + ')" style="background:#f0e9dc;color:#2b2620;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">🔍 찾기</button></div></div>';
   }).join('');
 }
 
+function playHitSite(i) {
+  var h = HITS[i];
+  // 해당 가수의 채널 최신 영상으로 사이트 내 재생
+  var v = (playerVideos[h.s] || [])[0];
+  if (v) {
+    currentQueue = (playerVideos[h.s] || []).slice(0, 10);
+    currentQIdx = 0;
+    playVideo(v.videoId, h.s + ' — ' + h.t);
+  } else {
+    alert('🎵 ' + h.s + '님의 영상을 아직 불러오지 못했어요. 잠시 후 다시 눌러주세요!');
+  }
+}
 function playHit(i) {
   var h = HITS[i];
   window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent(h.s + ' ' + h.t), '_blank', 'noopener');
@@ -783,6 +815,9 @@ function playVideo(videoId, title) {
     if (typeof renderRecent === 'function') renderRecent();
   } catch (e) {}
 }
+function playShorts(videoId, title) {
+  playVideo(videoId, title);
+}
 function playerNext() {
   if (currentQueue.length && currentQIdx < currentQueue.length - 1) {
     currentQIdx++;
@@ -846,8 +881,8 @@ function setVidFilter(name, kind) {
   el.innerHTML = list.slice(0, 5).map(function(v) {
     var k = v.kind || 'other';
     var label = { live: '🎤 무대', mv: '🎥 뮤비', shorts: '🎬 쇼츠', interview: '🎙️ 인터뷰', behind: '📹 비하인드', other: '🎵 영상' }[k] || '🎵 영상';
-    var href = k === 'shorts' ? 'https://www.youtube.com/shorts/' + v.videoId : 'https://www.youtube.com/watch?v=' + v.videoId;
-    return '<a class="vid" href="' + href + '" target="_blank" rel="noopener">' +
+    var q = kind === 'shorts' ? '' : (currentQueue.length ? '' : '');
+    return '<a class="vid" href="javascript:void(0)" onclick="playVideo(\'' + v.videoId + '\',\'' + v.title.replace(/\'/g, '') + '\')" title="이 사이트에서 재생">' +
       '<span class="thumb">▶</span>' +
       '<span><span class="vid-kind vk-' + k + '">' + label + '</span><span class="t" style="display:block;">' + v.title + '</span></span></a>';
   }).join('');
@@ -916,12 +951,44 @@ async function loadSNS(name) {
     var items = d.sns || [];
     if (!items.length) { el.innerHTML = '<div class="news-loading">SNS 소식이 아직 없어요</div>'; return; }
     el.innerHTML = items.map(function(s) {
-      return '<a class="sns-item" href="' + s.link + '" target="_blank" rel="noopener">' +
+      return '<a class="sns-item" href="javascript:void(0)" onclick="openNewsModal(\'' + s.title.replace(/\'/g, '') + '\',\'' + s.link.replace(/\'/g, '') + '\',\'SNS 화제\')">' +
         '<div><div class="snt">' + s.title + '</div><div class="snd">' + s.date + '</div></div></a>';
     }).join('');
   } catch (e) { el.innerHTML = '<div class="news-loading">SNS 소식을 불러오지 못했어요</div>'; }
 }
 
+// 뉴스 읽기 모달 (사이트 내 열람)
+function openNewsModal(title, link, singer) {
+  document.getElementById('newsModalBody').innerHTML =
+    '<div style="font-size:13px;color:#8a6d3b;font-weight:800;margin-bottom:6px;">' + singer + ' 최신 소식</div>' +
+    '<div style="font-size:18px;font-weight:900;margin-bottom:16px;">' + title + '</div>' +
+    '<div style="background:#f7f2e9;padding:14px;border-radius:12px;font-size:14px;color:#6b6355;margin-bottom:16px;">' +
+    '💡 기사 전문은 언론사 사이트에 있어요. 아래 버튼을 누르면 기사가 열립니다.' +
+    '</div>' +
+    '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
+    '<a href="' + link + '" target="_blank" rel="noopener" style="flex:1;background:#8a6d3b;color:#fff;text-align:center;padding:13px;border-radius:10px;font-size:15px;font-weight:800;text-decoration:none;">📖 기사 전체 보기</a>' +
+    '<button onclick="closeNewsModal()" style="background:#f0e9dc;color:#2b2620;padding:13px 20px;border-radius:10px;font-size:15px;font-weight:800;border:none;cursor:pointer;">닫기</button></div>';
+  document.getElementById('newsModal').classList.add('on');
+}
+function closeNewsModal() { document.getElementById('newsModal').classList.remove('on'); }
+// 오늘의 노래 — 랜덤 명곡 (사이트 내 재생)
+function loadTodaySong() {
+  var h = HITS[Math.floor(Math.random() * HITS.length)];
+  document.getElementById('todaySongTitle').textContent = h.t + ' — ' + h.s;
+  document.getElementById('todaySongSub').textContent = '🎤 ' + h.s + ' · 이 사이트에서 바로 감상';
+}
+function playTodaySong() {
+  var t = document.getElementById('todaySongTitle').textContent;
+  var singer = t.split(' — ').pop();
+  var v = (playerVideos[singer] || [])[0];
+  if (v) {
+    currentQueue = (playerVideos[singer] || []).slice(0, 10);
+    currentQIdx = 0;
+    playVideo(v.videoId, singer + ' — ' + t);
+  } else {
+    alert('🎵 ' + singer + '님의 영상을 불러오는 중이에요. 잠시 후 다시 눌러주세요!');
+  }
+}
 async function loadVideos() {
   try {
     var r = await fetch('https://api.pomyjo.com/api/singer/feed');
@@ -937,8 +1004,9 @@ async function loadVideos() {
       el.innerHTML = vids.slice(0, 5).map(function(v) {
         var k = v.kind || 'other';
         var label = { live: '🎤 무대', mv: '🎥 뮤비', shorts: '🎬 쇼츠', interview: '🎙️ 인터뷰', behind: '📹 비하인드', other: '🎵 영상' }[k] || '🎵 영상';
-        var href = k === 'shorts' ? 'https://www.youtube.com/shorts/' + v.videoId : 'https://www.youtube.com/watch?v=' + v.videoId;
-        return '<a class="vid" href="' + href + '" target="_blank" rel="noopener">' +
+        var fn = k === 'shorts' ? 'playShorts' : 'playVideo';
+        var arg = k === 'shorts' ? ('\'' + v.videoId + '\',\'' + v.title.replace(/\'/g, '') + '\'') : ('\'' + v.videoId + '\',\'' + v.title.replace(/\'/g, '') + '\'');
+        return '<a class="vid" href="javascript:void(0)" onclick="' + fn + '(' + arg + ')" title="이 사이트에서 재생">' +
           '<span class="thumb">▶</span>' +
           '<span><span class="vid-kind vk-' + k + '">' + label + '</span><span class="t" style="display:block;">' + v.title + '</span></span></a>';
       }).join('');
@@ -1128,7 +1196,7 @@ async function loadNews() {
     results.forEach(function(grp) {
       if (!grp.items.length) return;
       var item = grp.items[0];
-      html += '<a class="news-item" href="' + item.link + '" target="_blank" rel="noopener">' +
+      html += '<a class="news-item" href="javascript:void(0)" onclick="openNewsModal(\'' + item.title.replace(/\'/g, '') + '\',\'' + item.link.replace(/\'/g, '') + '\',\'' + grp.name + '\')">' +
         '<div><div class="nt">' + item.title + '</div><div class="nd">' + grp.name + ' · ' + item.date + '</div></div></a>';
     });
     if (html) el.innerHTML = html;
@@ -1140,6 +1208,7 @@ async function loadNews() {
 
 initFont();
 renderSingers();
+loadTodaySong();
 loadChart();
 loadSchedule();
 loadNews();
