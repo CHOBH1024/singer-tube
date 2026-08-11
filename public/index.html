@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>가수튜브 | 트로트·아이돌 가수 유튜브 바로가기 — 최신 영상과 소식</title>
-<meta name="description" content="임영웅, 영탁, 이찬원, BTS, 블랙핑크 등 인기 트로트·아이돌 가수의 유튜브 채널로 한 번에! 최신 영상과 X(트위터)·인스타그램 소식까지.">
+<meta name="description" content="임영웅, 영탁, 이찬원, BTS, 블랙핑크 등 인기 트로트·아이돌 가수의 유튜브 채널로 한 번에! 최신 영상, 히트곡 차트, 방송 일정, 가수 퀴즈까지.">
 <meta property="og:title" content="가수튜브 — 가수 유튜브 바로가기">
-<meta property="og:description" content="트로트·아이돌 인기 가수의 유튜브 채널, 최신 영상, X·인스타 소식을 큰 글씨로 편하게.">
+<meta property="og:description" content="트로트·아이돌 인기 가수의 유튜브 채널, 최신 영상, 히트곡 차트, 방송 일정을 큰 글씨로 편하게.">
 <meta property="og:image" content="https://singer-tube.pomyjo.com/og-banner.png">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,47 +17,87 @@
 <link rel="apple-touch-icon" href="/icon-512.png">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Noto Sans KR', sans-serif;
-    background: #faf7f2; color: #2b2620; line-height: 1.7;
-  }
-  .wrap { max-width: 860px; margin: 0 auto; padding: 24px 20px 80px; }
+  body { font-family: 'Noto Sans KR', sans-serif; background: #faf7f2; color: #2b2620; line-height: 1.7; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 20px 90px; }
+
+  /* 헤더 — 히어로 */
   header {
-    text-align: center; padding: 48px 0 8px;
+    text-align: center; padding: 52px 0 10px; position: relative; overflow: hidden;
+  }
+  header::before {
+    content: ''; position: absolute; top: -120px; left: 50%; transform: translateX(-50%);
+    width: 700px; height: 400px; border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(138,109,59,0.14) 0%, transparent 70%);
+    pointer-events: none;
   }
   .badge {
     display: inline-block; font-size: 13px; font-weight: 800; letter-spacing: 3px;
-    color: #8a6d3b; background: rgba(138,109,59,0.08); padding: 6px 16px;
-    border-radius: 999px; margin-bottom: 18px;
+    color: #8a6d3b; background: rgba(138,109,59,0.08); padding: 7px 18px;
+    border-radius: 999px; margin-bottom: 18px; position: relative;
   }
   h1 {
-    font-family: 'Noto Serif KR', serif; font-size: clamp(28px, 5vw, 42px); font-weight: 900;
-    letter-spacing: -1px; margin-bottom: 14px;
+    font-family: 'Noto Serif KR', serif; font-size: clamp(30px, 5.5vw, 44px); font-weight: 900;
+    letter-spacing: -1px; margin-bottom: 14px; position: relative;
   }
-  .sub { font-size: 17px; color: #6b6355; max-width: 560px; margin: 0 auto 12px; }
+  h1 .acc { color: #8a6d3b; }
+  .sub { font-size: 17px; color: #6b6355; max-width: 560px; margin: 0 auto 12px; position: relative; }
   .notice {
     display: inline-block; font-size: 14px; color: #6b6355; background: #f0e9dc;
-    padding: 8px 18px; border-radius: 999px; margin-top: 6px;
+    padding: 9px 18px; border-radius: 999px; margin-top: 6px; position: relative;
   }
-  section { margin-top: 48px; }
+
+  /* 검색 */
+  .search-box { max-width: 540px; margin: 24px auto 0; position: relative; }
+  .search-box input {
+    width: 100%; padding: 16px 20px 16px 50px; border-radius: 999px;
+    border: 2px solid #e5ded2; background: #fffdf8; font-size: 17px; color: #2b2620;
+    outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-box input:focus { border-color: #8a6d3b; box-shadow: 0 0 0 4px rgba(138,109,59,0.1); }
+  .search-box .si { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); font-size: 18px; }
+  .search-results {
+    position: absolute; top: 60px; left: 0; right: 0; background: #fffdf8;
+    border: 1px solid #e5ded2; border-radius: 14px; box-shadow: 0 14px 40px rgba(43,38,32,0.16);
+    max-height: 360px; overflow-y: auto; display: none; z-index: 40;
+  }
+  .search-results.on { display: block; }
+  .sr-item {
+    display: flex; align-items: center; gap: 10px; padding: 12px 16px; cursor: pointer;
+    border-bottom: 1px solid #f0e9dc; font-size: 15px;
+  }
+  .sr-item:hover { background: #f7f2e9; }
+  .sr-item:last-child { border-bottom: none; }
+
+  /* 장르 탭 */
+  .tabs { display: flex; justify-content: center; gap: 8px; margin: 30px 0 6px; flex-wrap: wrap; }
+  .tab {
+    padding: 12px 26px; border-radius: 999px; border: 2px solid #e5ded2; background: #fffdf8;
+    font-size: 16px; font-weight: 800; cursor: pointer; color: #2b2620; transition: all 0.2s;
+  }
+  .tab.on { background: #2b2620; color: #faf7f2; border-color: #2b2620; }
+  .tab:hover { border-color: #8a6d3b; }
+
+  section { margin-top: 44px; }
   .sec-title {
     font-family: 'Noto Serif KR', serif; font-size: 24px; font-weight: 900;
     display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
   }
   .sec-desc { font-size: 15px; color: #6b6355; margin-bottom: 18px; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+
+  /* 가수 카드 */
   .card {
     background: #fffdf8; border: 1px solid #e5ded2; border-radius: 18px; padding: 20px;
     transition: transform 0.2s, box-shadow 0.2s;
   }
-  .card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(43,38,32,0.1); }
-  .card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(43,38,32,0.1); }
+  .card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; cursor: pointer; }
   .avatar {
     width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-size: 28px; background: rgba(138,109,59,0.12);
+    font-size: 28px; background: rgba(138,109,59,0.12); flex-shrink: 0;
   }
   .name { font-family: 'Noto Serif KR', serif; font-size: 20px; font-weight: 900; }
-  .cat { font-size: 13px; color: #8a6d3b; font-weight: 700; }
+  .cat { font-size: 12px; color: #8a6d3b; font-weight: 700; }
   .big-btn {
     display: block; width: 100%; text-align: center; text-decoration: none;
     padding: 15px 0; border-radius: 12px; font-size: 18px; font-weight: 800;
@@ -66,7 +106,14 @@
   }
   .big-btn:hover { background: #3d3830; }
   .big-btn:active { transform: scale(0.98); }
-  .big-btn .s { font-size: 15px; font-weight: 500; opacity: 0.8; }
+  .big-btn .s { font-size: 14px; font-weight: 500; opacity: 0.8; }
+  .play-btn {
+    display: block; width: 100%; text-align: center; text-decoration: none;
+    padding: 12px 0; border-radius: 10px; font-size: 15px; font-weight: 800;
+    background: #8a6d3b; color: #fff; margin-bottom: 8px; cursor: pointer; border: none;
+    transition: background 0.2s;
+  }
+  .play-btn:hover { background: #9a7d4b; }
   .sns-row { display: flex; gap: 8px; }
   .sns-btn {
     flex: 1; display: block; text-align: center; text-decoration: none;
@@ -87,12 +134,161 @@
   .vid .t { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
   .loading, .err { text-align: center; padding: 20px; color: #6b6355; font-size: 15px; }
   .err { color: #dc2626; }
-  footer { text-align: center; margin-top: 56px; padding-top: 24px; border-top: 1px solid #e5ded2; font-size: 14px; color: #7a7060; }
+
+  /* 히트곡 차트 */
+  .chart-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .chart-item {
+    display: flex; align-items: center; gap: 12px; padding: 13px 14px;
+    background: #fffdf8; border: 1px solid #e5ded2; border-radius: 14px; cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .chart-item:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(43,38,32,0.08); }
+  .chart-rank { font-size: 22px; font-weight: 900; width: 34px; text-align: center; color: #c9bda8; font-family: 'Noto Serif KR', serif; }
+  .chart-item:nth-child(1) .chart-rank, .chart-item:nth-child(2) .chart-rank, .chart-item:nth-child(3) .chart-rank { color: #8a6d3b; }
+  .chart-info { flex: 1; min-width: 0; }
+  .chart-song { font-size: 15px; font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .chart-singer { font-size: 12px; color: #7a7060; }
+  .chart-play { font-size: 18px; color: #8a6d3b; flex-shrink: 0; }
+
+  /* 방송 일정 */
+  .schedule-item {
+    display: flex; align-items: center; gap: 14px; padding: 14px 16px;
+    background: #fffdf8; border: 1px solid #e5ded2; border-radius: 14px; margin-bottom: 8px;
+  }
+  .schedule-day {
+    font-size: 13px; font-weight: 800; color: #8a6d3b; width: 44px; text-align: center;
+    background: rgba(138,109,59,0.1); padding: 8px 6px; border-radius: 10px; flex-shrink: 0;
+  }
+  .schedule-info { flex: 1; }
+  .schedule-title { font-size: 16px; font-weight: 800; }
+  .schedule-sub { font-size: 13px; color: #7a7060; }
+
+  /* 출석 */
+  .attendance {
+    background: linear-gradient(135deg, #f7f2e9, #f0e9dc);
+    border: 1px solid #e5ded2; border-radius: 18px; padding: 24px; text-align: center;
+  }
+  .attendance h3 { font-family: 'Noto Serif KR', serif; font-size: 22px; margin-bottom: 8px; }
+  .stamps { display: flex; justify-content: center; gap: 8px; margin: 14px 0; }
+  .stamp {
+    width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 20px; background: #fffdf8; border: 2px solid #e5ded2; color: #c9bda8;
+  }
+  .stamp.on { background: #8a6d3b; border-color: #8a6d3b; color: #fff; animation: pop 0.3s ease; }
+  @keyframes pop { 0% { transform: scale(0.5); } 70% { transform: scale(1.15); } 100% { transform: scale(1); } }
+  .attend-btn {
+    padding: 14px 40px; border-radius: 999px; border: none; cursor: pointer;
+    background: #2b2620; color: #faf7f2; font-size: 18px; font-weight: 800;
+    transition: transform 0.1s;
+  }
+  .attend-btn:active { transform: scale(0.96); }
+  .attend-btn.done { background: #15803d; }
+  .attend-msg { font-size: 14px; color: #6b6355; margin-top: 10px; }
+
+  /* 퀴즈 */
+  .quiz { background: #fffdf8; border: 1px solid #e5ded2; border-radius: 18px; padding: 24px; text-align: center; }
+  .quiz h3 { font-family: 'Noto Serif KR', serif; font-size: 22px; margin-bottom: 4px; }
+  .q-sub { font-size: 14px; color: #6b6355; margin-bottom: 16px; }
+  .quiz-q { font-size: 20px; font-weight: 800; margin-bottom: 16px; min-height: 30px; }
+  .quiz-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 420px; margin: 0 auto; }
+  .quiz-opt {
+    padding: 14px 10px; border-radius: 12px; border: 2px solid #e5ded2; background: #f7f2e9;
+    font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.15s;
+  }
+  .quiz-opt:hover { border-color: #8a6d3b; background: #f0e9dc; }
+  .quiz-opt.correct { border-color: #15803d; background: rgba(21,128,61,0.12); color: #15803d; }
+  .quiz-opt.wrong { border-color: #dc2626; background: rgba(220,38,38,0.1); color: #dc2626; }
+  .quiz-score { font-size: 15px; color: #8a6d3b; font-weight: 800; margin-top: 14px; }
+  .quiz-next {
+    margin-top: 14px; padding: 10px 28px; border-radius: 999px; border: none; cursor: pointer;
+    background: #2b2620; color: #faf7f2; font-size: 15px; font-weight: 700;
+  }
+
+  /* 랭킹 */
+  .rank-item {
+    display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+    background: #fffdf8; border: 1px solid #e5ded2; border-radius: 14px; margin-bottom: 8px;
+  }
+  .rank-num { font-size: 22px; font-weight: 900; width: 36px; text-align: center; color: #8a6d3b; font-family: 'Noto Serif KR', serif; }
+  .rank-item:first-child .rank-num { color: #c9a867; }
+  .rank-like { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+  .rank-like button { background: none; border: none; font-size: 22px; cursor: pointer; transition: transform 0.15s; }
+  .rank-like button:active { transform: scale(1.3); }
+  .rank-like .rc { font-size: 14px; color: #6b6355; font-weight: 700; }
+
+  /* 가수 상세 모달 */
+  .singer-detail {
+    position: fixed; inset: 0; z-index: 90; display: none; align-items: center; justify-content: center;
+    background: rgba(23,19,16,0.6); backdrop-filter: blur(4px);
+  }
+  .singer-detail.on { display: flex; }
+  .sd-box {
+    width: 92%; max-width: 480px; max-height: 82vh; overflow-y: auto;
+    background: #fffdf8; border-radius: 20px; padding: 24px; animation: pop2 0.25s ease;
+  }
+  @keyframes pop2 { 0% { transform: scale(0.92); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  .sd-head { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+  .sd-avatar { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; background: rgba(138,109,59,0.12); }
+  .sd-name { font-family: 'Noto Serif KR', serif; font-size: 22px; font-weight: 900; }
+  .sd-cat { font-size: 13px; color: #8a6d3b; font-weight: 700; }
+  .sd-close { margin-left: auto; background: none; border: none; font-size: 22px; color: #7a7060; cursor: pointer; }
+  .sd-songs { display: flex; flex-direction: column; gap: 6px; }
+  .sd-song {
+    display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px;
+    border: 1px solid #f0e9dc; background: #f7f2e9; cursor: pointer; transition: background 0.15s;
+  }
+  .sd-song:hover { background: #f0e9dc; }
+  .sd-song .n { font-size: 13px; color: #8a6d3b; font-weight: 800; width: 20px; }
+  .sd-song .t { flex: 1; font-size: 15px; font-weight: 700; }
+  .sd-song .p { font-size: 16px; color: #8a6d3b; }
+  .sd-links { display: flex; gap: 8px; margin-top: 16px; }
+  .sd-links a {
+    flex: 1; text-align: center; padding: 12px 0; border-radius: 10px; text-decoration: none;
+    font-size: 14px; font-weight: 800; background: #2b2620; color: #faf7f2;
+  }
+  .sd-links a.gold { background: #8a6d3b; }
+
+  /* 미니 플레이어 */
+  .player-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+    background: #171310; color: #faf7f2; padding: 10px 16px;
+    display: none; align-items: center; gap: 12px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+  }
+  .player-bar.on { display: flex; }
+  .player-bar iframe { border-radius: 10px; border: none; }
+  .player-bar .pb-title { font-size: 15px; font-weight: 700; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .player-bar .pb-close { background: none; border: none; color: #faf7f2; font-size: 20px; cursor: pointer; padding: 4px 8px; }
+
+  /* 공유 배너 */
+  .share-banner {
+    margin-top: 44px; background: linear-gradient(135deg, #2b2620, #171310);
+    border-radius: 18px; padding: 26px; text-align: center; color: #faf7f2;
+  }
+  .share-banner h3 { font-family: 'Noto Serif KR', serif; font-size: 21px; margin-bottom: 6px; }
+  .share-banner p { font-size: 14px; color: #b8ae9c; margin-bottom: 16px; }
+  .share-row { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+  .share-btn {
+    padding: 13px 24px; border-radius: 999px; border: none; cursor: pointer;
+    font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 8px;
+    transition: transform 0.12s, filter 0.2s;
+  }
+  .share-btn:hover { filter: brightness(1.1); }
+  .share-btn:active { transform: scale(0.95); }
+  .share-btn.kakao { background: #FEE500; color: #3c1e1e; }
+  .share-btn.copy { background: #fffdf8; color: #2b2620; }
+  .share-btn.share { background: #8a6d3b; color: #fff; }
+
+  footer { text-align: center; margin-top: 48px; padding-top: 24px; border-top: 1px solid #e5ded2; font-size: 14px; color: #7a7060; }
   footer a { color: #8a6d3b; text-decoration: none; font-weight: 700; }
+
   @media (max-width: 600px) {
     .grid { grid-template-columns: 1fr; }
+    .chart-list { grid-template-columns: 1fr; }
     .card { padding: 18px; }
     .big-btn { font-size: 17px; padding: 14px 0; }
+    .share-row { flex-direction: column; align-items: stretch; }
+    .share-btn { justify-content: center; }
   }
 </style>
 </head>
@@ -100,21 +296,69 @@
 <div class="wrap">
   <header>
     <div class="badge">FOR SENIORS · 큰 글씨로 편하게</div>
-    <h1>가수튜브 🎵</h1>
-    <p class="sub">좋아하는 트로트·아이돌 가수의 <strong>유튜브 채널</strong>로 한 번에!<br>최신 영상과 X(트위터)·인스타그램 소식도 확인하세요.</p>
+    <h1>가수튜브 <span class="acc">🎵</span></h1>
+    <p class="sub">좋아하는 트로트·아이돌 가수의 <strong>유튜브 채널</strong>로 한 번에!<br>최신 영상·히트곡 차트·방송 일정까지 큰 글씨로</p>
     <div class="notice">💡 버튼을 누르면 유튜브·트위터·인스타그램 앱 또는 사이트가 열립니다</div>
+    <div class="search-box">
+      <span class="si">🔍</span>
+      <input id="searchInput" placeholder="가수나 노래를 검색해보세요 (예: 임영웅, 어머나)" oninput="doSearch(this.value)" onblur="setTimeout(function(){document.getElementById('searchResults').classList.remove('on')},200)">
+      <div class="search-results" id="searchResults"></div>
+    </div>
   </header>
 
-  <section>
-    <h2 class="sec-title">🎤 트로트 가수</h2>
-    <p class="sec-desc">임영웅부터 나훈아까지 — 최신 노래와 무대 영상 보기</p>
-    <div class="grid" id="trot"></div>
+  <div class="tabs">
+    <button class="tab on" data-tab="all" onclick="setTab('all')">🎶 전체</button>
+    <button class="tab" data-tab="trot" onclick="setTab('trot')">🎤 트로트</button>
+    <button class="tab" data-tab="idol" onclick="setTab('idol')">✨ 아이돌</button>
+  </div>
+
+  <section id="singerSection">
+    <div class="grid" id="singerGrid"></div>
   </section>
 
-  <section>
-    <h2 class="sec-title">✨ 아이돌 그룹</h2>
-    <p class="sec-desc">BTS부터 뉴진스까지 — 멤버들의 최신 영상과 소식</p>
-    <div class="grid" id="idol"></div>
+  <section class="chart">
+    <h2 class="sec-title">🎶 가수튜브 히트곡 차트</h2>
+    <p class="sec-desc">노인분들이 가장 사랑하는 노래 — 누르면 유튜브에서 바로 들어요</p>
+    <div class="chart-list" id="chartList"></div>
+  </section>
+
+  <section class="schedule">
+    <h2 class="sec-title">📺 이번 주 방송 일정</h2>
+    <p class="sec-desc">좋아하는 가수가 나오는 TV 프로그램을 확인하세요</p>
+    <div id="scheduleList"></div>
+  </section>
+
+  <section class="attendance">
+    <h3>📅 오늘도 출석하셨어요?</h3>
+    <p class="q-sub">매일 출석하고 7일 연속 스탬프를 모아보세요!<br>건강한 두뇌 습관에 좋아요.</p>
+    <div class="stamps" id="stamps"></div>
+    <button class="attend-btn" id="attendBtn" onclick="attend()">오늘 출석하기</button>
+    <div class="attend-msg" id="attendMsg"></div>
+  </section>
+
+  <section class="quiz">
+    <h3>🧠 가수 퀴즈 — 두뇌 운동</h3>
+    <p class="q-sub">노래 한 소절 보고 가수를 맞혀보세요. 하루 10문제!</p>
+    <div class="quiz-q" id="quizQ"></div>
+    <div class="quiz-opts" id="quizOpts"></div>
+    <div class="quiz-score" id="quizScore"></div>
+    <button class="quiz-next" id="quizNext" style="display:none;" onclick="nextQuiz()">다음 문제</button>
+  </section>
+
+  <section class="rank">
+    <h2 class="sec-title">🏆 실시간 사랑받는 가수</h2>
+    <p class="sec-desc">하트를 눌러 응원해주세요! (이 기기는 하루 1번)</p>
+    <div id="rankList"></div>
+  </section>
+
+  <section class="share-banner">
+    <h3>💌 가족·친구에게 알려주세요</h3>
+    <p>부모님이나 할머니·할아버지가 좋아하실 노래가 여기 다 있어요</p>
+    <div class="share-row">
+      <button class="share-btn kakao" onclick="shareKakao()">💬 카카오톡으로 보내기</button>
+      <button class="share-btn copy" onclick="copyLink()">🔗 주소 복사</button>
+      <button class="share-btn share" onclick="shareNative()">📤 다른 앱으로 공유</button>
+    </div>
   </section>
 
   <footer>
@@ -123,8 +367,20 @@
   </footer>
 </div>
 
+<!-- 가수 상세 모달 -->
+<div class="singer-detail" id="singerModal" onclick="closeSingerModal()">
+  <div class="sd-box" onclick="event.stopPropagation()" id="singerBox"></div>
+</div>
+
+<!-- 미니 플레이어 -->
+<div class="player-bar" id="playerBar">
+  <iframe id="pbFrame" width="220" height="124" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  <div class="pb-title" id="pbTitle"></div>
+  <button class="pb-close" onclick="closePlayer()">✕</button>
+</div>
+
 <script>
-// 가수 데이터 — 유튜브 채널/검색 + X + 인스타 링크
+// ============ 데이터 ============
 const ARTISTS = [
   // 트로트
   { name: '임영웅', emoji: '🎤', cat: 'trot', yt: 'https://www.youtube.com/channel/UC3WZlO2Zl8NE1yIUgtwUtQw', x: 'https://x.com/search?q=' + encodeURIComponent('임영웅'), ig: 'https://www.instagram.com/explore/tags/임영웅/' },
@@ -157,65 +413,334 @@ const ARTISTS = [
   { name: '아이유', emoji: '🌙', cat: 'idol', yt: 'https://www.youtube.com/channel/UC3SyT4_WLHzN7JmHQwKQZww', x: 'https://x.com/search?q=' + encodeURIComponent('아이유'), ig: 'https://www.instagram.com/dlwlrma/' },
 ];
 
+// 히트곡 차트 (30곡)
+const HITS = [
+  { s: '임영웅', t: '이제 나만 믿어요' }, { s: '임영웅', t: '별빛 같은 나의 사랑아' }, { s: '임영웅', t: '사랑은 늘 도망가' },
+  { s: '영탁', t: '찐이야' }, { s: '영탁', t: '니가 왜 거기서 나와' }, { s: '이찬원', t: '진또배기' },
+  { s: '이찬원', t: '편의점' }, { s: '장민호', t: '남자는 배 여자는 항구' }, { s: '김호중', t: '바람이 불면' },
+  { s: '정동원', t: '당신이 필요해' }, { s: '송가인', t: '사람이 좋다' }, { s: '장윤정', t: '어머나' },
+  { s: '태진아', t: '옥경이' }, { s: '설운도', t: '사랑의 트위스트' }, { s: '나훈아', t: '고향역' },
+  { s: '진성', t: '안동역에서' }, { s: 'BTS', t: 'Dynamite' }, { s: 'BTS', t: 'Butter' },
+  { s: '블랙핑크', t: 'DDU-DU DDU-DU' }, { s: '뉴진스', t: 'Super Shy' }, { s: '아이브', t: 'LOVE DIVE' },
+  { s: '에스파', t: 'Next Level' }, { s: '트와이스', t: 'TT' }, { s: '세븐틴', t: '손오공' },
+  { s: '싸이', t: '강남스타일' }, { s: '아이유', t: '좋은 날' }, { s: '아이유', t: '밤편지' },
+  { s: '엑소', t: 'Ko Ko Bop' }, { s: '르세라핌', t: 'ANTIFRAGILE' }, { s: '홍진영', t: '사랑의 배터리' },
+];
+
+// 가수별 대표곡
+const HIT_SONGS = {
+  '임영웅': ['이제 나만 믿어요', '별빛 같은 나의 사랑아', '사랑은 늘 도망가', '무엇이든', 'HERO'],
+  '영탁': ['찐이야', '니가 왜 거기서 나와', '막걸리 한잔', '소주 한 잔', '사랑은 눈물겹다'],
+  '이찬원': ['진또배기', '편의점', '사랑의 트위스트', '한잔 더', '찬란한 하루'],
+  '장민호': ['남자는 배 여자는 항구', '사랑의 미로', '초혼', '울산 큰애기', '하트'],
+  '김호중': ['바람이 불면', '그 겨울의 찻집', '넌 감동이었어', '어느 60대 노부부 이야기', '빛나리'],
+  '정동원': ['당신이 필요해', '여백', '보릿고개', '쓰리랑', '미운 사내'],
+  '송가인': ['사람이 좋다', '몽당연필', '서울 대전 대구 부산', '가인이어라', '흥부가'],
+  '장윤정': ['어머나', '꽃', '초혼', '젊은 날의 생애', '오라버니'],
+  '태진아': ['옥경이', '미안 미안해', '사랑은 아무나 하나', '동반자', '애인'],
+  '설운도': ['사랑의 트위스트', '잃어버린 30년', '잠깐만', '세월이 약이지', '쌍둥이 봄'],
+  '나훈아': ['고향역', '무시로', '영영', '청춘을 돌려다오', '테스형!'],
+  '진성': ['안동역에서', '보릿고개', '소양강 처녀', '황진이', '태클을 걸지마'],
+  '박서진': ['하늘이 재일 예쁘다', '청춘가요', '고맙소', '두 손을 맞잡고', '사랑은'],
+  '홍진영': ['사랑의 배터리', '엄지척', '월화수목금토일', 'GOOD BYE', '사랑은 봄비처럼'],
+  '조항조': ['거지', '만약에', '미안해요', '사랑의 시', '남자의 눈물'],
+  '신유': ['보릿고개', '미안해 미안해', '서울의 달', '빈말', '사랑아'],
+  'BTS': ['Dynamite', 'Butter', 'Spring Day', 'Boy With Luv', 'Permission to Dance'],
+  '블랙핑크': ['DDU-DU DDU-DU', 'How You Like That', 'Kill This Love', 'Pink Venom', 'Shut Down'],
+  '뉴진스': ['Super Shy', 'Ditto', 'Attention', 'Hype Boy', 'OMG'],
+  '아이브': ['LOVE DIVE', 'After LIKE', 'ELEVEN', 'I AM', 'Kitsch'],
+  '에스파': ['Next Level', 'Black Mamba', 'Savage', 'Spicy', 'Drama'],
+  '트와이스': ['TT', 'Fancy', 'Cheer Up', 'Feel Special', 'What is Love'],
+  '세븐틴': ['손오공', 'Ready to love', 'HOT', 'Super', 'Rock with you'],
+  '싸이': ['강남스타일', 'That That', 'Daddy', 'Gangnam Style', 'New Face'],
+  '엑소': ['Ko Ko Bop', 'Love Shot', 'Growl', 'Monster', 'Tempo'],
+  '르세라핌': ['ANTIFRAGILE', 'UNFORGIVEN', 'FEARLESS', 'Eve, Psyche', 'Perfect Night'],
+  '아이유': ['좋은 날', '밤편지', '너랑 나', '팔레트', 'Celebrity'],
+};
+
+// 주간 방송 일정
+const SCHEDULE = [
+  { day: '일', title: '전국노래자랑', sub: 'KBS 1TV · 낮 12:10 · 노인들이 가장 사랑하는 프로그램', emoji: '🎤' },
+  { day: '월', title: '가요무대', sub: 'KBS 1TV · 밤 10시 · 트로트 가수 총출동', emoji: '🎶' },
+  { day: '수', title: '미스터트롯3', sub: 'TV조선 · 밤 10시 · 트로트 서바이벌', emoji: '🏆' },
+  { day: '금', title: '불후의 명곡', sub: 'KBS 2TV · 밤 8:30 · 가수들의 명곡 재해석', emoji: '🎼' },
+  { day: '토', title: '쇼! 음악중심', sub: 'MBC · 오후 3:30 · 아이돌 무대', emoji: '✨' },
+];
+
+// 퀴즈
+const QUIZ = [
+  { q: '🎵 "어머나 세상에 이게 웬일이야~" 이 노래 가수는?', a: 0, opts: ['장윤정', '송가인', '태진아', '영탁'] },
+  { q: '🎵 "사랑은 늘 도망가~" (드라마 OST로 유명한) 이 노래 가수는?', a: 1, opts: ['이찬원', '임영웅', '김호중', '영탁'] },
+  { q: '🎵 "진진자라~" 이 유명한 노래의 가수는?', a: 2, opts: ['나훈아', '설운도', '진성', '장민호'] },
+  { q: '🎵 "트로트의 황제"라고 불리는, "님과 함께" 부른 가수는?', a: 1, opts: ['남진', '나훈아', '태진아', '설운도'] },
+  { q: '🎵 "미스터트롯" 우승으로 유명해진 "이제 나만 믿어요" 가수는?', a: 1, opts: ['영탁', '임영웅', '이찬원', '정동원'] },
+  { q: '🎵 "안동역에서"를 부른 가수는?', a: 2, opts: ['신유', '조항조', '진성', '박서진'] },
+  { q: '🎵 "사랑의 트위스트"를 부른 트로트 여왕은?', a: 2, opts: ['장윤정', '송가인', '설운도', '홍진영'] },
+  { q: '🎵 "Dynamite"로 세계를 사로잡은 그룹은?', a: 3, opts: ['블랙핑크', '세븐틴', '뉴진스', 'BTS'] },
+  { q: '🎵 "How You Like That" 부른 걸그룹은?', a: 0, opts: ['블랙핑크', '에스파', '아이브', '르세라핌'] },
+  { q: '🎵 "Super Shy"로 유행한 신인 걸그룹은?', a: 2, opts: ['아이브', '에스파', '뉴진스', '트와이스'] },
+];
+
+// ============ 렌더링 ============
+let currentTab = 'all';
+let playerVideos = {};
+
 function cardHTML(a) {
-  return `
-  <div class="card">
-    <div class="card-top">
-      <div class="avatar">${a.emoji}</div>
-      <div>
-        <div class="name">${a.name}</div>
-        <div class="cat">${a.cat === 'trot' ? '트로트 가수' : '아이돌 그룹'}</div>
-      </div>
-    </div>
-    <a class="big-btn" href="${a.yt}" target="_blank" rel="noopener">▶ 유튜브 보기 <span class="s">(채널 이동)</span></a>
-    <div class="sns-row">
-      <a class="sns-btn" href="${a.x}" target="_blank" rel="noopener">𝕏 소식</a>
-      <a class="sns-btn" href="${a.ig}" target="_blank" rel="noopener">📷 인스타</a>
-    </div>
-    <div class="latest">
-      <div class="latest-title">🆕 최신 영상</div>
-      <div id="vid-${a.name}" class="loading">불러오는 중...</div>
-    </div>
-  </div>`;
+  return '<div class="card">' +
+    '<div class="card-top" onclick="openSingerDetail(\'' + a.name + '\')">' +
+      '<div class="avatar">' + a.emoji + '</div>' +
+      '<div><div class="name">' + a.name + '</div><div class="cat">' + (a.cat === 'trot' ? '트로트 가수' : '아이돌 그룹') + ' · 눌러서 자세히</div></div>' +
+    '</div>' +
+    '<a class="big-btn" href="' + a.yt + '" target="_blank" rel="noopener">▶ 유튜브 보기 <span class="s">(채널 이동)</span></a>' +
+    '<button class="play-btn" onclick="playLatest(\'' + a.name + '\')">🎵 여기서 바로 듣기</button>' +
+    '<div class="sns-row">' +
+      '<a class="sns-btn" href="' + a.x + '" target="_blank" rel="noopener">𝕏 소식</a>' +
+      '<a class="sns-btn" href="' + a.ig + '" target="_blank" rel="noopener">📷 인스타</a>' +
+    '</div>' +
+    '<div class="latest"><div class="latest-title">🆕 최신 영상</div><div id="vid-' + a.name + '" class="loading">불러오는 중...</div></div>' +
+  '</div>';
 }
 
-// 가수 카드 렌더
-function render() {
-  const trot = ARTISTS.filter(a => a.cat === 'trot');
-  const idol = ARTISTS.filter(a => a.cat === 'idol');
-  document.getElementById('trot').innerHTML = trot.map(cardHTML).join('');
-  document.getElementById('idol').innerHTML = idol.map(cardHTML).join('');
+function renderSingers() {
+  const list = currentTab === 'all' ? ARTISTS : ARTISTS.filter(a => a.cat === currentTab);
+  document.getElementById('singerGrid').innerHTML = list.map(cardHTML).join('');
 }
 
-// 최신 영상 로드 (백엔드 프록시 — 10분 캐시)
+function setTab(t) {
+  currentTab = t;
+  document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x.dataset.tab === t));
+  renderSingers();
+}
+
+// 히트곡 차트
+function loadChart() {
+  document.getElementById('chartList').innerHTML = HITS.map(function(h, i) {
+    return '<div class="chart-item" onclick="playHit(' + i + ')">' +
+      '<div class="chart-rank">' + (i + 1) + '</div>' +
+      '<div class="chart-info"><div class="chart-song">' + h.t + '</div><div class="chart-singer">' + h.s + '</div></div>' +
+      '<div class="chart-play">▶</div></div>';
+  }).join('');
+}
+
+function playHit(i) {
+  var h = HITS[i];
+  window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent(h.s + ' ' + h.t), '_blank', 'noopener');
+}
+
+// 방송 일정
+function loadSchedule() {
+  var days = ['일', '월', '화', '수', '목', '금', '토'];
+  var today = new Date().getDay();
+  document.getElementById('scheduleList').innerHTML = SCHEDULE.map(function(s) {
+    var isToday = days[today] === s.day;
+    return '<div class="schedule-item" style="' + (isToday ? 'border-color:#8a6d3b;background:#fdf9f0;' : '') + '">' +
+      '<div class="schedule-day">' + s.day + (isToday ? '<br><span style="font-size:10px;">오늘</span>' : '') + '</div>' +
+      '<div class="schedule-info"><div class="schedule-title">' + s.emoji + ' ' + s.title + '</div><div class="schedule-sub">' + s.sub + '</div></div></div>';
+  }).join('');
+}
+
+// 검색
+function doSearch(v) {
+  var el = document.getElementById('searchResults');
+  var q = (v || '').trim().toLowerCase();
+  if (!q) { el.classList.remove('on'); return; }
+  var singerHits = ARTISTS.filter(function(a) { return a.name.toLowerCase().indexOf(q) >= 0; }).slice(0, 4);
+  var songHits = HITS.filter(function(h) { return (h.s + h.t).toLowerCase().indexOf(q) >= 0; }).slice(0, 6);
+  var html = '';
+  singerHits.forEach(function(s) {
+    html += '<div class="sr-item" onmousedown="openSingerDetail(\'' + s.name + '\')"><span style="font-size:20px;">' + s.emoji + '</span><span><strong>' + s.name + '</strong> <span style="color:#7a7060;font-size:12px;">가수</span></span></div>';
+  });
+  songHits.forEach(function(s) {
+    html += '<div class="sr-item" onmousedown="playSongSearch(\'' + s.t + '\',\'' + s.s + '\')"><span style="font-size:18px;">🎵</span><span>' + s.t + ' <span style="color:#7a7060;font-size:12px;">' + s.s + '</span></span></div>';
+  });
+  if (!html) html = '<div class="sr-item" style="color:#7a7060;">찾는 가수나 노래가 없어요. 다른 이름으로 검색해보세요.</div>';
+  el.innerHTML = html;
+  el.classList.add('on');
+}
+
+function playSongSearch(song, singer) {
+  window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent(singer + ' ' + song), '_blank', 'noopener');
+}
+
+// 가수 상세 모달
+function openSingerDetail(name) {
+  var a = ARTISTS.filter(function(x) { return x.name === name; })[0];
+  if (!a) return;
+  var songs = HIT_SONGS[name] || [];
+  var songsHtml = songs.map(function(s, i) {
+    return '<div class="sd-song" onclick="playSongSearch(\'' + s + '\',\'' + name + '\')"><span class="n">' + (i + 1) + '</span><span class="t">' + s + '</span><span class="p">▶</span></div>';
+  }).join('');
+  document.getElementById('singerBox').innerHTML =
+    '<div class="sd-head">' +
+    '<div class="sd-avatar">' + a.emoji + '</div>' +
+    '<div><div class="sd-name">' + a.name + '</div><div class="sd-cat">' + (a.cat === 'trot' ? '트로트 가수' : '아이돌 그룹') + '</div></div>' +
+    '<button class="sd-close" onclick="closeSingerModal()">✕</button></div>' +
+    '<div style="font-size:14px;font-weight:800;color:#8a6d3b;margin-bottom:8px;">🎶 대표곡 (누르면 유튜브에서 들어요)</div>' +
+    '<div class="sd-songs">' + songsHtml + '</div>' +
+    '<div class="sd-links">' +
+    '<a href="' + a.yt + '" target="_blank" rel="noopener">▶ 유튜브 채널</a>' +
+    '<a class="gold" href="' + a.x + '" target="_blank" rel="noopener">𝕏 소식</a>' +
+    '<a class="gold" href="' + a.ig + '" target="_blank" rel="noopener">📷 인스타</a></div>';
+  document.getElementById('singerModal').classList.add('on');
+}
+function closeSingerModal() { document.getElementById('singerModal').classList.remove('on'); }
+
+// 미니 플레이어
+function playLatest(name) {
+  var v = (playerVideos[name] || [])[0];
+  if (!v) { alert('재생할 영상을 찾지 못했어요. 유튜브 보기를 눌러주세요.'); return; }
+  playVideo(v.videoId, name + ' — ' + v.title);
+}
+function playVideo(videoId, title) {
+  var bar = document.getElementById('playerBar');
+  bar.classList.add('on');
+  document.getElementById('pbFrame').src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0';
+  document.getElementById('pbTitle').textContent = title;
+}
+function closePlayer() {
+  document.getElementById('playerBar').classList.remove('on');
+  document.getElementById('pbFrame').src = '';
+}
+
+// 최신 영상 (백엔드 프록시 — 10분 캐시)
 async function loadVideos() {
   try {
-    const r = await fetch('https://api.pomyjo.com/api/singer/feed');
-    const d = await r.json();
-    const artists = d.artists || {};
-    for (const a of ARTISTS) {
-      const el = document.getElementById('vid-' + a.name);
-      if (!el) continue;
-      const vids = artists[a.name] || [];
-      if (vids.length === 0) {
-        el.className = 'latest-note'; el.textContent = '최근 올라온 영상이 없어요';
-        el.style.color = '#7a7060'; el.style.fontSize = '13px';
-        continue;
-      }
-      el.className = '';
-      el.innerHTML = vids.map(v => `
-        <a class="vid" href="https://www.youtube.com/watch?v=${v.videoId}" target="_blank" rel="noopener">
-          <span class="thumb">▶</span><span class="t">${v.title}</span>
-        </a>`).join('');
-    }
+    var r = await fetch('https://api.pomyjo.com/api/singer/feed');
+    var d = await r.json();
+    var artists = d.artists || {};
+    playerVideos = artists;
+    ARTISTS.forEach(function(a) {
+      var el = document.getElementById('vid-' + a.name);
+      if (!el) return;
+      var vids = artists[a.name] || [];
+      if (vids.length === 0) { el.style.color = '#7a7060'; el.style.fontSize = '13px'; el.textContent = '최근 올라온 영상이 없어요'; return; }
+      el.innerHTML = vids.map(function(v) {
+        return '<a class="vid" href="https://www.youtube.com/watch?v=' + v.videoId + '" target="_blank" rel="noopener"><span class="thumb">▶</span><span class="t">' + v.title + '</span></a>';
+      }).join('');
+    });
   } catch (e) {
-    document.querySelectorAll('[id^="vid-"]').forEach(el => {
-      if (el.classList.contains('loading')) { el.className = 'err'; el.textContent = '최신 영상을 불러오지 못했어요'; }
+    document.querySelectorAll('[id^="vid-"]').forEach(function(el) {
+      if (el.textContent === '불러오는 중...') { el.textContent = '최신 영상을 불러오지 못했어요'; }
     });
   }
 }
 
-render();
+// 출석 체크
+function attend() {
+  var today = new Date().toDateString();
+  var data = JSON.parse(localStorage.getItem('st_days') || '[]');
+  if (data.indexOf(today) >= 0) { document.getElementById('attendMsg').textContent = '오늘은 이미 출석하셨어요! 내일 또 만나요 😊'; return; }
+  data.push(today);
+  localStorage.setItem('st_days', JSON.stringify(data));
+  document.getElementById('attendBtn').textContent = '✅ 오늘 출석 완료!';
+  document.getElementById('attendBtn').classList.add('done');
+  document.getElementById('attendMsg').textContent = '🎉 출석 체크! ' + (data.length % 7 === 0 ? '7일 연속 — 대단해요! 건강 배지 획득!' : (data.length % 7) + '일째 모으는 중');
+  renderStamps();
+}
+function renderStamps() {
+  var data = JSON.parse(localStorage.getItem('st_days') || '[]');
+  var today = new Date().toDateString();
+  var el = document.getElementById('stamps');
+  var html = '';
+  for (var i = 1; i <= 7; i++) {
+    var day = new Date(); day.setDate(day.getDate() - (7 - i));
+    var on = data.indexOf(day.toDateString()) >= 0;
+    html += '<div class="stamp' + (on ? ' on' : '') + '">' + (on ? '✓' : i) + '</div>';
+  }
+  el.innerHTML = html;
+  var btn = document.getElementById('attendBtn');
+  if (data.indexOf(today) >= 0) { btn.textContent = '✅ 오늘 출석 완료!'; btn.classList.add('done'); }
+}
+
+// 퀴즈
+var qIdx = 0, qScore = 0, qAnswered = false;
+function showQuiz() {
+  var item = QUIZ[qIdx];
+  document.getElementById('quizQ').textContent = item.q;
+  var el = document.getElementById('quizOpts');
+  el.innerHTML = item.opts.map(function(o, i) { return '<button class="quiz-opt" onclick="quizPick(' + i + ')">' + o + '</button>'; }).join('');
+  document.getElementById('quizNext').style.display = 'none';
+  document.getElementById('quizScore').textContent = qScore > 0 ? '점수: ' + qScore + ' / 10' : '';
+  qAnswered = false;
+}
+function quizPick(i) {
+  if (qAnswered) return;
+  qAnswered = true;
+  var item = QUIZ[qIdx];
+  var btns = document.querySelectorAll('.quiz-opt');
+  btns.forEach(function(b, j) {
+    b.disabled = true;
+    if (j === item.a) b.classList.add('correct');
+    else if (j === i) b.classList.add('wrong');
+  });
+  if (i === item.a) { qScore++; document.getElementById('quizScore').textContent = '정답! 🎉 점수: ' + qScore + ' / 10'; }
+  else document.getElementById('quizScore').textContent = '아쉬워요! 정답은 ' + item.opts[item.a] + ' — 점수: ' + qScore + ' / 10';
+  document.getElementById('quizNext').style.display = 'inline-block';
+  if (qIdx >= QUIZ.length - 1) document.getElementById('quizNext').textContent = '결과 보기';
+}
+function nextQuiz() {
+  qIdx++;
+  if (qIdx >= QUIZ.length) {
+    document.getElementById('quizQ').textContent = '🎉 오늘의 퀴즈 완료!';
+    document.getElementById('quizOpts').innerHTML = '<div style="font-size:22px;font-weight:900;">' + qScore + ' / 10점</div>';
+    document.getElementById('quizScore').textContent = qScore >= 7 ? '두뇌가 아주 건강하세요! 🧠✨' : qScore >= 4 ? '좋아요! 내일 또 도전하세요!' : '다음엔 더 잘할 수 있어요! 화이팅!';
+    document.getElementById('quizNext').style.display = 'none';
+    return;
+  }
+  showQuiz();
+}
+
+// 랭킹 (하트 — 하루 1회)
+function loadRank() {
+  var votes = JSON.parse(localStorage.getItem('st_votes') || '{}');
+  var list = ARTISTS.slice().sort(function(a, b) { return (votes[b.name] || 0) - (votes[a.name] || 0); }).slice(0, 10);
+  document.getElementById('rankList').innerHTML = list.map(function(a, i) {
+    var n = votes[a.name] || 0;
+    return '<div class="rank-item"><div class="rank-num">' + (i + 1) + '</div><div class="avatar" style="width:40px;height:40px;font-size:20px;">' + a.emoji + '</div><div style="font-size:17px;font-weight:800;">' + a.name + '</div><div class="rank-like"><span class="rc">' + n + '</span><button onclick="vote(\'' + a.name + '\')" title="응원">❤️</button></div></div>';
+  }).join('');
+}
+function vote(name) {
+  var today = new Date().toDateString();
+  if (localStorage.getItem('st_voted') === today) { alert('오늘은 이미 응원하셨어요! 내일 다시 눌러주세요 😊'); return; }
+  var votes = JSON.parse(localStorage.getItem('st_votes') || '{}');
+  votes[name] = (votes[name] || 0) + 1;
+  localStorage.setItem('st_votes', JSON.stringify(votes));
+  localStorage.setItem('st_voted', today);
+  alert('❤️ ' + name + '님을 응원했어요!');
+  loadRank();
+}
+
+// ============ 공유 ============
+function shareKakao() {
+  var url = encodeURIComponent(location.href);
+  window.open('https://share.kakao.com/compose?url=' + url, '_blank', 'noopener');
+}
+function copyLink() {
+  var url = location.href;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(function() { alert('✅ 주소가 복사됐어요! 카카오톡이나 문자로 붙여넣어 보내세요.'); });
+  } else {
+    var ta = document.createElement('textarea'); ta.value = url; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    alert('✅ 주소가 복사됐어요!');
+  }
+}
+function shareNative() {
+  if (navigator.share) {
+    navigator.share({ title: '가수튜브 — 가수 유튜브 바로가기', text: '부모님께 보내기 좋은 가수 노래 모음 사이트예요!', url: location.href })
+      .catch(function() {});
+  } else {
+    copyLink();
+  }
+}
+
+// ============ 초기화 ============
+renderSingers();
+loadChart();
+loadSchedule();
+renderStamps();
+showQuiz();
+loadRank();
 loadVideos();
 </script>
 <script>
