@@ -282,6 +282,7 @@
   .share-btn:hover { filter: brightness(1.1); }
   .share-btn:active { transform: scale(0.95); }
   .share-btn.kakao { background: #FEE500; color: #3c1e1e; }
+  .share-btn.naver { background: #03C75A; color: #fff; }
   .share-btn.copy { background: #fffdf8; color: #2b2620; }
   .share-btn.share { background: #8a6d3b; color: #fff; }
 
@@ -449,7 +450,7 @@
   </section>
 
   <section class="rank">
-    <h2 class="sec-title">🏆 실시간 사랑받는 가수</h2>
+    <h2 class="sec-title">🏆 사랑받는 가수 <span style="font-size:13px;cursor:pointer;color:#8a6d3b;" onclick="setRankPeriod('week')">[이번 주]</span> <span style="font-size:13px;color:#c9bda8;">|</span> <span style="font-size:13px;cursor:pointer;color:#8a6d3b;" onclick="setRankPeriod('all')">[전체]</span></h2>
     <p class="sec-desc">하트를 눌러 응원해주세요! (이 기기는 하루 1번)</p>
     <div id="rankList"></div>
   </section>
@@ -471,6 +472,7 @@
     <p>부모님이나 할머니·할아버지가 좋아하실 노래가 여기 다 있어요</p>
     <div class="share-row">
       <button class="share-btn kakao" onclick="shareKakao()">💬 카카오톡으로 보내기</button>
+      <button class="share-btn naver" onclick="shareNaver()">🔵 네이버로 보내기</button>
       <button class="share-btn copy" onclick="copyLink()">🔗 주소 복사</button>
       <button class="share-btn share" onclick="shareNative()">📤 다른 앱으로 공유</button>
     </div>
@@ -482,6 +484,8 @@
       <a href="/privacy.html" style="color:#8a6d3b;font-weight:700;text-decoration:none;">개인정보처리방침</a>
       <span style="color:#c9bda8;"> · </span>
       <a href="/terms.html" style="color:#8a6d3b;font-weight:700;text-decoration:none;">이용약관</a>
+      <span style="color:#c9bda8;"> · </span>
+      <a href="mailto:nokira1024@gmail.com?subject=[이메일수집거부]" style="color:#8a6d3b;font-weight:700;text-decoration:none;">이메일 수집 거부</a>
     </p>
     <p style="margin-top:6px; font-size:13px; color:#9a9081;">유튜브·X·인스타그램 영상과 소식은 각 서비스에서 제공됩니다 · 본 사이트는 비공식 팬 편의 사이트입니다</p>
   </footer>
@@ -1013,9 +1017,14 @@ function nextQuiz() {
 
 // 랭킹 (서버 전역 집계 — 진짜 실시간)
 var votedToday = false;
+var rankPeriod = 'week';
+function setRankPeriod(p) {
+  rankPeriod = p;
+  loadRank();
+}
 async function loadRank() {
   try {
-    var r = await fetch('https://api.pomyjo.com/api/singer/rank');
+    var r = await fetch('https://api.pomyjo.com/api/singer/rank?period=' + rankPeriod);
     var d = await r.json();
     var votes = {};
     (d.rank || []).forEach(function(x) { votes[x.singer] = x.c; });
@@ -1041,6 +1050,11 @@ async function vote(name) {
 }
 
 // ============ 공유 ============
+function shareNaver() {
+  var url = encodeURIComponent(location.href);
+  var title = encodeURIComponent('가수튜브 — 부모님께 노래 선물하기 🎵');
+  window.open('https://share.naver.com/web/shareView?url=' + url + '&title=' + title, '_blank', 'noopener');
+}
 function shareKakao() {
   var url = encodeURIComponent(location.href);
   window.open('https://share.kakao.com/compose?url=' + url, '_blank', 'noopener');
