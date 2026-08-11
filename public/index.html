@@ -364,6 +364,12 @@
     <h1>가수튜브 <span class="acc">🎵</span></h1>
     <p class="sub">좋아하는 트로트·아이돌 가수의 <strong>유튜브 채널</strong>로 한 번에!<br>최신 영상·히트곡 차트·방송 일정까지 큰 글씨로</p>
     <div class="notice">💡 버튼을 누르면 유튜브·트위터·인스타그램 앱 또는 사이트가 열립니다</div>
+    <div style="margin-top:14px;display:flex;justify-content:center;gap:8px;align-items:center;position:relative;">
+      <span style="font-size:14px;color:#6b6355;font-weight:700;">🔠 글자 크기:</span>
+      <button onclick="setFont(0)" class="font-btn" id="fontBtn0" style="padding:8px 14px;border-radius:999px;border:2px solid #e5ded2;background:#fffdf8;font-size:14px;font-weight:800;cursor:pointer;">가</button>
+      <button onclick="setFont(1)" class="font-btn" id="fontBtn1" style="padding:8px 16px;border-radius:999px;border:2px solid #e5ded2;background:#fffdf8;font-size:17px;font-weight:800;cursor:pointer;">가+</button>
+      <button onclick="setFont(2)" class="font-btn" id="fontBtn2" style="padding:8px 18px;border-radius:999px;border:2px solid #e5ded2;background:#fffdf8;font-size:20px;font-weight:800;cursor:pointer;">가++</button>
+    </div>
     <div class="search-box">
       <span class="si">🔍</span>
       <input id="searchInput" placeholder="가수나 노래를 검색해보세요 (예: 임영웅, 어머나)" oninput="doSearch(this.value)" onblur="setTimeout(function(){document.getElementById('searchResults').classList.remove('on')},200)">
@@ -440,6 +446,11 @@
 
   <footer>
     <p>🎵 가수튜브 · <a href="https://pomyjo.com">POMYJO</a> · 문의: <a href="mailto:nokira1024@gmail.com">nokira1024@gmail.com</a></p>
+    <p style="margin-top:8px;font-size:13px;">
+      <a href="/privacy.html" style="color:#8a6d3b;font-weight:700;text-decoration:none;">개인정보처리방침</a>
+      <span style="color:#c9bda8;"> · </span>
+      <a href="/terms.html" style="color:#8a6d3b;font-weight:700;text-decoration:none;">이용약관</a>
+    </p>
     <p style="margin-top:6px; font-size:13px; color:#9a9081;">유튜브·X·인스타그램 영상과 소식은 각 서비스에서 제공됩니다 · 본 사이트는 비공식 팬 편의 사이트입니다</p>
   </footer>
 </div>
@@ -568,8 +579,8 @@ function cardHTML(a) {
       '<div class="avatar">' + a.emoji + '</div>' +
       '<div><div class="name">' + a.name + '</div><div class="cat">' + (a.cat === 'trot' ? '트로트 가수' : '아이돌 그룹') + ' · 눌러서 자세히</div></div>' +
     '</div>' +
-    '<a class="big-btn" href="' + a.yt + '" target="_blank" rel="noopener">▶ 유튜브 보기 <span class="s">(채널 이동)</span></a>' +
-    '<button class="play-btn" onclick="playLatest(\'' + a.name + '\')">🎵 여기서 바로 듣기</button>' +
+    '<button class="play-btn" style="font-size:17px;padding:15px 0;background:#8a6d3b;" onclick="playLatest(\'' + a.name + '\')">🎵 여기서 바로 듣기 <span style="font-size:12px;font-weight:500;opacity:0.85;">(이 사이트에서)</span></button>' +
+    '<a class="big-btn" style="background:#f0e9dc;color:#2b2620;font-size:15px;padding:11px 0;" href="' + a.yt + '" target="_blank" rel="noopener">▶ 유튜브 채널 열기</a>' +
     '<div class="sns-row">' +
       '<a class="sns-btn" href="' + a.x + '" target="_blank" rel="noopener">𝕏 소식</a>' +
       '<a class="sns-btn" href="' + a.ig + '" target="_blank" rel="noopener">📷 인스타</a>' +
@@ -751,6 +762,22 @@ function loadPlaylists() {
 function playPlaylist(i) {
   var p = PLAYLISTS[i];
   window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent(p.query), '_blank', 'noopener');
+}
+
+
+// 글자 크기 토글 (노인 UX — localStorage 저장)
+function setFont(level) {
+  var sizes = [0, 1.1, 1.25];
+  localStorage.setItem('st_font', level);
+  document.body.style.fontSize = (sizes[level] * 100) + '%';
+  document.querySelectorAll('.font-btn').forEach(function(b, i) {
+    b.style.borderColor = i === level ? '#8a6d3b' : '#e5ded2';
+    b.style.background = i === level ? 'rgba(138,109,59,0.12)' : '#fffdf8';
+  });
+}
+function initFont() {
+  var level = parseInt(localStorage.getItem('st_font') || '0');
+  setFont(level);
 }
 
 async function loadVideos() {
@@ -935,24 +962,30 @@ async function sendComment(singer) {
   } catch (e) { alert('댓글 등록에 실패했어요. 다시 시도해주세요.'); }
 }
 async function loadNews() {
-  var names = ['임영웅', 'BTS', '뉴진스', '영탁', '아이유', '이찬원'];
+  var names = ['임영웅', '영탁', '이찬원', '장민호', '김호중', '정동원', '송가인', '장윤정', '태진아', '설운도', '진성', '나훈아', '박서진', '홍진영', 'BTS', '블랙핑크', '뉴진스', '아이브', '에스파', '트와이스', '세븐틴', '싸이', '엑소', '르세라핌', '아이유'];
   var el = document.getElementById('newsList');
-  var html = '';
-  for (var i = 0; i < names.length; i++) {
-    try {
-      var r = await fetch('https://api.pomyjo.com/api/singer/news?name=' + encodeURIComponent(names[i]));
-      var d = await r.json();
-      var items = d.news || [];
-      for (var j = 0; j < 2 && j < items.length; j++) {
-        html += '<a class="news-item" href="' + items[j].link + '" target="_blank" rel="noopener">' +
-          '<div><div class="nt">' + items[j].title + '</div><div class="nd">' + names[i] + ' · ' + items[j].date + '</div></div></a>';
-      }
-    } catch (e) {}
+  try {
+    var results = await Promise.all(names.map(function(name) {
+      return fetch('https://api.pomyjo.com/api/singer/news?name=' + encodeURIComponent(name))
+        .then(function(r) { return r.json(); })
+        .then(function(d) { return { name: name, items: (d.news || []).slice(0, 1) }; })
+        .catch(function() { return { name: name, items: [] }; });
+    }));
+    var html = '';
+    results.forEach(function(grp) {
+      if (!grp.items.length) return;
+      var item = grp.items[0];
+      html += '<a class="news-item" href="' + item.link + '" target="_blank" rel="noopener">' +
+        '<div><div class="nt">' + item.title + '</div><div class="nd">' + grp.name + ' · ' + item.date + '</div></div></a>';
+    });
+    if (html) el.innerHTML = html;
+    else el.innerHTML = '<div class="news-loading">소식을 불러오지 못했어요.</div>';
+  } catch (e) {
+    el.innerHTML = '<div class="news-loading">소식을 불러오지 못했어요.</div>';
   }
-  if (html) el.innerHTML = html;
-  else el.innerHTML = '<div class="news-loading">소식을 불러오지 못했어요. 잠시 후 다시 확인해주세요.</div>';
 }
 
+initFont();
 renderSingers();
 loadChart();
 loadSchedule();
