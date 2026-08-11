@@ -767,7 +767,7 @@ function playPlaylist(i) {
 
 // 글자 크기 토글 (노인 UX — localStorage 저장)
 function setFont(level) {
-  var sizes = [0, 1.1, 1.25];
+  var sizes = [1, 1.1, 1.25];
   localStorage.setItem('st_font', level);
   document.body.style.fontSize = (sizes[level] * 100) + '%';
   document.querySelectorAll('.font-btn').forEach(function(b, i) {
