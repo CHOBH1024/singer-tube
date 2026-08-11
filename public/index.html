@@ -331,6 +331,30 @@
     transition: background 0.15s;
   }
   .sd-concert a:hover { background: rgba(138,109,59,0.12); }
+
+  /* 영상 종류 */
+  .vid-kind {
+    display: inline-block; font-size: 10px; font-weight: 800; padding: 2px 7px;
+    border-radius: 999px; margin-bottom: 3px;
+  }
+  .vk-live { background: rgba(220,38,38,0.12); color: #dc2626; }
+  .vk-mv { background: rgba(138,109,59,0.15); color: #8a6d3b; }
+  .vk-shorts { background: rgba(220,38,38,0.12); color: #dc2626; }
+  .vk-interview { background: rgba(21,128,61,0.12); color: #15803d; }
+  .vk-behind { background: rgba(99,102,241,0.12); color: #4f46e5; }
+  .vk-other { background: #f0e9dc; color: #7a7060; }
+  .vid-filter { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .vid-filter button {
+    padding: 6px 12px; border-radius: 999px; border: 1px solid #e5ded2;
+    background: #fffdf8; font-size: 12px; font-weight: 700; cursor: pointer; color: #2b2620;
+  }
+  .vid-filter button.on { background: #2b2620; color: #faf7f2; border-color: #2b2620; }
+  .more-link {
+    display: block; text-align: center; padding: 8px; border-radius: 8px;
+    background: #f7f2e9; font-size: 12px; font-weight: 700; color: #8a6d3b;
+    text-decoration: none; margin-top: 8px;
+  }
+  .more-link:hover { background: #f0e9dc; }
 </style>
 </head>
 <body>
@@ -545,7 +569,19 @@ function cardHTML(a) {
       '<a class="sns-btn" href="' + a.ig + '" target="_blank" rel="noopener">📷 인스타</a>' +
       '<a class="sns-btn" href="' + a.fb + '" target="_blank" rel="noopener">📘 페이스북</a>' +
     '</div>' +
-    '<div class="latest"><div class="latest-title">🆕 최신 영상</div><div id="vid-' + a.name + '" class="loading">불러오는 중...</div></div>' +
+    '<div class="latest">' +
+      '<div class="latest-title">🆕 최신 영상</div>' +
+      '<div class="vid-filter" id="vf-' + a.name + '">' +
+        '<button class="on" data-kind="all" onclick="setVidFilter(\'' + a.name + '\',\'all\')">전체</button>' +
+        '<button data-kind="live" onclick="setVidFilter(\'' + a.name + '\',\'live\')">🎤 무대</button>' +
+        '<button data-kind="mv" onclick="setVidFilter(\'' + a.name + '\',\'mv\')">🎥 뮤비</button>' +
+        '<button data-kind="shorts" onclick="setVidFilter(\'' + a.name + '\',\'shorts\')">🎬 쇼츠</button>' +
+        '<button data-kind="interview" onclick="setVidFilter(\'' + a.name + '\',\'interview\')">🎙️ 인터뷰</button>' +
+        '<button data-kind="behind" onclick="setVidFilter(\'' + a.name + '\',\'behind\')">📹 비하인드</button>' +
+      '</div>' +
+      '<div id="vid-' + a.name + '" class="loading">불러오는 중...</div>' +
+      '<a class="more-link" href="https://www.youtube.com/results?search_query=' + encodeURIComponent(a.name + ' 뮤직비디오 인터뷰') + '" target="_blank" rel="noopener">🔎 더 많은 영상 보기 (유튜브)</a>' +
+    '</div>' +
   '</div>';
 }
 
@@ -664,6 +700,25 @@ function closePlayer() {
 }
 
 // 최신 영상 (백엔드 프록시 — 10분 캐시)
+
+// 영상 종류 필터 (카드별)
+function setVidFilter(name, kind) {
+  var btns = document.querySelectorAll('#vf-' + name + ' button');
+  btns.forEach(function(b) { b.classList.toggle('on', b.dataset.kind === kind); });
+  var el = document.getElementById('vid-' + name);
+  var all = (playerVideos[name] || []);
+  var list = kind === 'all' ? all : all.filter(function(v) { return v.kind === kind; });
+  if (!list.length) { el.innerHTML = '<div style="font-size:13px;color:#9a9081;padding:6px;">이 종류의 영상이 아직 없어요</div>'; return; }
+  el.innerHTML = list.slice(0, 5).map(function(v) {
+    var k = v.kind || 'other';
+    var label = { live: '🎤 무대', mv: '🎥 뮤비', shorts: '🎬 쇼츠', interview: '🎙️ 인터뷰', behind: '📹 비하인드', other: '🎵 영상' }[k] || '🎵 영상';
+    var href = k === 'shorts' ? 'https://www.youtube.com/shorts/' + v.videoId : 'https://www.youtube.com/watch?v=' + v.videoId;
+    return '<a class="vid" href="' + href + '" target="_blank" rel="noopener">' +
+      '<span class="thumb">▶</span>' +
+      '<span><span class="vid-kind vk-' + k + '">' + label + '</span><span class="t" style="display:block;">' + v.title + '</span></span></a>';
+  }).join('');
+}
+
 async function loadVideos() {
   try {
     var r = await fetch('https://api.pomyjo.com/api/singer/feed');
@@ -675,8 +730,13 @@ async function loadVideos() {
       if (!el) return;
       var vids = artists[a.name] || [];
       if (vids.length === 0) { el.style.color = '#7a7060'; el.style.fontSize = '13px'; el.textContent = '최근 올라온 영상이 없어요'; return; }
-      el.innerHTML = vids.map(function(v) {
-        return '<a class="vid" href="https://www.youtube.com/watch?v=' + v.videoId + '" target="_blank" rel="noopener"><span class="thumb">▶</span><span class="t">' + v.title + '</span></a>';
+      el.innerHTML = vids.slice(0, 5).map(function(v) {
+        var k = v.kind || 'other';
+        var label = { live: '🎤 무대', mv: '🎥 뮤비', shorts: '🎬 쇼츠', interview: '🎙️ 인터뷰', behind: '📹 비하인드', other: '🎵 영상' }[k] || '🎵 영상';
+        var href = k === 'shorts' ? 'https://www.youtube.com/shorts/' + v.videoId : 'https://www.youtube.com/watch?v=' + v.videoId;
+        return '<a class="vid" href="' + href + '" target="_blank" rel="noopener">' +
+          '<span class="thumb">▶</span>' +
+          '<span><span class="vid-kind vk-' + k + '">' + label + '</span><span class="t" style="display:block;">' + v.title + '</span></span></a>';
       }).join('');
     });
   } catch (e) {
