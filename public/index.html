@@ -422,6 +422,12 @@
     <div id="rankList"></div>
   </section>
 
+  <section class="chart" style="margin-top:44px;">
+    <h2 class="sec-title">📻 테마 플레이리스트</h2>
+    <p class="sec-desc">누르면 유튜브에서 노래가 바로 재생돼요 — 무료 음악 감상</p>
+    <div class="chart-list" id="playlistList"></div>
+  </section>
+
   <section class="share-banner">
     <h3>💌 가족·친구에게 알려주세요</h3>
     <p>부모님이나 할머니·할아버지가 좋아하실 노래가 여기 다 있어요</p>
@@ -578,6 +584,7 @@ function cardHTML(a) {
         '<button data-kind="shorts" onclick="setVidFilter(\'' + a.name + '\',\'shorts\')">🎬 쇼츠</button>' +
         '<button data-kind="interview" onclick="setVidFilter(\'' + a.name + '\',\'interview\')">🎙️ 인터뷰</button>' +
         '<button data-kind="behind" onclick="setVidFilter(\'' + a.name + '\',\'behind\')">📹 비하인드</button>' +
+        '<button data-kind="cover" onclick="setVidFilter(\'' + a.name + '\',\'cover\')">🎤 커버·듀엣</button>' +
       '</div>' +
       '<div id="vid-' + a.name + '" class="loading">불러오는 중...</div>' +
       '<a class="more-link" href="https://www.youtube.com/results?search_query=' + encodeURIComponent(a.name + ' 뮤직비디오 인터뷰') + '" target="_blank" rel="noopener">🔎 더 많은 영상 보기 (유튜브)</a>' +
@@ -708,7 +715,11 @@ function setVidFilter(name, kind) {
   var el = document.getElementById('vid-' + name);
   var all = (playerVideos[name] || []);
   var list = kind === 'all' ? all : all.filter(function(v) { return v.kind === kind; });
-  if (!list.length) { el.innerHTML = '<div style="font-size:13px;color:#9a9081;padding:6px;">이 종류의 영상이 아직 없어요</div>'; return; }
+  if (!list.length) {
+    var kq = { live: '무대 라이브', mv: '뮤직비디오', shorts: 'shorts', interview: '인터뷰', behind: '비하인드', cover: '커버' }[kind] || '';
+    el.innerHTML = '<div style="font-size:13px;color:#9a9081;padding:6px;">이 종류가 아직 없어요 — <a href="https://www.youtube.com/results?search_query=' + encodeURIComponent(name + ' ' + kq) + '" target="_blank" style="color:#8a6d3b;font-weight:800;">유튜브에서 ' + kq + ' 보기 →</a></div>';
+    return;
+  }
   el.innerHTML = list.slice(0, 5).map(function(v) {
     var k = v.kind || 'other';
     var label = { live: '🎤 무대', mv: '🎥 뮤비', shorts: '🎬 쇼츠', interview: '🎙️ 인터뷰', behind: '📹 비하인드', other: '🎵 영상' }[k] || '🎵 영상';
@@ -717,6 +728,29 @@ function setVidFilter(name, kind) {
       '<span class="thumb">▶</span>' +
       '<span><span class="vid-kind vk-' + k + '">' + label + '</span><span class="t" style="display:block;">' + v.title + '</span></span></a>';
   }).join('');
+}
+
+
+// 테마 플레이리스트 (유튜브 검색 재생)
+const PLAYLISTS = [
+  { emoji: '🎤', title: '부모님 세대 명곡 모음', query: '트로트 명곡 모음', sub: '임영웅·영탁·이찬원 대표곡' },
+  { emoji: '💃', title: '신나는 트로트 댄스', query: '신나는 트로트 노래모음', sub: '흥겨운 노래로 기분 전환' },
+  { emoji: '🌙', title: '감성 발라드 힐링', query: '감성 발라드 히트곡 모음', sub: '마음이 편안해지는 노래' },
+  { emoji: '💜', title: '아이돌 인기곡 모음', query: '케이팝 히트곡 모음 2026', sub: 'BTS·뉴진스·아이브' },
+  { emoji: '🎶', title: '노래자랑 인기곡', query: '전국노래자랑 인기곡', sub: 'TV에서 자주 나오는 노래' },
+  { emoji: '🎼', title: '가요무대 명곡', query: '가요무대 트로트 모음', sub: 'KBS 가요무대 레전드' },
+];
+function loadPlaylists() {
+  document.getElementById('playlistList').innerHTML = PLAYLISTS.map(function(p, i) {
+    return '<div class="chart-item" onclick="playPlaylist(' + i + ')">' +
+      '<div class="chart-rank">' + p.emoji + '</div>' +
+      '<div class="chart-info"><div class="chart-song">' + p.title + '</div><div class="chart-singer">' + p.sub + '</div></div>' +
+      '<div class="chart-play">▶</div></div>';
+  }).join('');
+}
+function playPlaylist(i) {
+  var p = PLAYLISTS[i];
+  window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent(p.query), '_blank', 'noopener');
 }
 
 async function loadVideos() {
@@ -811,24 +845,33 @@ function nextQuiz() {
   showQuiz();
 }
 
-// 랭킹 (하트 — 하루 1회)
-function loadRank() {
-  var votes = JSON.parse(localStorage.getItem('st_votes') || '{}');
-  var list = ARTISTS.slice().sort(function(a, b) { return (votes[b.name] || 0) - (votes[a.name] || 0); }).slice(0, 10);
-  document.getElementById('rankList').innerHTML = list.map(function(a, i) {
-    var n = votes[a.name] || 0;
-    return '<div class="rank-item"><div class="rank-num">' + (i + 1) + '</div><div class="avatar" style="width:40px;height:40px;font-size:20px;">' + a.emoji + '</div><div style="font-size:17px;font-weight:800;">' + a.name + '</div><div class="rank-like"><span class="rc">' + n + '</span><button onclick="vote(\'' + a.name + '\')" title="응원">❤️</button></div></div>';
-  }).join('');
+// 랭킹 (서버 전역 집계 — 진짜 실시간)
+var votedToday = false;
+async function loadRank() {
+  try {
+    var r = await fetch('https://api.pomyjo.com/api/singer/rank');
+    var d = await r.json();
+    var votes = {};
+    (d.rank || []).forEach(function(x) { votes[x.singer] = x.c; });
+    var list = ARTISTS.slice().sort(function(a, b) { return (votes[b.name] || 0) - (votes[a.name] || 0); }).slice(0, 10);
+    document.getElementById('rankList').innerHTML = list.map(function(a, i) {
+      var n = votes[a.name] || 0;
+      return '<div class="rank-item"><div class="rank-num">' + (i + 1) + '</div><div class="avatar" style="width:40px;height:40px;font-size:20px;">' + a.emoji + '</div><div style="font-size:17px;font-weight:800;">' + a.name + '</div><div class="rank-like"><span class="rc">' + n + '</span><button onclick="vote(\'' + a.name + '\')" title="응원">❤️</button></div></div>';
+    }).join('');
+  } catch (e) {}
 }
-function vote(name) {
-  var today = new Date().toDateString();
-  if (localStorage.getItem('st_voted') === today) { alert('오늘은 이미 응원하셨어요! 내일 다시 눌러주세요 😊'); return; }
-  var votes = JSON.parse(localStorage.getItem('st_votes') || '{}');
-  votes[name] = (votes[name] || 0) + 1;
-  localStorage.setItem('st_votes', JSON.stringify(votes));
-  localStorage.setItem('st_voted', today);
-  alert('❤️ ' + name + '님을 응원했어요!');
-  loadRank();
+async function vote(name) {
+  if (votedToday) { alert('오늘은 이미 응원하셨어요! 내일 다시 눌러주세요 😊'); return; }
+  try {
+    var r = await fetch('https://api.pomyjo.com/api/singer/vote', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ singer: name })
+    });
+    var d = await r.json();
+    votedToday = true;
+    alert('❤️ ' + name + '님을 응원했어요! (전국 집계에 반영)');
+    loadRank();
+  } catch (e) { alert('응원에 실패했어요. 다시 시도해주세요.'); }
 }
 
 // ============ 공유 ============
@@ -914,6 +957,7 @@ renderSingers();
 loadChart();
 loadSchedule();
 loadNews();
+loadPlaylists();
 renderStamps();
 showQuiz();
 loadRank();
