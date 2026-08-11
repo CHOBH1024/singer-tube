@@ -455,6 +455,12 @@
   </section>
 
   <section class="chart" style="margin-top:44px;">
+    <h2 class="sec-title">🕘 최근 들은 노래</h2>
+    <p class="sec-desc">어제 들었던 노래를 다시 들어보세요</p>
+    <div class="chart-list" id="recentList"></div>
+  </section>
+
+  <section class="chart">
     <h2 class="sec-title">📻 테마 플레이리스트</h2>
     <p class="sec-desc">누르면 유튜브에서 노래가 바로 재생돼요 — 무료 음악 감상</p>
     <div class="chart-list" id="playlistList"></div>
@@ -486,13 +492,21 @@
   <div class="sd-box" onclick="event.stopPropagation()" id="singerBox"></div>
 </div>
 
-<!-- 미니 플레이어 -->
+<!-- 미니 플레이어 — 영상 재생 + 연속 재생 -->
 <div class="player-bar" id="playerBar">
-  <iframe id="pbFrame" width="220" height="124" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-  <div class="pb-title" id="pbTitle"></div>
+  <div id="pbFrame" style="border-radius:10px;"></div>
+  <div class="pb-info">
+    <div class="pb-title" id="pbTitle"></div>
+    <div class="pb-btns">
+      <button class="pb-full" onclick="playerNext()">⏭ 다음 곡</button>
+      <button class="pb-full" onclick="openFullscreen()">⛶ 전체 화면</button>
+      <button class="pb-full" onclick="window.open('https://www.youtube.com/watch?v=' + currentVideoId, '_blank', 'noopener')">🔗 유튜브</button>
+    </div>
+  </div>
   <button class="pb-close" onclick="closePlayer()">✕</button>
 </div>
 
+<script src="https://www.youtube.com/iframe_api"></script>
 <script>
 // ============ 데이터 ============
 const ARTISTS = [
@@ -698,6 +712,9 @@ function openSingerDetail(name) {
   var cmHtml = '<div class="sd-cm-empty">첫 댓글을 남겨보세요! 💬</div>';
   loadComments(name);
   loadSingerSNS(name);
+  var follows = JSON.parse(localStorage.getItem('st_follows') || '[]');
+  var fb = document.getElementById('followBtn');
+  if (fb) fb.textContent = follows.indexOf(name) >= 0 ? '💛 팔로우 중' : '🤍 팔로우';
   var songsHtml = songs.map(function(s, i) {
     return '<div class="sd-song" onclick="playSongSearch(\'' + s + '\',\'' + name + '\')"><span class="n">' + (i + 1) + '</span><span class="t">' + s + '</span><span class="p">▶</span></div>';
   }).join('');
@@ -705,6 +722,7 @@ function openSingerDetail(name) {
     '<div class="sd-head">' +
     '<div class="sd-avatar">' + a.emoji + '</div>' +
     '<div><div class="sd-name">' + a.name + '</div><div class="sd-cat">' + (a.cat === 'trot' ? '트로트 가수' : '아이돌 그룹') + '</div></div>' +
+    '<button id="followBtn" onclick="toggleFollow(\'' + name + '\')" style="padding:7px 14px;border-radius:999px;border:2px solid #8a6d3b;background:transparent;color:#8a6d3b;font-size:13px;font-weight:800;cursor:pointer;margin-left:auto;">🤍 팔로우</button>' +
     '<button class="sd-close" onclick="closeSingerModal()">✕</button></div>' +
     '<div style="font-size:14px;font-weight:800;color:#8a6d3b;margin-bottom:8px;">🎶 대표곡 (누르면 유튜브에서 들어요)</div>' +
     '<div class="sd-songs">' + songsHtml + '</div>' +
@@ -728,34 +746,82 @@ function openSingerDetail(name) {
 }
 function closeSingerModal() { document.getElementById('singerModal').classList.remove('on'); }
 
-// 미니 플레이어
+// ===== 미니 플레이어 — YT Player 연속 재생 =====
+var ytPlayer = null, currentVideoId = '', currentQueue = [], currentQIdx = 0;
+function onYouTubeIframeAPIReady() {
+  ytPlayer = new YT.Player('pbFrame', {
+    width: '320', height: '180',
+    playerVars: { autoplay: 1, rel: 0, playsinline: 1 },
+    events: { onStateChange: onPlayerState }
+  });
+}
+function onPlayerState(e) {
+  if (e.data === YT.PlayerState.ENDED) playerNext();
+}
 function playLatest(name) {
   var v = (playerVideos[name] || [])[0];
   if (!v) { alert('재생할 영상을 찾지 못했어요. 유튜브 보기를 눌러주세요.'); return; }
+  currentQueue = (playerVideos[name] || []).slice(0, 10);
+  currentQIdx = 0;
   playVideo(v.videoId, name + ' — ' + v.title);
 }
 function playVideo(videoId, title) {
   var bar = document.getElementById('playerBar');
   bar.classList.add('on');
-  document.getElementById('pbFrame').src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0';
+  currentVideoId = videoId;
   document.getElementById('pbTitle').textContent = title;
+  if (ytPlayer) ytPlayer.loadVideoById(videoId);
+  try {
+    var recent = JSON.parse(localStorage.getItem('st_recent') || '[]');
+    recent = recent.filter(function(x) { return x.v !== videoId; });
+    recent.unshift({ v: videoId, t: title.slice(0, 60) });
+    localStorage.setItem('st_recent', JSON.stringify(recent.slice(0, 12)));
+    if (typeof renderRecent === 'function') renderRecent();
+  } catch (e) {}
+}
+function playerNext() {
+  if (currentQueue.length && currentQIdx < currentQueue.length - 1) {
+    currentQIdx++;
+    var v = currentQueue[currentQIdx];
+    playVideo(v.videoId, v.title);
+  } else {
+    alert('🎵 이 가수의 다른 영상이 없어요. 다른 가수를 선택해보세요!');
+  }
 }
 function closePlayer() {
   document.getElementById('playerBar').classList.remove('on');
-  document.getElementById('pbFrame').src = '';
+  if (ytPlayer) ytPlayer.stopVideo();
 }
 function openFullscreen() {
-  var frame = document.getElementById('pbFrame');
-  var src = frame.src;
-  if (frame.requestFullscreen) frame.requestFullscreen();
-  else if (frame.webkitRequestFullscreen) frame.webkitRequestFullscreen();
-  // requestFullscreen 실패 시 새 탭
-  setTimeout(function() {
-    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-      var v = src.split('/').pop().split('?')[0];
-      window.open('https://www.youtube.com/watch?v=' + v, '_blank', 'noopener');
-    }
-  }, 300);
+  var frame = document.getElementById('pbFrame').querySelector('iframe');
+  if (frame) {
+    if (frame.requestFullscreen) frame.requestFullscreen();
+    else if (frame.webkitRequestFullscreen) frame.webkitRequestFullscreen();
+  } else {
+    window.open('https://www.youtube.com/watch?v=' + currentVideoId, '_blank', 'noopener');
+  }
+}
+
+// ===== 최근 들은 곡 + 내 가수 팔로우 =====
+function renderRecent() {
+  var el = document.getElementById('recentList');
+  if (!el) return;
+  var recent = JSON.parse(localStorage.getItem('st_recent') || '[]');
+  if (!recent.length) { el.innerHTML = '<div class="news-loading">노래를 들으면 여기에 표시돼요</div>'; return; }
+  el.innerHTML = recent.slice(0, 6).map(function(x) {
+    return '<div class="chart-item" onclick="playRecent(\'' + x.v + '\',\'' + x.t.replace(/\'/g, '') + '\')">' +
+      '<div class="chart-rank">🎵</div><div class="chart-info"><div class="chart-song">' + x.t + '</div><div class="chart-singer">다시 듣기</div></div><div class="chart-play">▶</div></div>';
+  }).join('');
+}
+function playRecent(v, t) { playVideo(v, t); }
+function toggleFollow(name) {
+  var follows = JSON.parse(localStorage.getItem('st_follows') || '[]');
+  var idx = follows.indexOf(name);
+  if (idx >= 0) { follows.splice(idx, 1); alert('💔 ' + name + ' 팔로우를 해제했어요'); }
+  else { follows.push(name); alert('💛 ' + name + '님을 팔로우했어요! 최신 소식을 계속 볼 수 있어요'); }
+  localStorage.setItem('st_follows', JSON.stringify(follows));
+  var btn = document.getElementById('followBtn');
+  if (btn) btn.textContent = follows.indexOf(name) >= 0 ? '💛 팔로우 중' : '🤍 팔로우';
 }
 
 // 최신 영상 (백엔드 프록시 — 10분 캐시)
@@ -1063,6 +1129,7 @@ loadSchedule();
 loadNews();
 loadSNS("임영웅");
 loadPlaylists();
+renderRecent();
 renderStamps();
 showQuiz();
 loadRank();
