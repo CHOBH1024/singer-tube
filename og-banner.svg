@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2b2620"/><stop offset="100%" stop-color="#171310"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="40" y="40" width="1120" height="550" rx="32" fill="none" stroke="#c9a867" stroke-width="4"/>
+  <text x="600" y="250" font-family="'Noto Serif KR',serif" font-size="110" font-weight="900" text-anchor="middle" fill="#faf7f2">🎵 가수튜브</text>
+  <text x="600" y="350" font-family="'Noto Sans KR',sans-serif" font-size="44" font-weight="700" text-anchor="middle" fill="#c9a867">트로트·아이돌 가수 유튜브 바로가기</text>
+  <text x="600" y="440" font-family="'Noto Sans KR',sans-serif" font-size="32" font-weight="500" text-anchor="middle" fill="#b8ae9c">임영웅 · BTS · 뉴진스 — 최신 영상과 소식까지 큰 글씨로</text>
+  <text x="600" y="520" font-family="'Noto Sans KR',sans-serif" font-size="28" font-weight="700" text-anchor="middle" fill="#8a6d3b">singer-tube.pomyjo.com</text>
+</svg>

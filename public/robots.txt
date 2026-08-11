@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://singer-tube.pomyjo.com/sitemap.xml

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>가수튜브 | 트로트·아이돌 가수 유튜브 바로가기 — 최신 영상과 소식</title>
+<meta name="description" content="임영웅, 영탁, 이찬원, BTS, 블랙핑크 등 인기 트로트·아이돌 가수의 유튜브 채널로 한 번에! 최신 영상과 X(트위터)·인스타그램 소식까지.">
+<meta property="og:title" content="가수튜브 — 가수 유튜브 바로가기">
+<meta property="og:description" content="트로트·아이돌 인기 가수의 유튜브 채널, 최신 영상, X·인스타 소식을 큰 글씨로 편하게.">
+<meta property="og:image" content="https://singer-tube.pomyjo.com/og-banner.png">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#2b2620">
+<link rel="apple-touch-icon" href="/icon-512.png">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #faf7f2; color: #2b2620; line-height: 1.7;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 24px 20px 80px; }
+  header {
+    text-align: center; padding: 48px 0 8px;
+  }
+  .badge {
+    display: inline-block; font-size: 13px; font-weight: 800; letter-spacing: 3px;
+    color: #8a6d3b; background: rgba(138,109,59,0.08); padding: 6px 16px;
+    border-radius: 999px; margin-bottom: 18px;
+  }
+  h1 {
+    font-family: 'Noto Serif KR', serif; font-size: clamp(28px, 5vw, 42px); font-weight: 900;
+    letter-spacing: -1px; margin-bottom: 14px;
+  }
+  .sub { font-size: 17px; color: #6b6355; max-width: 560px; margin: 0 auto 12px; }
+  .notice {
+    display: inline-block; font-size: 14px; color: #6b6355; background: #f0e9dc;
+    padding: 8px 18px; border-radius: 999px; margin-top: 6px;
+  }
+  section { margin-top: 48px; }
+  .sec-title {
+    font-family: 'Noto Serif KR', serif; font-size: 24px; font-weight: 900;
+    display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
+  }
+  .sec-desc { font-size: 15px; color: #6b6355; margin-bottom: 18px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+  .card {
+    background: #fffdf8; border: 1px solid #e5ded2; border-radius: 18px; padding: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(43,38,32,0.1); }
+  .card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .avatar {
+    width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 28px; background: rgba(138,109,59,0.12);
+  }
+  .name { font-family: 'Noto Serif KR', serif; font-size: 20px; font-weight: 900; }
+  .cat { font-size: 13px; color: #8a6d3b; font-weight: 700; }
+  .big-btn {
+    display: block; width: 100%; text-align: center; text-decoration: none;
+    padding: 15px 0; border-radius: 12px; font-size: 18px; font-weight: 800;
+    background: #2b2620; color: #faf7f2; margin-bottom: 8px;
+    transition: transform 0.1s, background 0.2s;
+  }
+  .big-btn:hover { background: #3d3830; }
+  .big-btn:active { transform: scale(0.98); }
+  .big-btn .s { font-size: 15px; font-weight: 500; opacity: 0.8; }
+  .sns-row { display: flex; gap: 8px; }
+  .sns-btn {
+    flex: 1; display: block; text-align: center; text-decoration: none;
+    padding: 12px 0; border-radius: 10px; font-size: 14px; font-weight: 700;
+    border: 1px solid #e5ded2; color: #2b2620; background: #f7f2e9;
+    transition: background 0.2s;
+  }
+  .sns-btn:hover { background: #f0e9dc; }
+  .latest { margin-top: 14px; border-top: 1px dashed #e5ded2; padding-top: 12px; }
+  .latest-title { font-size: 14px; font-weight: 800; color: #8a6d3b; margin-bottom: 8px; }
+  .vid {
+    display: flex; gap: 8px; align-items: center; text-decoration: none; color: #2b2620;
+    padding: 7px 8px; border-radius: 8px; font-size: 14px; line-height: 1.45;
+    transition: background 0.15s;
+  }
+  .vid:hover { background: #f7f2e9; }
+  .vid .thumb { width: 64px; height: 40px; border-radius: 6px; background: #f0e9dc; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .vid .t { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .loading, .err { text-align: center; padding: 20px; color: #6b6355; font-size: 15px; }
+  .err { color: #dc2626; }
+  footer { text-align: center; margin-top: 56px; padding-top: 24px; border-top: 1px solid #e5ded2; font-size: 14px; color: #7a7060; }
+  footer a { color: #8a6d3b; text-decoration: none; font-weight: 700; }
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; }
+    .card { padding: 18px; }
+    .big-btn { font-size: 17px; padding: 14px 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="badge">FOR SENIORS · 큰 글씨로 편하게</div>
+    <h1>가수튜브 🎵</h1>
+    <p class="sub">좋아하는 트로트·아이돌 가수의 <strong>유튜브 채널</strong>로 한 번에!<br>최신 영상과 X(트위터)·인스타그램 소식도 확인하세요.</p>
+    <div class="notice">💡 버튼을 누르면 유튜브·트위터·인스타그램 앱 또는 사이트가 열립니다</div>
+  </header>
+
+  <section>
+    <h2 class="sec-title">🎤 트로트 가수</h2>
+    <p class="sec-desc">임영웅부터 나훈아까지 — 최신 노래와 무대 영상 보기</p>
+    <div class="grid" id="trot"></div>
+  </section>
+
+  <section>
+    <h2 class="sec-title">✨ 아이돌 그룹</h2>
+    <p class="sec-desc">BTS부터 뉴진스까지 — 멤버들의 최신 영상과 소식</p>
+    <div class="grid" id="idol"></div>
+  </section>
+
+  <footer>
+    <p>🎵 가수튜브 · <a href="https://pomyjo.com">POMYJO</a> · 문의: <a href="mailto:nokira1024@gmail.com">nokira1024@gmail.com</a></p>
+    <p style="margin-top:6px; font-size:13px; color:#9a9081;">유튜브·X·인스타그램 영상과 소식은 각 서비스에서 제공됩니다 · 본 사이트는 비공식 팬 편의 사이트입니다</p>
+  </footer>
+</div>
+
+<script>
+// 가수 데이터 — 유튜브 채널/검색 + X + 인스타 링크
+const ARTISTS = [
+  // 트로트
+  { name: '임영웅', emoji: '🎤', cat: 'trot', yt: 'https://www.youtube.com/channel/UC3WZlO2Zl8NE1yIUgtwUtQw', x: 'https://x.com/search?q=' + encodeURIComponent('임영웅'), ig: 'https://www.instagram.com/explore/tags/임영웅/' },
+  { name: '영탁', emoji: '😎', cat: 'trot', yt: 'https://www.youtube.com/channel/UCjL2bp7EDRIk7rwwEYeofeg', x: 'https://x.com/search?q=' + encodeURIComponent('영탁'), ig: 'https://www.instagram.com/explore/tags/영탁/' },
+  { name: '이찬원', emoji: '🌟', cat: 'trot', yt: 'https://www.youtube.com/channel/UC4UnP3v-iaFaLdtKwp84Pmw', x: 'https://x.com/search?q=' + encodeURIComponent('이찬원'), ig: 'https://www.instagram.com/explore/tags/이찬원/' },
+  { name: '장민호', emoji: '🎩', cat: 'trot', yt: 'https://www.youtube.com/channel/UC00wMKeoF72UURd3WO9pZHw', x: 'https://x.com/search?q=' + encodeURIComponent('장민호'), ig: 'https://www.instagram.com/explore/tags/장민호/' },
+  { name: '김호중', emoji: '🎼', cat: 'trot', yt: 'https://www.youtube.com/channel/UC73yn5mmJSr3hh9jKe2AdWw', x: 'https://x.com/search?q=' + encodeURIComponent('김호중'), ig: 'https://www.instagram.com/explore/tags/김호중/' },
+  { name: '정동원', emoji: '🍀', cat: 'trot', yt: 'https://www.youtube.com/channel/UCrLQ0ovys23H9xBV6U-Sd4A', x: 'https://x.com/search?q=' + encodeURIComponent('정동원'), ig: 'https://www.instagram.com/explore/tags/정동원/' },
+  { name: '송가인', emoji: '🌸', cat: 'trot', yt: 'https://www.youtube.com/channel/UCJ-8qxJb6_YCLIS1Fwb0aZw', x: 'https://x.com/search?q=' + encodeURIComponent('송가인'), ig: 'https://www.instagram.com/explore/tags/송가인/' },
+  { name: '장윤정', emoji: '💃', cat: 'trot', yt: 'https://www.youtube.com/channel/UCcRLbgAux_pU8iGh112MSMg', x: 'https://x.com/search?q=' + encodeURIComponent('장윤정'), ig: 'https://www.instagram.com/explore/tags/장윤정/' },
+  { name: '태진아', emoji: '🎸', cat: 'trot', yt: 'https://www.youtube.com/channel/UColyKaHN53uondb6PGrZsrA', x: 'https://x.com/search?q=' + encodeURIComponent('태진아'), ig: 'https://www.instagram.com/explore/tags/태진아/' },
+  { name: '설운도', emoji: '🤠', cat: 'trot', yt: 'https://www.youtube.com/channel/UCJV68FS4MQE9C5pc4co3vCw', x: 'https://x.com/search?q=' + encodeURIComponent('설운도'), ig: 'https://www.instagram.com/explore/tags/설운도/' },
+  { name: '진성', emoji: '🎻', cat: 'trot', yt: 'https://www.youtube.com/channel/UCg60mxpvfizWGCaP1R13JMg', x: 'https://x.com/search?q=' + encodeURIComponent('진성 가수'), ig: 'https://www.instagram.com/explore/tags/진성/' },
+  { name: '나훈아', emoji: '👑', cat: 'trot', yt: 'https://www.youtube.com/channel/UCej9znwYQ2C2zRjroMjysRA', x: 'https://x.com/search?q=' + encodeURIComponent('나훈아'), ig: 'https://www.instagram.com/explore/tags/나훈아/' },
+  { name: '박서진', emoji: '💗', cat: 'trot', yt: 'https://www.youtube.com/channel/UCyFY_W_igFW88D83ycjbtXA', x: 'https://x.com/search?q=' + encodeURIComponent('박서진'), ig: 'https://www.instagram.com/explore/tags/박서진/' },
+  { name: '홍진영', emoji: '🍒', cat: 'trot', yt: 'https://www.youtube.com/channel/UCQDS4PykMn66F-KFPDEgi5A', x: 'https://x.com/search?q=' + encodeURIComponent('홍진영'), ig: 'https://www.instagram.com/explore/tags/홍진영/' },
+  { name: '조항조', emoji: '🎙️', cat: 'trot', yt: 'https://www.youtube.com/channel/UCuD9TkhoEA2ITbCwxaRvgDA', x: 'https://x.com/search?q=' + encodeURIComponent('조항조'), ig: 'https://www.instagram.com/explore/tags/조항조/' },
+  { name: '신유', emoji: '🎵', cat: 'trot', yt: 'https://www.youtube.com/channel/UCw9jx0jUXQdYXjuVjTw67HA', x: 'https://x.com/search?q=' + encodeURIComponent('신유 가수'), ig: 'https://www.instagram.com/explore/tags/신유/' },
+  // 아이돌
+  { name: 'BTS', emoji: '💜', cat: 'idol', yt: 'https://www.youtube.com/channel/UCJCAlMsCuld3v96t-9SffdA', x: 'https://x.com/bts_bighit', ig: 'https://www.instagram.com/bts.bighitofficial/' },
+  { name: '블랙핑크', emoji: '🖤', cat: 'idol', yt: 'https://www.youtube.com/channel/UCQi67q4kGdmnJaRzX81uK5g', x: 'https://x.com/BLACKPINK', ig: 'https://www.instagram.com/blackpinkofficial/' },
+  { name: '뉴진스', emoji: '🐰', cat: 'idol', yt: 'https://www.youtube.com/channel/UCMki_UkHb4qSc0qyEcOHHJw', x: 'https://x.com/search?q=' + encodeURIComponent('뉴진스'), ig: 'https://www.instagram.com/newjeans_official/' },
+  { name: '아이브', emoji: '💖', cat: 'idol', yt: 'https://www.youtube.com/channel/UCpQUUKbKD4LIfsMH3Uj7YhQ', x: 'https://x.com/search?q=' + encodeURIComponent('아이브'), ig: 'https://www.instagram.com/ive.official/' },
+  { name: '에스파', emoji: '🚀', cat: 'idol', yt: 'https://www.youtube.com/channel/UC9GtSLeksfK4yuJ_g1lgQbg', x: 'https://x.com/search?q=' + encodeURIComponent('에스파'), ig: 'https://www.instagram.com/aespa_official/' },
+  { name: '트와이스', emoji: '🍭', cat: 'idol', yt: 'https://www.youtube.com/channel/UCzgxx_DM2Dcb9Y1spb9mUJA', x: 'https://x.com/JYPETWICE', ig: 'https://www.instagram.com/twicetagram/' },
+  { name: '세븐틴', emoji: '💎', cat: 'idol', yt: 'https://www.youtube.com/channel/UCfkXDY7vwkcJ8ddFGz8KusA', x: 'https://x.com/search?q=' + encodeURIComponent('세븐틴'), ig: 'https://www.instagram.com/saythename_17/' },
+  { name: '싸이', emoji: '🕶️', cat: 'idol', yt: 'https://www.youtube.com/channel/UCrDkAvwZum-UTjHmzDI2iIw', x: 'https://x.com/search?q=' + encodeURIComponent('싸이'), ig: 'https://www.instagram.com/psy_oppa/' },
+  { name: '엑소', emoji: '🌟', cat: 'idol', yt: 'https://www.youtube.com/channel/UCzCedBCSSltI1TFd3bKyN6g', x: 'https://x.com/search?q=' + encodeURIComponent('엑소'), ig: 'https://www.instagram.com/weareone.exo/' },
+  { name: '르세라핌', emoji: '🔥', cat: 'idol', yt: 'https://www.youtube.com/channel/UCs-QBT4qkj_YiQw1ZntDO3g', x: 'https://x.com/search?q=' + encodeURIComponent('르세라핌'), ig: 'https://www.instagram.com/le_sserafim/' },
+  { name: '아이유', emoji: '🌙', cat: 'idol', yt: 'https://www.youtube.com/channel/UC3SyT4_WLHzN7JmHQwKQZww', x: 'https://x.com/search?q=' + encodeURIComponent('아이유'), ig: 'https://www.instagram.com/dlwlrma/' },
+];
+
+function cardHTML(a) {
+  return `
+  <div class="card">
+    <div class="card-top">
+      <div class="avatar">${a.emoji}</div>
+      <div>
+        <div class="name">${a.name}</div>
+        <div class="cat">${a.cat === 'trot' ? '트로트 가수' : '아이돌 그룹'}</div>
+      </div>
+    </div>
+    <a class="big-btn" href="${a.yt}" target="_blank" rel="noopener">▶ 유튜브 보기 <span class="s">(채널 이동)</span></a>
+    <div class="sns-row">
+      <a class="sns-btn" href="${a.x}" target="_blank" rel="noopener">𝕏 소식</a>
+      <a class="sns-btn" href="${a.ig}" target="_blank" rel="noopener">📷 인스타</a>
+    </div>
+    <div class="latest">
+      <div class="latest-title">🆕 최신 영상</div>
+      <div id="vid-${a.name}" class="loading">불러오는 중...</div>
+    </div>
+  </div>`;
+}
+
+// 가수 카드 렌더
+function render() {
+  const trot = ARTISTS.filter(a => a.cat === 'trot');
+  const idol = ARTISTS.filter(a => a.cat === 'idol');
+  document.getElementById('trot').innerHTML = trot.map(cardHTML).join('');
+  document.getElementById('idol').innerHTML = idol.map(cardHTML).join('');
+}
+
+// 최신 영상 로드 (백엔드 프록시 — 10분 캐시)
+async function loadVideos() {
+  try {
+    const r = await fetch('https://api.pomyjo.com/api/singer/feed');
+    const d = await r.json();
+    const artists = d.artists || {};
+    for (const a of ARTISTS) {
+      const el = document.getElementById('vid-' + a.name);
+      if (!el) continue;
+      const vids = artists[a.name] || [];
+      if (vids.length === 0) {
+        el.className = 'latest-note'; el.textContent = '최근 올라온 영상이 없어요';
+        el.style.color = '#7a7060'; el.style.fontSize = '13px';
+        continue;
+      }
+      el.className = '';
+      el.innerHTML = vids.map(v => `
+        <a class="vid" href="https://www.youtube.com/watch?v=${v.videoId}" target="_blank" rel="noopener">
+          <span class="thumb">▶</span><span class="t">${v.title}</span>
+        </a>`).join('');
+    }
+  } catch (e) {
+    document.querySelectorAll('[id^="vid-"]').forEach(el => {
+      if (el.classList.contains('loading')) { el.className = 'err'; el.textContent = '최신 영상을 불러오지 못했어요'; }
+    });
+  }
+}
+
+render();
+loadVideos();
+</script>
+<script>
+  // 분석 비콘
+  (function(){try{var s=location.hostname.split('.')[0];fetch('https://api.pomyjo.com/api/analytics/pageview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({site:s,path:location.pathname}),keepalive:true});}catch(e){}})();
+</script>
+</body>
+</html>
