@@ -364,6 +364,17 @@
     text-decoration: none; margin-top: 8px;
   }
   .more-link:hover { background: #f0e9dc; }
+
+  .sns-item {
+    display: flex; gap: 10px; align-items: flex-start; padding: 11px 14px;
+    background: #fffdf8; border: 1px solid #e5ded2; border-left: 3px solid #8a6d3b;
+    border-radius: 12px; margin-bottom: 8px; text-decoration: none; color: #2b2620;
+    transition: background 0.15s;
+  }
+  .sns-item:hover { background: #f7f2e9; }
+  .sns-item .snt { flex: 1; font-size: 15px; font-weight: 700; line-height: 1.5; }
+  .sns-item .snd { font-size: 12px; color: #9a9081; margin-top: 3px; }
+  .sns-section { margin-top: 44px; }
 </style>
 </head>
 <body>
@@ -400,6 +411,12 @@
     <h2 class="sec-title">📰 연예인 최신 소식</h2>
     <p class="sec-desc">좋아하는 가수의 오늘 소식 — 자동으로 모아와요</p>
     <div id="newsList"><div class="news-loading">소식을 불러오는 중...</div></div>
+  </section>
+
+  <section class="sns-section">
+    <h2 class="sec-title">🔥 SNS 화제 소식</h2>
+    <p class="sec-desc">가수들의 인스타·트위터·SNS 이야기 — 자동으로 모아와요</p>
+    <div id="snsList"><div class="news-loading">SNS 소식을 불러오는 중...</div></div>
   </section>
 
   <section class="chart">
@@ -680,6 +697,7 @@ function openSingerDetail(name) {
   var songs = HIT_SONGS[name] || [];
   var cmHtml = '<div class="sd-cm-empty">첫 댓글을 남겨보세요! 💬</div>';
   loadComments(name);
+  loadSingerSNS(name);
   var songsHtml = songs.map(function(s, i) {
     return '<div class="sd-song" onclick="playSongSearch(\'' + s + '\',\'' + name + '\')"><span class="n">' + (i + 1) + '</span><span class="t">' + s + '</span><span class="p">▶</span></div>';
   }).join('');
@@ -696,6 +714,7 @@ function openSingerDetail(name) {
     '<a class="gold" href="' + a.ig + '" target="_blank" rel="noopener">📷 인스타</a>' +
     '<a class="gold" href="' + a.fb + '" target="_blank" rel="noopener">📘 페북</a></div>' +
     '<div class="sd-concert"><a href="https://www.google.com/search?q=' + encodeURIComponent(name + ' 콘서트 티켓') + '" target="_blank" rel="noopener">🎟️ ' + name + ' 콘서트·공연 정보 보기 (자동 검색)</a></div>' +
+    '<div class="sd-concert" style="margin-top:14px;"><div style="font-size:14px;font-weight:800;color:#8a6d3b;margin-bottom:8px;">🔥 ' + name + ' SNS 화제</div><div id="sdSns" class="news-loading" style="font-size:13px;">불러오는 중...</div></div>' +
     '<div class="sd-comments">' +
       '<div class="sd-cm-title">💬 팬 댓글</div>' +
       '<div class="sd-cm-input">' +
@@ -800,6 +819,36 @@ function setFont(level) {
 function initFont() {
   var level = parseInt(localStorage.getItem('st_font') || '0');
   setFont(level);
+}
+
+
+async function loadSingerSNS(name) {
+  var el = document.getElementById('sdSns');
+  if (!el) return;
+  try {
+    var r = await fetch('https://api.pomyjo.com/api/singer/sns?name=' + encodeURIComponent(name));
+    var d = await r.json();
+    var items = d.sns || [];
+    if (!items.length) { el.innerHTML = '<div style="font-size:13px;color:#9a9081;">SNS 소식이 아직 없어요</div>'; return; }
+    el.innerHTML = items.slice(0, 3).map(function(s) {
+      return '<a class="sns-item" style="padding:9px 12px;" href="' + s.link + '" target="_blank" rel="noopener">' +
+        '<div><div class="snt" style="font-size:13px;">' + s.title + '</div></div></a>';
+    }).join('');
+  } catch (e) { el.innerHTML = ''; }
+}
+async function loadSNS(name) {
+  var el = document.getElementById('snsList');
+  if (!el) return;
+  try {
+    var r = await fetch('https://api.pomyjo.com/api/singer/sns?name=' + encodeURIComponent(name));
+    var d = await r.json();
+    var items = d.sns || [];
+    if (!items.length) { el.innerHTML = '<div class="news-loading">SNS 소식이 아직 없어요</div>'; return; }
+    el.innerHTML = items.map(function(s) {
+      return '<a class="sns-item" href="' + s.link + '" target="_blank" rel="noopener">' +
+        '<div><div class="snt">' + s.title + '</div><div class="snd">' + s.date + '</div></div></a>';
+    }).join('');
+  } catch (e) { el.innerHTML = '<div class="news-loading">SNS 소식을 불러오지 못했어요</div>'; }
 }
 
 async function loadVideos() {
@@ -1012,6 +1061,7 @@ renderSingers();
 loadChart();
 loadSchedule();
 loadNews();
+loadSNS("임영웅");
 loadPlaylists();
 renderStamps();
 showQuiz();
