@@ -838,6 +838,7 @@ function setVidFilter(name, kind) {
     el.innerHTML = '<div style="font-size:13px;color:#9a9081;padding:6px;">이 종류가 아직 없어요 — <a href="https://www.youtube.com/results?search_query=' + encodeURIComponent(name + ' ' + kq) + '" target="_blank" style="color:#8a6d3b;font-weight:800;">유튜브에서 ' + kq + ' 보기 →</a></div>';
     return;
   }
+  el.className = '';
   el.innerHTML = list.slice(0, 5).map(function(v) {
     var k = v.kind || 'other';
     var label = { live: '🎤 무대', mv: '🎥 뮤비', shorts: '🎬 쇼츠', interview: '🎙️ 인터뷰', behind: '📹 비하인드', other: '🎵 영상' }[k] || '🎵 영상';
@@ -928,6 +929,7 @@ async function loadVideos() {
       if (!el) return;
       var vids = artists[a.name] || [];
       if (vids.length === 0) { el.style.color = '#7a7060'; el.style.fontSize = '13px'; el.textContent = '최근 올라온 영상이 없어요'; return; }
+      el.className = '';
       el.innerHTML = vids.slice(0, 5).map(function(v) {
         var k = v.kind || 'other';
         var label = { live: '🎤 무대', mv: '🎥 뮤비', shorts: '🎬 쇼츠', interview: '🎙️ 인터뷰', behind: '📹 비하인드', other: '🎵 영상' }[k] || '🎵 영상';
