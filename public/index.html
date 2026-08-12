@@ -561,12 +561,12 @@
     .cm-form input{ width:100%; }
     #cmName{ width:100%; }
   }
-  /* 가++ 배율 (--fs:1.45) 에서도 appbar가 깨지지 않도록 */
+  /* 가++ 배율 (--fs:1.45) 에서도 appbar가 깨지지 않도록 — rem이라 배율 자동 반영 */
   @media (max-width:480px){
     .fs-btn{ min-width:38px; height:38px; padding:0 6px; }
     .tabbar{ gap:.15rem; }
-    .tab-btn{ font-size:clamp(11px,3.2vw,15px); }
-    .tab-btn .ic{ font-size:clamp(13px,3.8vw,17px); }
+    .tab-btn{ font-size:clamp(0.66rem, 3.2vw, 1.05rem); }
+    .tab-btn .ic{ font-size:clamp(0.8rem, 3.8vw, 1.05rem); }
   }
   @media (prefers-reduced-motion:reduce){
     *{ animation:none !important; transition:none !important; }
