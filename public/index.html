@@ -37,7 +37,19 @@
   }
   *{ box-sizing:border-box; margin:0; padding:0; }
   [hidden]{ display:none !important; }
-  html{ font-size: calc(18px * var(--fs)); -webkit-text-size-adjust:100%; }
+  
+/* 다크 모드 */
+html[data-theme="dark"]{
+  --bg:#1c1917; --card:#262220; --ink:#f0ebe3; --muted:#c4b9a6; --wash:#33302c;
+  --line:#3a352f; --faint:#9a9080; --gold:#c9a86a;
+}
+html[data-theme="dark"] body{ background:var(--bg); color:var(--ink); }
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .player,
+html[data-theme="dark"] .sd-box,
+html[data-theme="dark"] .modal{ background:var(--card); }
+
+html{ font-size: calc(18px * var(--fs)); -webkit-text-size-adjust:100%; }
   body{
     font-family:'Noto Sans KR', sans-serif; background:var(--cream); color:var(--ink);
     font-size:1rem; line-height:1.8; overflow-x:hidden;
@@ -616,6 +628,7 @@
   <div class="appbar-in">
     <div class="brand"><span class="dot" aria-hidden="true"></span>최애광장</div>
     <div class="fontsize" role="group" aria-label="글자 크기 조절">
+      <button type="button" class="fs-btn" data-act="theme" id="themeBtn" aria-label="다크 모드" style="padding:8px 10px;background:transparent;border:1px solid var(--line,#ddd);border-radius:999px;font-size:14px;cursor:pointer;margin-left:6px;">🌙</button>
       <button type="button" class="fs-btn" data-act="drive" aria-label="내 저장소" style="padding:8px 12px;background:var(--gold,#8a6d3b);color:#fff;border-radius:999px;font-size:13px;font-weight:800;border:0;cursor:pointer;margin-left:6px;">💾 내 저장소</button>
       <span class="lbl">글자 크기</span>
       <button type="button" class="fs-btn" data-act="font" data-level="0" aria-pressed="true" aria-label="글자 크기 보통">가</button>
@@ -710,9 +723,10 @@
     <section>
       <h2 class="sec-title">연예 소식</h2>
       <p class="sec-desc">인기 가수의 오늘 소식을 자동으로 모아왔어요.</p>
-      <div class="seg" role="group" aria-label="소식 종류">
+      <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-bottom:.6rem;">
         <button type="button" class="seg-btn" data-act="news-tab" data-which="news" aria-pressed="true">뉴스</button>
         <button type="button" class="seg-btn" data-act="news-tab" data-which="sns" aria-pressed="false">오늘의 화제</button>
+        <button type="button" class="btn" data-act="news-tts" style="padding:.35rem .7rem;font-size:.85rem;">🔊 읽어주기</button>
       </div>
       <div class="rule"></div>
       <div id="newsBody"><p class="empty">소식을 불러오는 중...</p></div>
@@ -898,6 +912,54 @@ function checkDriveLogin() {
     toast('🔑 구글 로그인 완료! 이제 💾 버튼으로 저장하세요');
     openDrive();
   }
+}
+
+
+function toggleTheme() {
+  var html = document.documentElement;
+  var dark = html.getAttribute('data-theme') === 'dark';
+  if (dark) { html.removeAttribute('data-theme'); localStorage.setItem('st_theme', 'light'); $('themeBtn').textContent = '🌙'; }
+  else { html.setAttribute('data-theme', 'dark'); localStorage.setItem('st_theme', 'dark'); $('themeBtn').textContent = '☀️'; }
+}
+function initTheme() {
+  var t = localStorage.getItem('st_theme');
+  if (t === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); var b = $('themeBtn'); if (b) b.textContent = '☀️'; }
+}
+
+// ===== 📱 홈 화면 설치 안내 =====
+var installPrompt = null;
+window.addEventListener('beforeinstallprompt', function (e) {
+  e.preventDefault();
+  installPrompt = e;
+  var bar = document.getElementById('installBar');
+  if (bar) bar.hidden = false;
+});
+function installApp() {
+  if (!installPrompt) { toast('메뉴에서 "홈 화면에 추가"를 선택하세요'); return; }
+  installPrompt.prompt();
+  installPrompt.userChoice.then(function () {
+    installPrompt = null;
+    var bar = document.getElementById('installBar');
+    if (bar) bar.hidden = true;
+  });
+}
+
+// ===== 🔊 뉴스 읽어주기 (TTS) =====
+var ttsOn = false;
+function toggleNewsTTS() {
+  if (!('speechSynthesis' in window)) { toast('이 브라우저는 읽어주기를 지원하지 않아요'); return; }
+  if (ttsOn) { speechSynthesis.cancel(); ttsOn = false; toast('🔇 읽어주기를 멈췄어요'); return; }
+  var box = $('newsModal') || document.body;
+  var text = box.innerText.replace(/\s+/g, ' ').slice(0, 800);
+  if (!text) return;
+  speechSynthesis.cancel();
+  var u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ko-KR';
+  u.rate = 0.9;
+  u.onend = function () { ttsOn = false; };
+  speechSynthesis.speak(u);
+  ttsOn = true;
+  toast('🔊 소식을 읽어드릴게요');
 }
 
 /* =====================================================================
@@ -1917,6 +1979,7 @@ function handleAction(el, e) {
     case 'open-singer-news': openSingerDetail(name); openSingerNews(); break;
     case 'close-drive': $('driveModal').hidden = true; break;
     case 'google-login': googleLogin(); break;
+    case 'theme': toggleTheme(); break;
     case 'drive': openDrive(); break;
     case 'drive-save-all': saveDrive(); break;
     case 'drive-logout': driveUser = ''; localStorage.removeItem('st_drive_user'); openDrive(); break;
@@ -1932,6 +1995,9 @@ case 'close-singer': closeSingerModal(); break;
     case 'drive-fav': driveToggleFavorite(el.dataset.name); break;
     case 'follow': toggleFollow(name); break;
     case 'send-comment': sendComment(name); break;
+    case 'install-app': installApp(); break;
+    case 'install-close': $('installBar').hidden = true; break;
+    case 'news-tts': toggleNewsTTS(); break;
     case 'news-tab': setNewsTab(el.dataset.which); break;
     case 'save-article': driveSaveItem('articles', el.dataset.title); break;
     case 'open-news': openNewsModal(el.dataset.kind, i); break;
@@ -1987,6 +2053,7 @@ document.addEventListener('keydown', function (e) {
    초기화
    ===================================================================== */
 setFont(parseInt(store('st_font', '0'), 10) || 0);
+initTheme();
 checkDriveLogin();
 renderSingers();
 renderCollage();
