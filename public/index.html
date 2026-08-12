@@ -1393,6 +1393,9 @@ function openSingerDetail(name) {
     '</div>' +
     '<a class="link-line" style="margin-top:.5rem;" href="https://www.google.com/search?q=' + encodeURIComponent(name + ' 콘서트 티켓') + '" target="_blank" rel="noopener">🎟️ ' + esc(name) + ' 콘서트·공연 정보 찾기</a>' +
 
+    '<p class="md-sub">💬 유튜브 인기 팬 댓글</p>' +
+    '<div class="cm-list" id="ytCmList" style="margin-bottom:.8rem;"><p class="empty">댓글을 불러오는 중...</p></div>' +
+
     '<p class="md-sub">팬 댓글</p>' +
     '<div class="cm-form">' +
       '<label class="skip" for="cmName">이름</label><input id="cmName" placeholder="이름" maxlength="10">' +
@@ -1406,6 +1409,7 @@ function openSingerDetail(name) {
   renderVidList();
   loadSingerSNS(name);
   loadComments(name);
+  loadYTComments(name);
   var cl = $('singerBox').querySelector('.md-close');
   if (cl) cl.focus();
   /* cmText Enter 키 — 이전 리스너 제거 후 새로 등록 (모달을 여러 번 열어도 누적 안 됨) */
@@ -1681,6 +1685,27 @@ function closeNewsModal() {
 /* =====================================================================
    댓글
    ===================================================================== */
+function loadYTComments(name) {
+  var artists = ARTISTS.filter(function (a) { return a.name === name; });
+  var feed = window.__feed && window.__feed.artists ? window.__feed.artists[name] : null;
+  var first = (feed && feed[0]) || null;
+  if (!first || !first.videoId) { var el = $('ytCmList'); if (el) el.innerHTML = '<p class="empty">최신 영상의 댓글이 없어요.</p>'; return; }
+  fetch('https://api.pomyjo.com/api/singer/yt-comments?videoId=' + encodeURIComponent(first.videoId))
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      var el = $('ytCmList');
+      if (!el) return;
+      if (!d.comments || !d.comments.length) { el.innerHTML = '<p class="empty">아직 댓글이 없어요. 유튜브에서 확인해보세요.</p>'; return; }
+      el.innerHTML = d.comments.map(function (cm) {
+        return '<div class="cm-item" style="padding:.5rem .6rem;border-bottom:1px solid var(--line,#eee);">' +
+          '<span style="font-weight:800;font-size:.85rem;">' + esc(cm.author) + '</span>' +
+          '<span style="font-size:.75rem;color:var(--faint,#999);margin-left:.4rem;">👍 ' + cm.likes + ' · ' + esc(cm.date) + '</span>' +
+          '<p style="font-size:.88rem;line-height:1.5;margin:.2rem 0 0;">' + esc(cm.text) + '</p></div>';
+      }).join('');
+    })
+    .catch(function () { var el = $('ytCmList'); if (el) el.innerHTML = '<p class="empty">댓글을 불러오지 못했어요.</p>'; });
+}
+
 function loadComments(singer) {
   fetch(API + '/comments?singer=' + encodeURIComponent(singer))
     .then(function (r) { return r.json(); })
