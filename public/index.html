@@ -430,13 +430,13 @@
   </section>
 
   <section class="chart">
-    <h2 class="sec-title">🎶 가수튜브 히트곡 차트</h2>
+    <h2 class="sec-title">🎶 추천 명곡 — 오늘의 히트곡</h2>
     <p class="sec-desc">노인분들이 가장 사랑하는 노래 — 누르면 유튜브에서 바로 들어요</p>
     <div class="chart-list" id="chartList"></div>
   </section>
 
   <section class="schedule">
-    <h2 class="sec-title">📺 이번 주 방송 일정</h2>
+    <h2 class="sec-title">📺 이런 방송 어때요</h2>
     <p class="sec-desc">좋아하는 가수가 나오는 TV 프로그램을 확인하세요</p>
     <div id="scheduleList"></div>
   </section>
@@ -914,7 +914,7 @@ function playPlaylist(i) {
 
 // 글자 크기 토글 (노인 UX — localStorage 저장)
 function setFont(level) {
-  var sizes = [1, 1.1, 1.25];
+  var sizes = [1, 1.2, 1.45];
   localStorage.setItem('st_font', level);
   document.body.style.fontSize = (sizes[level] * 100) + '%';
   document.querySelectorAll('.font-btn').forEach(function(b, i) {
@@ -1183,7 +1183,7 @@ async function sendComment(singer) {
   } catch (e) { alert('댓글 등록에 실패했어요. 다시 시도해주세요.'); }
 }
 async function loadNews() {
-  var names = ['임영웅', '영탁', '이찬원', '장민호', '김호중', '정동원', '송가인', '장윤정', '태진아', '설운도', '진성', '나훈아', '박서진', '홍진영', 'BTS', '블랙핑크', '뉴진스', '아이브', '에스파', '트와이스', '세븐틴', '싸이', '엑소', '르세라핌', '아이유'];
+  var names = ['임영웅', '영탁', '이찬원', '장민호', '송가인', 'BTS', '블랙핑크', '뉴진스', '아이브', '아이유'];
   var el = document.getElementById('newsList');
   try {
     var results = await Promise.all(names.map(function(name) {
