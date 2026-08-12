@@ -883,7 +883,7 @@ function setVidFilter(name, kind) {
     var label = { live: '🎤 무대', mv: '🎥 뮤비', shorts: '🎬 쇼츠', interview: '🎙️ 인터뷰', behind: '📹 비하인드', other: '🎵 영상' }[k] || '🎵 영상';
     var q = kind === 'shorts' ? '' : (currentQueue.length ? '' : '');
     return '<a class="vid" href="javascript:void(0)" onclick="playVideo(\'' + v.videoId + '\',\'' + v.title.replace(/\'/g, '') + '\')" title="이 사이트에서 재생">' +
-      '<img class="thumb" src="https://img.youtube.com/vi/' + v.videoId + '/mqdefault.jpg" alt="" loading="lazy" onerror="this.style.display='none'">' +
+      '<img class="thumb" src="https://img.youtube.com/vi/' + v.videoId + '/mqdefault.jpg" alt="" loading="lazy" onerror="this.remove()">' +
       '<span><span class="vid-kind vk-' + k + '">' + label + '</span><span class="t" style="display:block;">' + v.title + '</span></span></a>';
   }).join('');
 }
