@@ -1381,10 +1381,20 @@ function loadNews() {
       .catch(function () { return null; });
   })).then(function (rows) {
     NEWS_ITEMS = rows.filter(Boolean);
-    if (state.newsWhich === 'news') {
-      if (NEWS_ITEMS.length) renderNewsBody();
-      else $('newsBody').innerHTML = '<p class="empty">소식을 불러오지 못했어요. 잠시 후 다시 열어주세요.</p>';
-    }
+    /* 네이버 기사 병합 (임영웅·BTS·뉴진스 등 인기 가수) */
+    return Promise.all(['임영웅', 'BTS', '뉴진스', '아이유'].map(function (name) {
+      return fetch(API + '/naver?name=' + encodeURIComponent(name))
+        .then(function (r) { return r.json(); })
+        .then(function (d) { return (d.news || []).slice(0, 1).map(function (it) { return { title: it.title, link: it.link, date: it.date, singer: name + ' · 네이버' }; }); })
+        .catch(function () { return []; });
+    })).then(function (naverRows) {
+      var naverItems = [].concat.apply([], naverRows);
+      NEWS_ITEMS = naverItems.concat(NEWS_ITEMS);
+      if (state.newsWhich === 'news') {
+        if (NEWS_ITEMS.length) renderNewsBody();
+        else $('newsBody').innerHTML = '<p class="empty">소식을 불러오지 못했어요. 잠시 후 다시 열어주세요.</p>';
+      }
+    });
   });
 }
 function loadSNS(name) {
