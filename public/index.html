@@ -424,8 +424,8 @@
   </section>
 
   <section class="sns-section">
-    <h2 class="sec-title">🔥 SNS 화제 소식</h2>
-    <p class="sec-desc">가수들의 인스타·트위터·SNS 이야기 — 자동으로 모아와요</p>
+    <h2 class="sec-title">🔥 오늘의 화제 소식</h2>
+    <p class="sec-desc">지금 가장 많이 언급되는 가수 이야기 — 언론·SNS에서 자동 수집</p>
     <div id="snsList"><div class="news-loading">SNS 소식을 불러오는 중...</div></div>
   </section>
 
@@ -883,7 +883,7 @@ function setVidFilter(name, kind) {
     var label = { live: '🎤 무대', mv: '🎥 뮤비', shorts: '🎬 쇼츠', interview: '🎙️ 인터뷰', behind: '📹 비하인드', other: '🎵 영상' }[k] || '🎵 영상';
     var q = kind === 'shorts' ? '' : (currentQueue.length ? '' : '');
     return '<a class="vid" href="javascript:void(0)" onclick="playVideo(\'' + v.videoId + '\',\'' + v.title.replace(/\'/g, '') + '\')" title="이 사이트에서 재생">' +
-      '<span class="thumb">▶</span>' +
+      '<img class="thumb" src="https://img.youtube.com/vi/' + v.videoId + '/mqdefault.jpg" alt="" loading="lazy" onerror="this.style.display='none'">' +
       '<span><span class="vid-kind vk-' + k + '">' + label + '</span><span class="t" style="display:block;">' + v.title + '</span></span></a>';
   }).join('');
 }
@@ -1007,7 +1007,7 @@ async function loadVideos() {
         var fn = k === 'shorts' ? 'playShorts' : 'playVideo';
         var arg = k === 'shorts' ? ('\'' + v.videoId + '\',\'' + v.title.replace(/\'/g, '') + '\'') : ('\'' + v.videoId + '\',\'' + v.title.replace(/\'/g, '') + '\'');
         return '<a class="vid" href="javascript:void(0)" onclick="' + fn + '(' + arg + ')" title="이 사이트에서 재생">' +
-          '<span class="thumb">▶</span>' +
+          '<img class="thumb" src="https://img.youtube.com/vi/' + v.videoId + '/mqdefault.jpg" alt="" loading="lazy" onerror="this.style.display=\'none\'">' +
           '<span><span class="vid-kind vk-' + k + '">' + label + '</span><span class="t" style="display:block;">' + v.title + '</span></span></a>';
       }).join('');
     });
