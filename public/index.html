@@ -876,7 +876,9 @@ function driveToggleFavorite(name) {
   var idx = driveData.favorites.indexOf(name);
   if (idx >= 0) { driveData.favorites.splice(idx, 1); toast('💔 최애에서 뺐어요'); }
   else { driveData.favorites.push(name); toast('💛 ' + name + '님을 최애로 저장!'); }
-  saveDrive();
+  localStorage.setItem('st_drive_data', JSON.stringify(driveData));
+  if (driveUser) saveDrive();
+  else toast('💾 최애가 저장됐어요! 구글 로그인하면 영구 보관돼요');
 }
 function driveSaveItem(kind, title) {
   var list = driveData[kind];
