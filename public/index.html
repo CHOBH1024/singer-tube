@@ -1021,7 +1021,7 @@ function cardHTML(a) {
       '<div class="card-id"><span class="avatar" aria-hidden="true">' + a.emoji + '</span>' +
       '<span><span class="name">' + esc(a.name) + '</span><span class="cat" style="display:block;">' + cat + '</span></span></div>' +
       '<div class="card-acts">' +
-        '<a class="btn" href="' + esc(a.yt) + '" target="_blank" rel="noopener" aria-label="' + esc(a.name) + ' 유튜브 채널 열기 (새 창)">📺 유튜브</a>' +
+        '<button type="button" class="btn solid" data-act="open-singer-news" data-name="' + esc(a.name) + '" aria-label="' + esc(a.name) + ' 최신 소식 보기">📰 소식 보기</button>' +
         '<button type="button" class="btn" data-act="open-singer" data-name="' + esc(a.name) + '" aria-label="' + esc(a.name) + ' 노래·소식 더보기">🔍 더보기</button>' +
       '</div>' +
     '</div>' +
@@ -1327,6 +1327,21 @@ function openFullscreen() {
   }
 }
 
+/* 소식 보기 — 상세 모달을 열고 소식 영역으로 이동 */
+function openSingerNews() {
+  setTimeout(function () {
+    var box = $('singerBox');
+    if (!box) return;
+    var newsSec = box.querySelector('[class*="news"], [class*="sns"]');
+    if (newsSec) newsSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    var hl = box.querySelector('.sec-tag, [class*="news-title"], [class*="sns-title"]');
+    if (hl) {
+      hl.style.boxShadow = '0 0 0 3px rgba(138,109,59,0.35)';
+      setTimeout(function () { if (hl) hl.style.boxShadow = ''; }, 1800);
+    }
+  }, 250);
+}
+
 /* =====================================================================
    소식 (뉴스 · SNS 화제)
    ===================================================================== */
@@ -1616,6 +1631,7 @@ function handleAction(el, e) {
     case 'more-hits': state.hitLimit = HITS.length; renderChart(); break;
     case 'play-singer': playSingerLatest(name); closeSearch(); break;
     case 'open-singer': openSingerDetail(name); break;
+    case 'open-singer-news': openSingerDetail(name); openSingerNews(); break;
     case 'close-singer': closeSingerModal(); break;
     case 'today': playTodaySong(); break;
     case 'play-hit': playHit(i); closeSearch(); break;
