@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>가수튜브 | 트로트·아이돌 가수 유튜브 바로가기 — 최신 영상과 소식</title>
 <meta name="description" content="임영웅, 영탁, 이찬원, BTS, 블랙핑크 등 인기 트로트·아이돌 가수의 유튜브 채널로 한 번에! 최신 영상, 히트곡 차트, 방송 일정, 가수 퀴즈까지.">
 <meta property="og:title" content="가수튜브 — 가수 유튜브 바로가기">
@@ -11,560 +11,768 @@
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://i.ytimg.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#2b2620">
 <link rel="apple-touch-icon" href="/icon-512.png">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Noto Sans KR', sans-serif; background: #faf7f2; color: #2b2620; line-height: 1.7; }
-  .wrap { max-width: 860px; margin: 0 auto; padding: 0 20px 90px; }
+  /* ===================================================================
+     가수튜브 — Calm Editorial
+     기준 글자 18px, 모든 치수는 rem → 글자 배율(--fs)에 레이아웃 전체가 반응
+     =================================================================== */
+  :root{
+    --fs: 1;
+    --cream:#faf7f2; --paper:#fffdf8; --ink:#2b2620; --ink-2:#4a4237;
+    --muted:#6b6355; --faint:#9a9081;
+    --line:#e5ded2; --line-2:#f0e9dc; --wash:#f7f2e9;
+    --gold:#8a6d3b; --gold-lite:rgba(138,109,59,.10); --gold-pale:#e5c68f;
+    --dark:#2b2620; --darker:#171310;
+    --ok:#15803d; --hot:#b91c1c;
+    --r:1rem; --r-sm:.65rem;
+    --tap:2.6rem;              /* 최소 터치 크기 (44px 이상 보장) */
+    --shadow:0 .6rem 1.6rem rgba(43,38,32,.08);
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  [hidden]{ display:none !important; }
+  html{ font-size: calc(18px * var(--fs)); -webkit-text-size-adjust:100%; }
+  body{
+    font-family:'Noto Sans KR', sans-serif; background:var(--cream); color:var(--ink);
+    font-size:1rem; line-height:1.8; overflow-x:hidden;
+  }
+  img{ max-width:100%; display:block; }
+  button{ font-family:inherit; font-size:inherit; line-height:1.5; color:inherit; }
+  a{ color:inherit; }
+  :focus-visible{ outline:3px solid var(--gold); outline-offset:3px; border-radius:.4rem; }
 
-  /* 헤더 — 히어로 */
-  header {
-    text-align: center; padding: 52px 0 10px; position: relative; overflow: hidden;
+  /* 화면에는 안 보이지만 스크린 리더는 읽는 텍스트 */
+  .skip{
+    position:absolute; width:1px; height:1px; padding:0; overflow:hidden;
+    clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; border:0;
   }
-  header::before {
-    content: ''; position: absolute; top: -120px; left: 50%; transform: translateX(-50%);
-    width: 700px; height: 400px; border-radius: 50%;
-    background: radial-gradient(ellipse, rgba(138,109,59,0.14) 0%, transparent 70%);
-    pointer-events: none;
+  .skip:focus{
+    position:fixed; top:0; left:0; width:auto; height:auto; z-index:200;
+    clip:auto; clip-path:none; background:var(--dark); color:var(--cream);
+    padding:.7rem 1.1rem; border-radius:0 0 .6rem 0; font-weight:800; text-decoration:none;
   }
-  .badge {
-    display: inline-block; font-size: 13px; font-weight: 800; letter-spacing: 3px;
-    color: #8a6d3b; background: rgba(138,109,59,0.08); padding: 7px 18px;
-    border-radius: 999px; margin-bottom: 18px; position: relative;
+
+  .wrap{ max-width:48rem; margin:0 auto; padding:0 1.1rem 3rem; }
+
+  /* ---------- 상단 고정 바 (브랜드 + 글자 크기 + 탭) ---------- */
+  .appbar{
+    position:sticky; top:0; z-index:60; background:rgba(250,247,242,.96);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
   }
-  h1 {
-    font-family: 'Noto Serif KR', serif; font-size: clamp(30px, 5.5vw, 44px); font-weight: 900;
-    letter-spacing: -1px; margin-bottom: 14px; position: relative;
+  .appbar-in{
+    max-width:48rem; margin:0 auto; padding:.5rem 1.1rem;
+    display:flex; align-items:center; gap:.8rem;
   }
-  h1 .acc { color: #8a6d3b; }
-  .sub { font-size: 17px; color: #6b6355; max-width: 560px; margin: 0 auto 12px; position: relative; }
-  .notice {
-    display: inline-block; font-size: 14px; color: #6b6355; background: #f0e9dc;
-    padding: 9px 18px; border-radius: 999px; margin-top: 6px; position: relative;
+  /* 상단 바는 글자 배율과 무관하게 항상 같은 크기 (px 고정) */
+  .brand{
+    font-family:'Noto Serif KR', serif; font-weight:900; font-size:20px; letter-spacing:-.02em;
+    display:flex; align-items:center; gap:7px; white-space:nowrap;
+  }
+  .brand .dot{ width:8px; height:8px; border-radius:50%; background:var(--gold); }
+  .fontsize{ display:flex; align-items:center; gap:5px; margin-left:auto; }
+  .fontsize .lbl{ font-size:13px; font-weight:700; color:var(--muted); margin-right:2px; }
+  .fs-btn{
+    min-width:46px; height:46px; padding:0 10px; border-radius:999px;
+    border:2px solid var(--line); background:var(--paper); font-weight:800; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; transition:border-color .15s, background .15s;
+  }
+  .fs-btn:nth-of-type(1){ font-size:15px; }
+  .fs-btn:nth-of-type(2){ font-size:19px; }
+  .fs-btn:nth-of-type(3){ font-size:23px; }
+  .fs-btn[aria-pressed="true"]{ border-color:var(--gold); background:var(--gold-lite); color:var(--gold); }
+
+  .tabbar{
+    max-width:48rem; margin:0 auto; padding:0 .6rem .45rem;
+    display:grid; grid-template-columns:repeat(4,1fr); gap:.3rem;
+  }
+  .tab-btn{
+    min-height:52px; padding:6px 2px; border:0; background:transparent; cursor:pointer;
+    font-size:min(1rem, 19px); font-weight:800; color:var(--muted); border-radius:.7rem;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px;
+    line-height:1.35; white-space:nowrap;
+    border-bottom:3px solid transparent; transition:color .15s, background .15s;
+  }
+  .tab-btn .ic{ font-size:min(1.05rem, 20px); line-height:1; }
+  .tab-btn:hover{ background:var(--wash); }
+  .tab-btn[aria-selected="true"]{ color:var(--ink); border-bottom-color:var(--gold); }
+
+  /* ---------- 히어로 ---------- */
+  .hero{ padding:1.8rem 0 .4rem; text-align:center; position:relative; }
+  .hero::before{
+    content:''; position:absolute; top:-6rem; left:50%; transform:translateX(-50%);
+    width:min(38rem, 100%); height:20rem; border-radius:50%; pointer-events:none;
+    background:radial-gradient(ellipse, rgba(138,109,59,.13) 0%, transparent 70%);
+  }
+  .badge{
+    display:inline-block; font-size:.68rem; font-weight:800; letter-spacing:.18em; color:var(--gold);
+    background:var(--gold-lite); padding:.35rem 1rem; border-radius:999px; position:relative;
+  }
+  h1{
+    font-family:'Noto Serif KR', serif; font-weight:900; font-size:2.05rem; line-height:1.35;
+    letter-spacing:-.03em; margin:.7rem 0 .5rem; position:relative;
+  }
+  h1 .acc{ color:var(--gold); }
+  .hero .sub{ font-size:.95rem; color:var(--muted); max-width:32rem; margin:0 auto; position:relative; }
+
+  /* 썸네일 콜라주 */
+  .collage{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem;
+    margin:1.2rem 0 0; position:relative;
+  }
+  .col-tile{
+    position:relative; aspect-ratio:16/10; border:0; padding:0; cursor:pointer; overflow:hidden;
+    border-radius:.7rem; background:linear-gradient(140deg,#efe6d5,#ded0b5);
+    box-shadow:var(--shadow);
+  }
+  .col-tile img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .col-tile .ph{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:1.6rem; }
+  .col-tile .veil{ position:absolute; inset:0; background:linear-gradient(to top, rgba(23,19,16,.78), rgba(23,19,16,0) 62%); }
+  .col-tile .nm{
+    position:absolute; left:.45rem; right:.45rem; bottom:.3rem; color:#fff; font-weight:800;
+    font-size:.72rem; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    text-shadow:0 1px 3px rgba(0,0,0,.5);
+  }
+  .col-tile:hover img{ transform:scale(1.04); }
+  .col-tile img{ transition:transform .3s ease; }
+
+  /* 오늘의 노래 */
+  .today{
+    width:100%; margin:1.1rem 0 0; border:0; cursor:pointer; text-align:left;
+    background:linear-gradient(135deg,#2b2620,#4a3f31); color:var(--cream);
+    border-radius:var(--r); padding:.9rem 1rem; display:flex; align-items:center; gap:.8rem;
+    box-shadow:var(--shadow); position:relative; min-height:var(--tap);
+  }
+  .today .gift{ font-size:1.7rem; flex-shrink:0; }
+  .today .tx{ flex:1; min-width:0; }
+  .today .k, .today .v, .today .s{ display:block; }
+  .today .k{ font-size:.68rem; font-weight:800; letter-spacing:.12em; color:var(--gold-pale); }
+  .today .v{ font-size:1.05rem; font-weight:900; line-height:1.4; }
+  .today .s{ font-size:.75rem; color:#c9bda8; }
+  .today .go{
+    background:var(--gold); color:#fff; border-radius:999px; padding:.55rem .9rem;
+    font-size:.8rem; font-weight:800; white-space:nowrap; flex-shrink:0;
   }
 
   /* 검색 */
-  .search-box { max-width: 540px; margin: 24px auto 0; position: relative; }
-  .search-box input {
-    width: 100%; padding: 16px 20px 16px 50px; border-radius: 999px;
-    border: 2px solid #e5ded2; background: #fffdf8; font-size: 17px; color: #2b2620;
-    outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+  .search{ position:relative; margin:1rem auto 0; max-width:32rem; }
+  .search input{
+    width:100%; min-height:var(--tap); padding:.75rem 1rem .75rem 2.6rem; border-radius:999px;
+    border:2px solid var(--line); background:var(--paper); font-size:.95rem; font-family:inherit;
+    color:var(--ink); outline:none; transition:border-color .2s, box-shadow .2s;
   }
-  .search-box input:focus { border-color: #8a6d3b; box-shadow: 0 0 0 4px rgba(138,109,59,0.1); }
-  .search-box .si { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); font-size: 18px; }
-  .search-results {
-    position: absolute; top: 60px; left: 0; right: 0; background: #fffdf8;
-    border: 1px solid #e5ded2; border-radius: 14px; box-shadow: 0 14px 40px rgba(43,38,32,0.16);
-    max-height: 360px; overflow-y: auto; display: none; z-index: 40;
+  .search input:focus{ border-color:var(--gold); box-shadow:0 0 0 4px rgba(138,109,59,.12); }
+  .search .si{ position:absolute; left:1rem; top:50%; transform:translateY(-50%); font-size:1rem; pointer-events:none; }
+  .sr{
+    position:absolute; top:calc(100% + .35rem); left:0; right:0; background:var(--paper);
+    border:1px solid var(--line); border-radius:.9rem; box-shadow:0 .8rem 2rem rgba(43,38,32,.18);
+    max-height:19rem; overflow-y:auto; display:none; z-index:40; text-align:left;
   }
-  .search-results.on { display: block; }
-  .sr-item {
-    display: flex; align-items: center; gap: 10px; padding: 12px 16px; cursor: pointer;
-    border-bottom: 1px solid #f0e9dc; font-size: 15px;
+  .sr.on{ display:block; }
+  .sr-item{
+    display:flex; align-items:center; gap:.6rem; padding:.7rem .9rem; cursor:pointer;
+    border-bottom:1px solid var(--line-2); font-size:.88rem; min-height:var(--tap);
   }
-  .sr-item:hover { background: #f7f2e9; }
-  .sr-item:last-child { border-bottom: none; }
+  .sr-item:last-child{ border-bottom:none; }
+  .sr-item:hover, .sr-item:focus{ background:var(--wash); }
 
-  /* 장르 탭 */
-  .tabs { display: flex; justify-content: center; gap: 8px; margin: 30px 0 6px; flex-wrap: wrap; }
-  .tab {
-    padding: 12px 26px; border-radius: 999px; border: 2px solid #e5ded2; background: #fffdf8;
-    font-size: 16px; font-weight: 800; cursor: pointer; color: #2b2620; transition: all 0.2s;
+  /* ---------- 공통 섹션 ---------- */
+  .panel{ scroll-margin-top:8rem; }
+  .panel > section{ margin-top:2.6rem; }
+  .panel > section:first-child{ margin-top:1.8rem; }
+  .sec-title{
+    font-family:'Noto Serif KR', serif; font-size:1.28rem; font-weight:900; letter-spacing:-.02em;
+    display:flex; align-items:center; gap:.4rem; flex-wrap:wrap;
   }
-  .tab.on { background: #2b2620; color: #faf7f2; border-color: #2b2620; }
-  .tab:hover { border-color: #8a6d3b; }
+  .sec-desc{ font-size:.83rem; color:var(--muted); margin:.15rem 0 1rem; }
+  .rule{ height:1px; background:var(--line); margin:.55rem 0 1rem; }
 
-  section { margin-top: 44px; }
-  .sec-title {
-    font-family: 'Noto Serif KR', serif; font-size: 24px; font-weight: 900;
-    display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
+  .seg{ display:flex; gap:.4rem; flex-wrap:wrap; }
+  .seg-btn{
+    min-height:var(--tap); padding:.4rem 1.2rem; border-radius:999px; border:2px solid var(--line);
+    background:var(--paper); font-size:.9rem; font-weight:800; cursor:pointer; transition:all .18s;
   }
-  .sec-desc { font-size: 15px; color: #6b6355; margin-bottom: 18px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+  .seg-btn:hover{ border-color:var(--gold); }
+  .seg-btn[aria-pressed="true"]{ background:var(--dark); color:var(--cream); border-color:var(--dark); }
 
-  /* 가수 카드 */
-  .card {
-    background: #fffdf8; border: 1px solid #e5ded2; border-radius: 18px; padding: 20px;
-    transition: transform 0.2s, box-shadow 0.2s;
+  .more-btn{
+    display:block; width:100%; margin-top:1rem; min-height:var(--tap); padding:.7rem 1rem;
+    border:2px dashed var(--line); background:transparent; border-radius:var(--r);
+    font-size:.9rem; font-weight:800; color:var(--gold); cursor:pointer; transition:background .15s;
   }
-  .card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(43,38,32,0.1); }
-  .card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; cursor: pointer; }
-  .avatar {
-    width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-size: 28px; background: rgba(138,109,59,0.12); flex-shrink: 0;
-  }
-  .name { font-family: 'Noto Serif KR', serif; font-size: 20px; font-weight: 900; }
-  .cat { font-size: 12px; color: #8a6d3b; font-weight: 700; }
-  .big-btn {
-    display: block; width: 100%; text-align: center; text-decoration: none;
-    padding: 15px 0; border-radius: 12px; font-size: 18px; font-weight: 800;
-    background: #2b2620; color: #faf7f2; margin-bottom: 8px;
-    transition: transform 0.1s, background 0.2s;
-  }
-  .big-btn:hover { background: #3d3830; }
-  .big-btn:active { transform: scale(0.98); }
-  .big-btn .s { font-size: 14px; font-weight: 500; opacity: 0.8; }
-  .play-btn {
-    display: block; width: 100%; text-align: center; text-decoration: none;
-    padding: 12px 0; border-radius: 10px; font-size: 15px; font-weight: 800;
-    background: #8a6d3b; color: #fff; margin-bottom: 8px; cursor: pointer; border: none;
-    transition: background 0.2s;
-  }
-  .play-btn:hover { background: #9a7d4b; }
-  .sns-row { display: flex; gap: 8px; }
-  .sns-btn {
-    flex: 1; display: block; text-align: center; text-decoration: none;
-    padding: 12px 0; border-radius: 10px; font-size: 14px; font-weight: 700;
-    border: 1px solid #e5ded2; color: #2b2620; background: #f7f2e9;
-    transition: background 0.2s;
-  }
-  .sns-btn:hover { background: #f0e9dc; }
-  .latest { margin-top: 14px; border-top: 1px dashed #e5ded2; padding-top: 12px; }
-  .latest-title { font-size: 14px; font-weight: 800; color: #8a6d3b; margin-bottom: 8px; }
-  .vid {
-    display: flex; gap: 8px; align-items: center; text-decoration: none; color: #2b2620;
-    padding: 7px 8px; border-radius: 8px; font-size: 14px; line-height: 1.45;
-    transition: background 0.15s;
-  }
-  .vid:hover { background: #f7f2e9; }
-  .vid .thumb { width: 64px; height: 40px; border-radius: 6px; background: #f0e9dc; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-  .vid .t { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-  .loading, .err { text-align: center; padding: 20px; color: #6b6355; font-size: 15px; }
-  .err { color: #dc2626; }
+  .more-btn:hover{ background:var(--wash); }
 
-  /* 히트곡 차트 */
-  .chart-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .chart-item {
-    display: flex; align-items: center; gap: 12px; padding: 13px 14px;
-    background: #fffdf8; border: 1px solid #e5ded2; border-radius: 14px; cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.15s;
-  }
-  .chart-item:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(43,38,32,0.08); }
-  .chart-rank { font-size: 22px; font-weight: 900; width: 34px; text-align: center; color: #c9bda8; font-family: 'Noto Serif KR', serif; }
-  .chart-item:nth-child(1) .chart-rank, .chart-item:nth-child(2) .chart-rank, .chart-item:nth-child(3) .chart-rank { color: #8a6d3b; }
-  .chart-info { flex: 1; min-width: 0; }
-  .chart-song { font-size: 15px; font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .chart-singer { font-size: 12px; color: #7a7060; }
-  .chart-play { font-size: 18px; color: #8a6d3b; flex-shrink: 0; }
+  .empty{ text-align:center; padding:1.4rem; color:var(--muted); font-size:.85rem; }
 
-  /* 방송 일정 */
-  .schedule-item {
-    display: flex; align-items: center; gap: 14px; padding: 14px 16px;
-    background: #fffdf8; border: 1px solid #e5ded2; border-radius: 14px; margin-bottom: 8px;
+  /* ---------- 가수 카드 ---------- */
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(13.5rem,1fr)); gap:.9rem; }
+  .card{
+    background:var(--paper); border:1px solid var(--line); border-radius:var(--r); overflow:hidden;
+    display:flex; flex-direction:column; transition:transform .2s, box-shadow .2s;
   }
-  .schedule-day {
-    font-size: 13px; font-weight: 800; color: #8a6d3b; width: 44px; text-align: center;
-    background: rgba(138,109,59,0.1); padding: 8px 6px; border-radius: 10px; flex-shrink: 0;
+  .card:hover{ transform:translateY(-3px); box-shadow:0 .8rem 1.8rem rgba(43,38,32,.11); }
+  .cover{
+    position:relative; width:100%; aspect-ratio:16/9; border:0; padding:0; cursor:pointer;
+    background:linear-gradient(140deg,#efe6d5,#ddcfb4); overflow:hidden; display:block;
   }
-  .schedule-info { flex: 1; }
-  .schedule-title { font-size: 16px; font-weight: 800; }
-  .schedule-sub { font-size: 13px; color: #7a7060; }
+  .cover img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform .3s ease; }
+  .cover:hover img{ transform:scale(1.05); }
+  .cover .ph{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:2.4rem; }
+  .cover .veil{ position:absolute; inset:0; background:linear-gradient(to top, rgba(23,19,16,.72), rgba(23,19,16,0) 58%); }
+  .cover .cta{
+    position:absolute; left:.6rem; bottom:.5rem; right:.6rem; color:#fff; font-weight:800; font-size:.82rem;
+    display:flex; align-items:center; gap:.35rem; text-shadow:0 1px 3px rgba(0,0,0,.5);
+  }
+  .cover .cta .pl{
+    width:1.55rem; height:1.55rem; border-radius:50%; background:var(--gold); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-size:.7rem; flex-shrink:0;
+  }
+  .card-body{ padding:.85rem .9rem 1rem; display:flex; flex-direction:column; gap:.7rem; flex:1; }
+  .card-id{ display:flex; align-items:center; gap:.55rem; }
+  .avatar{
+    width:2.1rem; height:2.1rem; border-radius:50%; background:var(--gold-lite); flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:1.05rem;
+  }
+  .name{ font-family:'Noto Serif KR', serif; font-size:1.05rem; font-weight:900; line-height:1.3; }
+  .cat{ font-size:.7rem; color:var(--gold); font-weight:700; }
+  .card-acts{ display:grid; grid-template-columns:1fr 1fr; gap:.45rem; margin-top:auto; }
+  .btn{
+    min-height:var(--tap); display:flex; align-items:center; justify-content:center; gap:.3rem;
+    border-radius:.7rem; font-size:.82rem; font-weight:800; cursor:pointer; text-decoration:none;
+    border:1px solid var(--line); background:var(--wash); color:var(--ink); padding:.5rem .4rem;
+    transition:background .15s, border-color .15s;
+  }
+  .btn:hover{ background:var(--line-2); border-color:var(--gold); }
+  .btn.solid{ background:var(--dark); color:var(--cream); border-color:var(--dark); }
+  .btn.solid:hover{ background:#3d3830; }
+  .btn.gold{ background:var(--gold); color:#fff; border-color:var(--gold); }
+  .btn.gold:hover{ background:#9a7d4b; }
+  .btn.wide{ width:100%; }
 
-  /* 출석 */
-  .attendance {
-    background: linear-gradient(135deg, #f7f2e9, #f0e9dc);
-    border: 1px solid #e5ded2; border-radius: 18px; padding: 24px; text-align: center;
+  /* ---------- 목록형 (차트 / 플레이리스트 / 최근) ---------- */
+  .list{ display:grid; grid-template-columns:repeat(auto-fill, minmax(min(16rem,100%),1fr)); gap:.5rem; }
+  .row{
+    display:flex; align-items:center; gap:.7rem; width:100%; min-width:0; text-align:left; cursor:pointer;
+    background:var(--paper); border:1px solid var(--line); border-radius:.85rem;
+    padding:.6rem .8rem; min-height:var(--tap); transition:transform .15s, box-shadow .15s, background .15s;
   }
-  .attendance h3 { font-family: 'Noto Serif KR', serif; font-size: 22px; margin-bottom: 8px; }
-  .stamps { display: flex; justify-content: center; gap: 8px; margin: 14px 0; }
-  .stamp {
-    width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-size: 20px; background: #fffdf8; border: 2px solid #e5ded2; color: #c9bda8;
+  .row:hover{ transform:translateY(-2px); box-shadow:var(--shadow); }
+  .row .rk{
+    font-family:'Noto Serif KR', serif; font-size:1.15rem; font-weight:900; color:#c9bda8;
+    width:1.8rem; text-align:center; flex-shrink:0;
   }
-  .stamp.on { background: #8a6d3b; border-color: #8a6d3b; color: #fff; animation: pop 0.3s ease; }
-  @keyframes pop { 0% { transform: scale(0.5); } 70% { transform: scale(1.15); } 100% { transform: scale(1); } }
-  .attend-btn {
-    padding: 14px 40px; border-radius: 999px; border: none; cursor: pointer;
-    background: #2b2620; color: #faf7f2; font-size: 18px; font-weight: 800;
-    transition: transform 0.1s;
-  }
-  .attend-btn:active { transform: scale(0.96); }
-  .attend-btn.done { background: #15803d; }
-  .attend-msg { font-size: 14px; color: #6b6355; margin-top: 10px; }
+  .row.top .rk{ color:var(--gold); }
+  .row .info{ flex:1; min-width:0; overflow:hidden; }
+  .row .t1, .row .t2{ display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .row .t1{ font-size:.9rem; font-weight:800; }
+  .row .t2{ font-size:.72rem; color:var(--muted); }
+  .row .go{ font-size:1rem; color:var(--gold); flex-shrink:0; }
 
-  /* 퀴즈 */
-  .quiz { background: #fffdf8; border: 1px solid #e5ded2; border-radius: 18px; padding: 24px; text-align: center; }
-  .quiz h3 { font-family: 'Noto Serif KR', serif; font-size: 22px; margin-bottom: 4px; }
-  .q-sub { font-size: 14px; color: #6b6355; margin-bottom: 16px; }
-  .quiz-q { font-size: 20px; font-weight: 800; margin-bottom: 16px; min-height: 30px; }
-  .quiz-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 420px; margin: 0 auto; }
-  .quiz-opt {
-    padding: 14px 10px; border-radius: 12px; border: 2px solid #e5ded2; background: #f7f2e9;
-    font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.15s;
+  /* ---------- 방송 편성 ---------- */
+  .show{
+    display:flex; align-items:center; gap:.8rem; padding:.7rem .9rem; background:var(--paper);
+    border:1px solid var(--line); border-radius:.85rem; margin-bottom:.5rem;
   }
-  .quiz-opt:hover { border-color: #8a6d3b; background: #f0e9dc; }
-  .quiz-opt.correct { border-color: #15803d; background: rgba(21,128,61,0.12); color: #15803d; }
-  .quiz-opt.wrong { border-color: #dc2626; background: rgba(220,38,38,0.1); color: #dc2626; }
-  .quiz-score { font-size: 15px; color: #8a6d3b; font-weight: 800; margin-top: 14px; }
-  .quiz-next {
-    margin-top: 14px; padding: 10px 28px; border-radius: 999px; border: none; cursor: pointer;
-    background: #2b2620; color: #faf7f2; font-size: 15px; font-weight: 700;
+  .show.today-on{ border-color:var(--gold); background:#fdf9f0; }
+  .show .day{
+    font-size:.75rem; font-weight:800; color:var(--gold); width:2.6rem; flex-shrink:0; text-align:center;
+    background:var(--gold-lite); padding:.4rem .2rem; border-radius:.55rem; line-height:1.3;
+  }
+  .show .st{ font-size:.92rem; font-weight:800; }
+  .show .ss{ font-size:.75rem; color:var(--muted); line-height:1.5; }
+
+  /* ---------- 소식 ---------- */
+  .news-item{
+    display:flex; gap:.7rem; align-items:flex-start; width:100%; text-align:left; cursor:pointer;
+    background:var(--paper); border:1px solid var(--line); border-radius:.85rem;
+    padding:.7rem .9rem; margin-bottom:.5rem; min-height:var(--tap); transition:background .15s;
+  }
+  .news-item:hover{ background:var(--wash); }
+  .news-item.hot{ border-left:3px solid var(--gold); }
+  .news-item .nt{ flex:1; font-size:.88rem; font-weight:700; line-height:1.6; }
+  .news-item .nd{ font-size:.72rem; color:var(--faint); margin-top:.15rem; }
+
+  /* ---------- 출석 ---------- */
+  .attend{
+    background:linear-gradient(135deg,var(--wash),var(--line-2)); border:1px solid var(--line);
+    border-radius:var(--r); padding:1.4rem 1.1rem; text-align:center;
+  }
+  .attend h3, .quiz h3{ font-family:'Noto Serif KR', serif; font-size:1.25rem; font-weight:900; }
+  .card-sub{ font-size:.83rem; color:var(--muted); margin:.3rem 0 .9rem; }
+  .stamps{ display:flex; justify-content:center; gap:.4rem; margin:.8rem 0; flex-wrap:wrap; }
+  .stamp{
+    width:2.5rem; height:2.5rem; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:1rem; font-weight:800; background:var(--paper); border:2px solid var(--line); color:#c9bda8;
+  }
+  .stamp.on{ background:var(--gold); border-color:var(--gold); color:#fff; animation:pop .3s ease; }
+  @keyframes pop{ 0%{transform:scale(.5)} 70%{transform:scale(1.15)} 100%{transform:scale(1)} }
+  .attend-btn{
+    min-height:var(--tap); padding:.6rem 2.2rem; border-radius:999px; border:0; cursor:pointer;
+    background:var(--dark); color:var(--cream); font-size:1rem; font-weight:800;
+  }
+  .attend-btn.done{ background:var(--ok); }
+  .attend-msg{ font-size:.83rem; color:var(--muted); margin-top:.6rem; min-height:1.4rem; }
+
+  /* ---------- 퀴즈 ---------- */
+  .quiz{ background:var(--paper); border:1px solid var(--line); border-radius:var(--r); padding:1.4rem 1.1rem; text-align:center; }
+  .quiz-q{ font-size:1.05rem; font-weight:800; margin-bottom:1rem; line-height:1.6; }
+  .quiz-opts{ display:grid; grid-template-columns:1fr 1fr; gap:.55rem; max-width:26rem; margin:0 auto; }
+  .quiz-opt{
+    min-height:var(--tap); padding:.6rem .5rem; border-radius:.7rem; border:2px solid var(--line);
+    background:var(--wash); font-size:.92rem; font-weight:700; cursor:pointer; transition:all .15s;
+  }
+  .quiz-opt:hover:enabled{ border-color:var(--gold); background:var(--line-2); }
+  .quiz-opt.correct{ border-color:var(--ok); background:rgba(21,128,61,.12); color:var(--ok); }
+  .quiz-opt.wrong{ border-color:var(--hot); background:rgba(185,28,28,.1); color:var(--hot); }
+  .quiz-score{ font-size:.85rem; color:var(--gold); font-weight:800; margin-top:.8rem; min-height:1.4rem; }
+  .quiz-next{
+    margin-top:.6rem; min-height:var(--tap); padding:.5rem 1.6rem; border-radius:999px; border:0;
+    cursor:pointer; background:var(--dark); color:var(--cream); font-size:.9rem; font-weight:800;
   }
 
-  /* 랭킹 */
-  .rank-item {
-    display: flex; align-items: center; gap: 12px; padding: 12px 16px;
-    background: #fffdf8; border: 1px solid #e5ded2; border-radius: 14px; margin-bottom: 8px;
+  /* ---------- 랭킹 ---------- */
+  .rank-item{
+    display:flex; align-items:center; gap:.7rem; padding:.55rem .9rem; background:var(--paper);
+    border:1px solid var(--line); border-radius:.85rem; margin-bottom:.5rem;
   }
-  .rank-num { font-size: 22px; font-weight: 900; width: 36px; text-align: center; color: #8a6d3b; font-family: 'Noto Serif KR', serif; }
-  .rank-item:first-child .rank-num { color: #c9a867; }
-  .rank-like { margin-left: auto; display: flex; align-items: center; gap: 6px; }
-  .rank-like button { background: none; border: none; font-size: 22px; cursor: pointer; transition: transform 0.15s; }
-  .rank-like button:active { transform: scale(1.3); }
-  .rank-like .rc { font-size: 14px; color: #6b6355; font-weight: 700; }
+  .rank-num{ font-family:'Noto Serif KR', serif; font-size:1.15rem; font-weight:900; width:1.7rem; text-align:center; color:var(--gold); }
+  .rank-item:first-child .rank-num{ color:#c9a867; }
+  .rank-name{ font-size:.95rem; font-weight:800; }
+  .rank-like{ margin-left:auto; display:flex; align-items:center; gap:.4rem; }
+  .rank-like .rc{ font-size:.8rem; color:var(--muted); font-weight:700; }
+  .like-btn{
+    width:var(--tap); height:var(--tap); border-radius:50%; border:1px solid var(--line);
+    background:var(--wash); font-size:1.05rem; cursor:pointer; transition:transform .15s, background .15s;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .like-btn:hover{ background:var(--line-2); }
+  .like-btn:active{ transform:scale(1.2); }
 
-  /* 가수 상세 모달 */
-  .singer-detail {
-    position: fixed; inset: 0; z-index: 90; display: none; align-items: center; justify-content: center;
-    background: rgba(23,19,16,0.6); backdrop-filter: blur(4px);
+  /* ---------- 공유 ---------- */
+  .share{
+    margin-top:2.6rem; background:linear-gradient(135deg,#2b2620,#171310); border-radius:var(--r);
+    padding:1.6rem 1.2rem; text-align:center; color:var(--cream);
   }
-  .singer-detail.on { display: flex; }
-  .sd-box {
-    width: 92%; max-width: 480px; max-height: 82vh; overflow-y: auto;
-    background: #fffdf8; border-radius: 20px; padding: 24px; animation: pop2 0.25s ease;
+  .share h3{ font-family:'Noto Serif KR', serif; font-size:1.2rem; font-weight:900; }
+  .share p{ font-size:.83rem; color:#b8ae9c; margin:.3rem 0 1rem; }
+  .share-row{ display:grid; grid-template-columns:repeat(auto-fit, minmax(11rem,1fr)); gap:.5rem; max-width:30rem; margin:0 auto; }
+  .share-btn{
+    min-height:var(--tap); border-radius:999px; border:0; cursor:pointer; font-size:.85rem; font-weight:800;
+    display:flex; align-items:center; justify-content:center; gap:.4rem; padding:.55rem 1rem;
+    transition:filter .2s, transform .12s;
   }
-  @keyframes pop2 { 0% { transform: scale(0.92); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-  .sd-head { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
-  .sd-avatar { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; background: rgba(138,109,59,0.12); }
-  .sd-name { font-family: 'Noto Serif KR', serif; font-size: 22px; font-weight: 900; }
-  .sd-cat { font-size: 13px; color: #8a6d3b; font-weight: 700; }
-  .sd-close { margin-left: auto; background: none; border: none; font-size: 22px; color: #7a7060; cursor: pointer; }
-  .sd-songs { display: flex; flex-direction: column; gap: 6px; }
-  .sd-song {
-    display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px;
-    border: 1px solid #f0e9dc; background: #f7f2e9; cursor: pointer; transition: background 0.15s;
-  }
-  .sd-song:hover { background: #f0e9dc; }
-  .sd-song .n { font-size: 13px; color: #8a6d3b; font-weight: 800; width: 20px; }
-  .sd-song .t { flex: 1; font-size: 15px; font-weight: 700; }
-  .sd-song .p { font-size: 16px; color: #8a6d3b; }
-  .sd-links { display: flex; gap: 8px; margin-top: 16px; }
-  .sd-links a {
-    flex: 1; text-align: center; padding: 12px 0; border-radius: 10px; text-decoration: none;
-    font-size: 14px; font-weight: 800; background: #2b2620; color: #faf7f2;
-  }
-  .sd-links a.gold { background: #8a6d3b; }
+  .share-btn:hover{ filter:brightness(1.08); }
+  .share-btn:active{ transform:scale(.97); }
+  .share-btn.kakao{ background:#FEE500; color:#3c1e1e; }
+  .share-btn.naver{ background:#03C75A; color:#fff; }
+  .share-btn.copy{ background:var(--paper); color:var(--ink); }
+  .share-btn.nat{ background:var(--gold); color:#fff; }
 
-  /* 미니 플레이어 */
-  .player-bar {
-    position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
-    background: #171310; color: #faf7f2; padding: 10px 16px;
-    display: none; align-items: center; gap: 12px;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+  footer{
+    text-align:center; margin-top:2.6rem; padding-top:1.4rem; border-top:1px solid var(--line);
+    font-size:.8rem; color:var(--muted);
   }
-  .player-bar.on { display: flex; }
-  .player-bar iframe { border-radius: 10px; border: none; }
-  .player-bar .pb-full {
-    background: none; border: 1px solid rgba(250,247,242,0.4); color: #faf7f2;
-    font-size: 12px; font-weight: 700; padding: 7px 12px; border-radius: 999px; cursor: pointer;
+  footer a{
+    color:var(--gold); text-decoration:none; font-weight:700;
+    display:inline-flex; align-items:center; min-height:var(--tap); padding:.2rem .4rem;
   }
-  .pb-info { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 0; }
-  .pb-btns { display: flex; gap: 8px; align-items: center; }
-  .player-bar .pb-title { font-size: 15px; font-weight: 700; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .player-bar .pb-close { background: none; border: none; color: #faf7f2; font-size: 20px; cursor: pointer; padding: 4px 8px; }
+  footer a:hover{ text-decoration:underline; }
+  .fine{ margin-top:.5rem; font-size:.75rem; color:var(--faint); }
 
-  /* 공유 배너 */
-  .share-banner {
-    margin-top: 44px; background: linear-gradient(135deg, #2b2620, #171310);
-    border-radius: 18px; padding: 26px; text-align: center; color: #faf7f2;
+  /* ---------- 모달 ---------- */
+  .modal{
+    position:fixed; inset:0; z-index:90; display:flex; align-items:center; justify-content:center;
+    background:rgba(23,19,16,.62); backdrop-filter:blur(4px); padding:1rem;
   }
-  .share-banner h3 { font-family: 'Noto Serif KR', serif; font-size: 21px; margin-bottom: 6px; }
-  .share-banner p { font-size: 14px; color: #b8ae9c; margin-bottom: 16px; }
-  .share-row { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-  .share-btn {
-    padding: 13px 24px; border-radius: 999px; border: none; cursor: pointer;
-    font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 8px;
-    transition: transform 0.12s, filter 0.2s;
+  .modal-box{
+    width:100%; max-width:30rem; max-height:86vh; overflow-y:auto; background:var(--paper);
+    border-radius:1.2rem; padding:1.2rem; animation:pop2 .22s ease;
   }
-  .share-btn:hover { filter: brightness(1.1); }
-  .share-btn:active { transform: scale(0.95); }
-  .share-btn.kakao { background: #FEE500; color: #3c1e1e; }
-  .share-btn.naver { background: #03C75A; color: #fff; }
-  .share-btn.copy { background: #fffdf8; color: #2b2620; }
-  .share-btn.share { background: #8a6d3b; color: #fff; }
+  @keyframes pop2{ 0%{transform:scale(.94); opacity:0} 100%{transform:scale(1); opacity:1} }
+  .md-head{ display:flex; align-items:center; gap:.7rem; margin-bottom:1rem; }
+  .md-avatar{
+    width:3rem; height:3rem; border-radius:50%; background:var(--gold-lite); flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:1.6rem;
+  }
+  .md-name{ font-family:'Noto Serif KR', serif; font-size:1.2rem; font-weight:900; line-height:1.3; }
+  .md-cat{ font-size:.75rem; color:var(--gold); font-weight:700; }
+  .md-close{
+    margin-left:auto; width:var(--tap); height:var(--tap); border-radius:50%; border:1px solid var(--line);
+    background:var(--wash); font-size:1rem; cursor:pointer; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .md-close:hover{ background:var(--line-2); }
+  .md-title{ font-family:'Noto Serif KR', serif; font-size:1.1rem; font-weight:900; }
+  .md-sub{ font-size:.8rem; font-weight:800; color:var(--gold); margin:1.2rem 0 .5rem; }
+  .md-sub:first-of-type{ margin-top:.4rem; }
+  .md-2col{ display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
+  .md-3col{ display:grid; grid-template-columns:repeat(3,1fr); gap:.45rem; }
+  .song{
+    display:flex; align-items:center; gap:.6rem; width:100%; text-align:left; cursor:pointer;
+    padding:.5rem .7rem; border-radius:.6rem; border:1px solid var(--line-2); background:var(--wash);
+    margin-bottom:.35rem; min-height:var(--tap); transition:background .15s;
+  }
+  .song:hover{ background:var(--line-2); }
+  .song .n{ font-size:.75rem; color:var(--gold); font-weight:800; width:1.1rem; flex-shrink:0; }
+  .song .t{ flex:1; font-size:.88rem; font-weight:700; }
+  .song .p{ font-size:.85rem; color:var(--gold); }
+  .follow-btn{
+    padding:.4rem .8rem; min-height:var(--tap); border-radius:999px; border:2px solid var(--gold);
+    background:transparent; color:var(--gold); font-size:.78rem; font-weight:800; cursor:pointer; white-space:nowrap;
+  }
+  .follow-btn.on{ background:var(--gold); color:#fff; }
 
-  footer { text-align: center; margin-top: 48px; padding-top: 24px; border-top: 1px solid #e5ded2; font-size: 14px; color: #7a7060; }
-  footer a { color: #8a6d3b; text-decoration: none; font-weight: 700; }
-
-  @media (max-width: 600px) {
-    .player-bar { flex-wrap: wrap; }
-    .player-bar iframe { width: 100%; height: 200px; }
-    .pb-info { width: 100%; }
-    .grid { grid-template-columns: 1fr; }
-    .chart-list { grid-template-columns: 1fr; }
-    .card { padding: 18px; }
-    .big-btn { font-size: 17px; padding: 14px 0; }
-    .share-row { flex-direction: column; align-items: stretch; }
-    .share-btn { justify-content: center; }
+  /* 영상 목록 */
+  .vfilter{ display:flex; gap:.35rem; flex-wrap:wrap; margin-bottom:.6rem; }
+  .vfilter button{
+    min-height:var(--tap); padding:.25rem .9rem; border-radius:999px; border:1px solid var(--line);
+    background:var(--paper); font-size:.76rem; font-weight:700; cursor:pointer;
   }
+  .vfilter button[aria-pressed="true"]{ background:var(--dark); color:var(--cream); border-color:var(--dark); }
+  .vid{
+    display:flex; gap:.6rem; align-items:center; width:100%; text-align:left; cursor:pointer;
+    padding:.4rem .45rem; border-radius:.6rem; border:0; background:transparent;
+    min-height:var(--tap); transition:background .15s;
+  }
+  .vid:hover{ background:var(--wash); }
+  .vid .thumb{
+    width:5.2rem; aspect-ratio:16/9; border-radius:.4rem; background:var(--line-2); flex-shrink:0;
+    object-fit:cover; height:auto;
+  }
+  .vid .vt{
+    font-size:.82rem; line-height:1.5; overflow:hidden; display:-webkit-box;
+    -webkit-line-clamp:2; -webkit-box-orient:vertical;
+  }
+  .vkind{ display:inline-block; font-size:.62rem; font-weight:800; padding:.05rem .45rem; border-radius:999px; margin-bottom:.15rem; }
+  .vk-live,.vk-shorts{ background:rgba(185,28,28,.12); color:var(--hot); }
+  .vk-mv{ background:var(--gold-lite); color:var(--gold); }
+  .vk-interview{ background:rgba(21,128,61,.12); color:var(--ok); }
+  .vk-behind,.vk-cover,.vk-other{ background:var(--line-2); color:var(--muted); }
+  .link-line{
+    display:flex; align-items:center; justify-content:center; gap:.35rem; width:100%;
+    min-height:var(--tap); padding:.5rem; border-radius:.6rem; background:var(--wash);
+    font-size:.78rem; font-weight:800; color:var(--gold); text-decoration:none; border:1px solid var(--line-2);
+  }
+  .link-line:hover{ background:var(--line-2); }
 
   /* 댓글 */
-  .sd-comments { margin-top: 18px; border-top: 1px solid #f0e9dc; padding-top: 14px; }
-  .sd-cm-title { font-size: 14px; font-weight: 800; color: #8a6d3b; margin-bottom: 10px; }
-  .sd-cm-input { display: flex; gap: 8px; margin-bottom: 10px; }
-  .sd-cm-input input {
-    flex: 1; padding: 11px 14px; border-radius: 10px; border: 2px solid #e5ded2;
-    font-size: 14px; background: #fffdf8; outline: none;
+  .cm-form{ display:flex; gap:.4rem; margin-bottom:.6rem; flex-wrap:wrap; }
+  .cm-form input{
+    min-height:var(--tap); padding:.5rem .7rem; border-radius:.6rem; border:2px solid var(--line);
+    font-size:.85rem; font-family:inherit; background:var(--paper); outline:none; color:var(--ink);
   }
-  .sd-cm-input input:focus { border-color: #8a6d3b; }
-  .sd-cm-send {
-    padding: 11px 18px; border-radius: 10px; border: none; cursor: pointer;
-    background: #2b2620; color: #faf7f2; font-size: 14px; font-weight: 800;
+  .cm-form input:focus{ border-color:var(--gold); }
+  #cmName{ width:6rem; }
+  #cmText{ flex:1; min-width:8rem; }
+  .cm-send{
+    min-height:var(--tap); padding:.5rem 1rem; border-radius:.6rem; border:0; cursor:pointer;
+    background:var(--dark); color:var(--cream); font-size:.82rem; font-weight:800;
   }
-  .sd-cm-list { display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; }
-  .sd-cm-item { background: #f7f2e9; border-radius: 10px; padding: 10px 12px; }
-  .sd-cm-item .who { font-size: 12px; font-weight: 800; color: #8a6d3b; margin-bottom: 2px; }
-  .sd-cm-item .txt { font-size: 14px; }
-  .sd-cm-empty { font-size: 13px; color: #9a9081; text-align: center; padding: 12px; }
+  .cm-list{ display:flex; flex-direction:column; gap:.4rem; max-height:13rem; overflow-y:auto; }
+  .cm-item{ background:var(--wash); border-radius:.6rem; padding:.5rem .7rem; }
+  .cm-item .who{ font-size:.72rem; font-weight:800; color:var(--gold); }
+  .cm-item .txt{ font-size:.85rem; line-height:1.6; }
 
-  /* 뉴스 섹션 */
-  .news { margin-top: 44px; }
-  .news-item {
-    display: flex; gap: 12px; align-items: flex-start; padding: 13px 16px;
-    background: #fffdf8; border: 1px solid #e5ded2; border-radius: 14px; margin-bottom: 8px;
-    text-decoration: none; color: #2b2620; transition: background 0.15s;
+  /* ---------- 미니 플레이어 ---------- */
+  .player{
+    position:fixed; left:0; right:0; bottom:0; z-index:70; background:var(--darker); color:var(--cream);
+    display:flex; align-items:center; gap:.7rem; padding:.55rem .8rem;
+    padding-bottom:calc(.55rem + env(safe-area-inset-bottom));
+    box-shadow:0 -.3rem 1.4rem rgba(0,0,0,.35);
   }
-  .news-item:hover { background: #f7f2e9; }
-  .news-item .nt { flex: 1; font-size: 15px; font-weight: 700; line-height: 1.5; }
-  .news-item .nd { font-size: 12px; color: #9a9081; margin-top: 3px; }
-  .news-loading { text-align: center; color: #7a7060; padding: 20px; }
+  .pv{ width:8.5rem; aspect-ratio:16/9; border-radius:.5rem; overflow:hidden; background:#000; flex-shrink:0; }
+  .pv #pbFrame, .pv iframe{ width:100%; height:100%; border:0; display:block; }
+  .pmeta{ flex:1; min-width:0; display:flex; flex-direction:column; gap:.35rem; }
+  .ptitle{ font-size:.85rem; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .pbtns{ display:flex; gap:.35rem; flex-wrap:wrap; }
+  .pbtn{
+    min-height:var(--tap); background:transparent; border:1px solid rgba(250,247,242,.35); color:var(--cream);
+    font-size:.75rem; font-weight:700; padding:.25rem .8rem; border-radius:999px; cursor:pointer;
+  }
+  .pbtn:hover{ background:rgba(250,247,242,.12); }
+  .pclose{
+    width:var(--tap); height:var(--tap); border-radius:50%; background:transparent; border:0;
+    color:var(--cream); font-size:1.1rem; cursor:pointer; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  /* 재생기가 본문을 가리지 않도록 실제 높이만큼 아래 여백 확보 (JS가 --player-h 갱신) */
+  body.playing .wrap{ padding-bottom:calc(var(--player-h, 8rem) + 1.5rem); }
 
-  /* 콘서트 */
-  .sd-concert { margin-top: 12px; }
-  .sd-concert a {
-    display: flex; align-items: center; gap: 10px; padding: 11px 12px;
-    border-radius: 10px; border: 1px solid rgba(138,109,59,0.3); background: rgba(138,109,59,0.06);
-    text-decoration: none; color: #2b2620; font-size: 14px; font-weight: 700;
-    transition: background 0.15s;
+  .toast{
+    position:fixed; left:50%; bottom:1.5rem; transform:translateX(-50%); z-index:120;
+    background:var(--darker); color:var(--cream); padding:.7rem 1.2rem; border-radius:999px;
+    font-size:.85rem; font-weight:700; box-shadow:0 .6rem 1.6rem rgba(0,0,0,.3);
+    max-width:90vw; text-align:center; animation:pop2 .2s ease;
   }
-  .sd-concert a:hover { background: rgba(138,109,59,0.12); }
+  body.playing .toast{ bottom:8rem; }
 
-  /* 영상 종류 */
-  .vid-kind {
-    display: inline-block; font-size: 10px; font-weight: 800; padding: 2px 7px;
-    border-radius: 999px; margin-bottom: 3px;
+  /* ---------- 모바일 ---------- */
+  @media (max-width:640px){
+    .wrap{ padding:0 .9rem 3rem; }
+    .appbar-in{ padding:.4rem .9rem; }
+    .fontsize .lbl{ display:none; }
+    .brand{ font-size:1rem; }
+    h1{ font-size:1.75rem; }
+    .grid{ grid-template-columns:minmax(0,1fr); }
+    .list{ grid-template-columns:minmax(0,1fr); }
+    .quiz-opts{ grid-template-columns:1fr; }
+    .collage{ grid-template-columns:repeat(2,1fr); }
+    .col-tile:nth-child(n+5){ display:none; }
+    .today{ flex-wrap:wrap; }
+    .today .go{ width:100%; text-align:center; }
+    .md-3col{ grid-template-columns:1fr; }
+    .player{ flex-wrap:wrap; }
+    .pv{ width:6.5rem; }
+    .cm-form input{ width:100%; }
+    #cmName{ width:100%; }
   }
-  .vk-live { background: rgba(220,38,38,0.12); color: #dc2626; }
-  .vk-mv { background: rgba(138,109,59,0.15); color: #8a6d3b; }
-  .vk-shorts { background: rgba(220,38,38,0.12); color: #dc2626; }
-  .vk-interview { background: rgba(21,128,61,0.12); color: #15803d; }
-  .vk-behind { background: rgba(99,102,241,0.12); color: #4f46e5; }
-  .vk-other { background: #f0e9dc; color: #7a7060; }
-  .vid-filter { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
-  .vid-filter button {
-    padding: 6px 12px; border-radius: 999px; border: 1px solid #e5ded2;
-    background: #fffdf8; font-size: 12px; font-weight: 700; cursor: pointer; color: #2b2620;
+  @media (prefers-reduced-motion:reduce){
+    *{ animation:none !important; transition:none !important; }
   }
-  .vid-filter button.on { background: #2b2620; color: #faf7f2; border-color: #2b2620; }
-  .more-link {
-    display: block; text-align: center; padding: 8px; border-radius: 8px;
-    background: #f7f2e9; font-size: 12px; font-weight: 700; color: #8a6d3b;
-    text-decoration: none; margin-top: 8px;
-  }
-  .more-link:hover { background: #f0e9dc; }
-
-  .sns-item {
-    display: flex; gap: 10px; align-items: flex-start; padding: 11px 14px;
-    background: #fffdf8; border: 1px solid #e5ded2; border-left: 3px solid #8a6d3b;
-    border-radius: 12px; margin-bottom: 8px; text-decoration: none; color: #2b2620;
-    transition: background 0.15s;
-  }
-  .sns-item:hover { background: #f7f2e9; }
-  .sns-item .snt { flex: 1; font-size: 15px; font-weight: 700; line-height: 1.5; }
-  .sns-item .snd { font-size: 12px; color: #9a9081; margin-top: 3px; }
-  .sns-section { margin-top: 44px; }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="badge">FOR SENIORS · 큰 글씨로 편하게</div>
-    <h1>가수튜브 <span class="acc">🎵</span></h1>
-    <p class="sub">좋아하는 트로트·아이돌 가수의 <strong>유튜브 채널</strong>로 한 번에!<br>최신 영상·히트곡 차트·방송 일정까지 큰 글씨로</p>
-    <div class="notice">💡 버튼을 누르면 유튜브·트위터·인스타그램 앱 또는 사이트가 열립니다</div>
-  <div style="margin:18px auto 0;max-width:680px;background:linear-gradient(135deg,#2b2620,#4a3f31);border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;" onclick="playTodaySong()">
-    <div style="font-size:34px;">🎁</div>
-    <div style="flex:1;text-align:left;">
-      <div style="color:#e5c68f;font-size:12px;font-weight:800;letter-spacing:1px;">오늘의 노래</div>
-      <div id="todaySongTitle" style="color:#faf7f2;font-size:18px;font-weight:900;margin-top:2px;">불러오는 중...</div>
-      <div id="todaySongSub" style="color:#c9bda8;font-size:13px;">이 사이트에서 바로 들을 수 있어요</div>
+<a class="skip" href="#main">본문 바로가기</a>
+
+<!-- ===== 상단 고정 바 ===== -->
+<header class="appbar">
+  <div class="appbar-in">
+    <div class="brand"><span class="dot" aria-hidden="true"></span>가수튜브</div>
+    <div class="fontsize" role="group" aria-label="글자 크기 조절">
+      <span class="lbl">글자 크기</span>
+      <button type="button" class="fs-btn" data-act="font" data-level="0" aria-pressed="true" aria-label="글자 크기 보통">가</button>
+      <button type="button" class="fs-btn" data-act="font" data-level="1" aria-pressed="false" aria-label="글자 크기 크게">가</button>
+      <button type="button" class="fs-btn" data-act="font" data-level="2" aria-pressed="false" aria-label="글자 크기 아주 크게">가</button>
     </div>
-    <div style="background:#8a6d3b;color:#fff;border-radius:999px;padding:11px 18px;font-size:14px;font-weight:800;white-space:nowrap;">🎵 듣기</div>
   </div>
-    <div style="margin-top:14px;display:flex;justify-content:center;gap:8px;align-items:center;position:relative;">
-      <span style="font-size:14px;color:#6b6355;font-weight:700;">🔠 글자 크기:</span>
-      <button onclick="setFont(0)" class="font-btn" id="fontBtn0" style="padding:8px 14px;border-radius:999px;border:2px solid #e5ded2;background:#fffdf8;font-size:14px;font-weight:800;cursor:pointer;">가</button>
-      <button onclick="setFont(1)" class="font-btn" id="fontBtn1" style="padding:8px 16px;border-radius:999px;border:2px solid #e5ded2;background:#fffdf8;font-size:17px;font-weight:800;cursor:pointer;">가+</button>
-      <button onclick="setFont(2)" class="font-btn" id="fontBtn2" style="padding:8px 18px;border-radius:999px;border:2px solid #e5ded2;background:#fffdf8;font-size:20px;font-weight:800;cursor:pointer;">가++</button>
-    </div>
-    <div class="search-box">
-      <span class="si">🔍</span>
-      <input id="searchInput" placeholder="가수나 노래를 검색해보세요 (예: 임영웅, 어머나)" oninput="doSearch(this.value)" onblur="setTimeout(function(){document.getElementById('searchResults').classList.remove('on')},200)">
-      <div class="search-results" id="searchResults"></div>
-    </div>
-  </header>
+  <nav class="tabbar" role="tablist" aria-label="주요 메뉴">
+    <button type="button" class="tab-btn" role="tab" id="tab-singer" data-act="tab" data-tab="singer" aria-selected="true" aria-controls="panel-singer"><span class="ic" aria-hidden="true">🎤</span>가수</button>
+    <button type="button" class="tab-btn" role="tab" id="tab-music" data-act="tab" data-tab="music" aria-selected="false" aria-controls="panel-music"><span class="ic" aria-hidden="true">🎶</span>음악</button>
+    <button type="button" class="tab-btn" role="tab" id="tab-news" data-act="tab" data-tab="news" aria-selected="false" aria-controls="panel-news"><span class="ic" aria-hidden="true">📰</span>소식</button>
+    <button type="button" class="tab-btn" role="tab" id="tab-play" data-act="tab" data-tab="play" aria-selected="false" aria-controls="panel-play"><span class="ic" aria-hidden="true">🎲</span>놀이터</button>
+  </nav>
+</header>
 
-  <div class="tabs">
-    <button class="tab on" data-tab="all" onclick="setTab('all')">🎶 전체</button>
-    <button class="tab" data-tab="trot" onclick="setTab('trot')">🎤 트로트</button>
-    <button class="tab" data-tab="idol" onclick="setTab('idol')">✨ 아이돌</button>
+<main id="main" class="wrap">
+
+  <!-- ===== 히어로 ===== -->
+  <div class="hero" id="hero">
+    <div id="heroLead">
+      <p class="badge">FOR SENIORS · 큰 글씨로 편하게</p>
+      <h1>좋아하는 가수를<br><span class="acc">한 곳에서</span> 편하게</h1>
+      <p class="sub">트로트·아이돌 인기 가수의 최신 영상과 노래를 이 사이트에서 바로 들어보세요.</p>
+      <div class="collage" id="collage" aria-label="지금 인기 있는 가수 영상"></div>
+    </div>
+
+    <button type="button" class="today" data-act="today" aria-label="오늘의 노래 듣기">
+      <span class="gift" aria-hidden="true">🎁</span>
+      <span class="tx">
+        <span class="k">오늘의 노래</span>
+        <span class="v" id="todayTitle">불러오는 중...</span>
+        <span class="s" id="todaySub">이 사이트에서 바로 들을 수 있어요</span>
+      </span>
+      <span class="go" aria-hidden="true">▶ 듣기</span>
+    </button>
+
+    <div class="search">
+      <span class="si" aria-hidden="true">🔍</span>
+      <label class="skip" for="searchInput">가수·노래 검색</label>
+      <input id="searchInput" type="search" autocomplete="off" role="combobox" aria-expanded="false"
+             aria-controls="searchResults" placeholder="가수나 노래 검색 (예: 임영웅, 어머나)">
+      <div class="sr" id="searchResults" role="listbox" aria-label="검색 결과"></div>
+    </div>
   </div>
 
-  <section id="singerSection">
-    <div class="grid" id="singerGrid"></div>
-  </section>
+  <!-- ===== 1. 가수 ===== -->
+  <div class="panel" id="panel-singer" role="tabpanel" aria-labelledby="tab-singer" tabindex="-1">
+    <section>
+      <h2 class="sec-title">가수 둘러보기</h2>
+      <p class="sec-desc">사진을 누르면 이 사이트에서 최신 영상이 바로 재생돼요.</p>
+      <div class="seg" role="group" aria-label="장르 선택">
+        <button type="button" class="seg-btn" data-act="genre" data-genre="all" aria-pressed="true">전체</button>
+        <button type="button" class="seg-btn" data-act="genre" data-genre="trot" aria-pressed="false">트로트</button>
+        <button type="button" class="seg-btn" data-act="genre" data-genre="idol" aria-pressed="false">아이돌</button>
+      </div>
+      <div class="rule"></div>
+      <div class="grid" id="singerGrid"></div>
+      <button type="button" class="more-btn" id="moreSingers" data-act="more-singers">가수 더 보기</button>
+    </section>
+  </div>
 
-  <section class="news">
-    <h2 class="sec-title">📰 연예인 최신 소식</h2>
-    <p class="sec-desc">좋아하는 가수의 오늘 소식 — 자동으로 모아와요</p>
-    <div id="newsList"><div class="news-loading">소식을 불러오는 중...</div></div>
-  </section>
+  <!-- ===== 2. 음악 ===== -->
+  <div class="panel" id="panel-music" role="tabpanel" aria-labelledby="tab-music" tabindex="-1" hidden>
+    <section>
+      <h2 class="sec-title">추천 명곡</h2>
+      <p class="sec-desc">많이 사랑받는 노래 30곡 — 누르면 바로 들려드려요.</p>
+      <div class="list" id="chartList"></div>
+      <button type="button" class="more-btn" id="moreHits" data-act="more-hits">노래 30곡 모두 보기</button>
+    </section>
 
-  <section class="sns-section">
-    <h2 class="sec-title">🔥 오늘의 화제 소식</h2>
-    <p class="sec-desc">지금 가장 많이 언급되는 가수 이야기 — 언론·SNS에서 자동 수집</p>
-    <div id="snsList"><div class="news-loading">SNS 소식을 불러오는 중...</div></div>
-  </section>
+    <section>
+      <h2 class="sec-title">테마 플레이리스트</h2>
+      <p class="sec-desc">기분에 맞는 노래 모음을 유튜브에서 이어서 들어요.</p>
+      <div class="list" id="playlistList"></div>
+    </section>
 
-  <section class="chart">
-    <h2 class="sec-title">🎶 추천 명곡 — 오늘의 히트곡</h2>
-    <p class="sec-desc">노인분들이 가장 사랑하는 노래 — 누르면 유튜브에서 바로 들어요</p>
-    <div class="chart-list" id="chartList"></div>
-  </section>
+    <section>
+      <h2 class="sec-title">최근 들은 노래</h2>
+      <p class="sec-desc">어제 들었던 노래를 다시 들어보세요.</p>
+      <div class="list" id="recentList"></div>
+    </section>
 
-  <section class="schedule">
-    <h2 class="sec-title">📺 이런 방송 어때요</h2>
-    <p class="sec-desc">좋아하는 가수가 나오는 TV 프로그램을 확인하세요</p>
-    <div id="scheduleList"></div>
-  </section>
+    <section>
+      <h2 class="sec-title">이런 방송 어때요</h2>
+      <p class="sec-desc">좋아하는 가수가 나오는 TV 프로그램이에요.</p>
+      <div id="showList"></div>
+    </section>
+  </div>
 
-  <section class="attendance">
-    <h3>📅 오늘도 출석하셨어요?</h3>
-    <p class="q-sub">매일 출석하고 7일 연속 스탬프를 모아보세요!<br>건강한 두뇌 습관에 좋아요.</p>
-    <div class="stamps" id="stamps"></div>
-    <button class="attend-btn" id="attendBtn" onclick="attend()">오늘 출석하기</button>
-    <div class="attend-msg" id="attendMsg"></div>
-  </section>
+  <!-- ===== 3. 소식 ===== -->
+  <div class="panel" id="panel-news" role="tabpanel" aria-labelledby="tab-news" tabindex="-1" hidden>
+    <section>
+      <h2 class="sec-title">연예 소식</h2>
+      <p class="sec-desc">인기 가수의 오늘 소식을 자동으로 모아왔어요.</p>
+      <div class="seg" role="group" aria-label="소식 종류">
+        <button type="button" class="seg-btn" data-act="news-tab" data-which="news" aria-pressed="true">뉴스</button>
+        <button type="button" class="seg-btn" data-act="news-tab" data-which="sns" aria-pressed="false">오늘의 화제</button>
+      </div>
+      <div class="rule"></div>
+      <div id="newsBody"><p class="empty">소식을 불러오는 중...</p></div>
+    </section>
+  </div>
 
-  <section class="quiz">
-    <h3>🧠 가수 퀴즈 — 두뇌 운동</h3>
-    <p class="q-sub">노래 한 소절 보고 가수를 맞혀보세요. 하루 10문제!</p>
-    <div class="quiz-q" id="quizQ"></div>
-    <div class="quiz-opts" id="quizOpts"></div>
-    <div class="quiz-score" id="quizScore"></div>
-    <button class="quiz-next" id="quizNext" style="display:none;" onclick="nextQuiz()">다음 문제</button>
-  </section>
+  <!-- ===== 4. 놀이터 ===== -->
+  <div class="panel" id="panel-play" role="tabpanel" aria-labelledby="tab-play" tabindex="-1" hidden>
+    <section class="attend">
+      <h3>오늘도 출석하셨어요?</h3>
+      <p class="card-sub">매일 출석하고 7일 연속 스탬프를 모아보세요.<br>건강한 두뇌 습관에 좋아요.</p>
+      <div class="stamps" id="stamps" aria-label="최근 7일 출석 현황"></div>
+      <button type="button" class="attend-btn" id="attendBtn" data-act="attend">오늘 출석하기</button>
+      <p class="attend-msg" id="attendMsg" role="status"></p>
+    </section>
 
-  <section class="rank">
-    <h2 class="sec-title">🏆 사랑받는 가수 <span style="font-size:13px;cursor:pointer;color:#8a6d3b;" onclick="setRankPeriod('week')">[이번 주]</span> <span style="font-size:13px;color:#c9bda8;">|</span> <span style="font-size:13px;cursor:pointer;color:#8a6d3b;" onclick="setRankPeriod('all')">[전체]</span></h2>
-    <p class="sec-desc">하트를 눌러 응원해주세요! (이 기기는 하루 1번)</p>
-    <div id="rankList"></div>
-  </section>
+    <section class="quiz">
+      <h3>가수 퀴즈 — 두뇌 운동</h3>
+      <p class="card-sub">노래 한 소절을 보고 가수를 맞혀보세요. 하루 10문제!</p>
+      <p class="quiz-q" id="quizQ"></p>
+      <div class="quiz-opts" id="quizOpts"></div>
+      <p class="quiz-score" id="quizScore" role="status"></p>
+      <button type="button" class="quiz-next" id="quizNext" data-act="quiz-next" hidden>다음 문제</button>
+    </section>
 
-  <section class="chart" style="margin-top:44px;">
-    <h2 class="sec-title">🕘 최근 들은 노래</h2>
-    <p class="sec-desc">어제 들었던 노래를 다시 들어보세요</p>
-    <div class="chart-list" id="recentList"></div>
-  </section>
+    <section>
+      <h2 class="sec-title">사랑받는 가수</h2>
+      <p class="sec-desc">하트를 눌러 응원해주세요. (이 기기는 하루 1번)</p>
+      <div class="seg" role="group" aria-label="랭킹 기간">
+        <button type="button" class="seg-btn" data-act="rank-period" data-period="week" aria-pressed="true">이번 주</button>
+        <button type="button" class="seg-btn" data-act="rank-period" data-period="all" aria-pressed="false">전체</button>
+      </div>
+      <div class="rule"></div>
+      <div id="rankList"></div>
+    </section>
+  </div>
 
-  <section class="chart">
-    <h2 class="sec-title">📻 테마 플레이리스트</h2>
-    <p class="sec-desc">누르면 유튜브에서 노래가 바로 재생돼요 — 무료 음악 감상</p>
-    <div class="chart-list" id="playlistList"></div>
-  </section>
-
-  <section class="share-banner">
-    <h3>💌 가족·친구에게 알려주세요</h3>
-    <p>부모님이나 할머니·할아버지가 좋아하실 노래가 여기 다 있어요</p>
+  <!-- ===== 공유 ===== -->
+  <section class="share">
+    <h3>가족·친구에게 알려주세요</h3>
+    <p>부모님이나 할머니·할아버지가 좋아하실 노래가 여기 다 있어요.</p>
     <div class="share-row">
-      <button class="share-btn kakao" onclick="shareKakao()">💬 카카오톡으로 보내기</button>
-      <button class="share-btn naver" onclick="shareNaver()">🔵 네이버로 보내기</button>
-      <button class="share-btn copy" onclick="copyLink()">🔗 주소 복사</button>
-      <button class="share-btn share" onclick="shareNative()">📤 다른 앱으로 공유</button>
+      <button type="button" class="share-btn kakao" data-act="share-kakao">카카오톡으로 보내기</button>
+      <button type="button" class="share-btn naver" data-act="share-naver">네이버로 보내기</button>
+      <button type="button" class="share-btn copy" data-act="share-copy">주소 복사</button>
+      <button type="button" class="share-btn nat" data-act="share-native">다른 앱으로 공유</button>
     </div>
   </section>
 
   <footer>
-    <p>🎵 가수튜브 · <a href="https://pomyjo.com">POMYJO</a> · 문의: <a href="mailto:nokira1024@gmail.com">nokira1024@gmail.com</a></p>
-    <p style="margin-top:8px;font-size:13px;">
-      <a href="/privacy.html" style="color:#8a6d3b;font-weight:700;text-decoration:none;">개인정보처리방침</a>
-      <span style="color:#c9bda8;"> · </span>
-      <a href="/terms.html" style="color:#8a6d3b;font-weight:700;text-decoration:none;">이용약관</a>
-      <span style="color:#c9bda8;"> · </span>
-      <a href="mailto:nokira1024@gmail.com?subject=[이메일수집거부]" style="color:#8a6d3b;font-weight:700;text-decoration:none;">이메일 수집 거부</a>
+    <p>가수튜브 · <a href="https://pomyjo.com">POMYJO</a> · 문의 <a href="mailto:nokira1024@gmail.com">nokira1024@gmail.com</a></p>
+    <p>
+      <a href="/privacy.html">개인정보처리방침</a> ·
+      <a href="/terms.html">이용약관</a> ·
+      <a href="mailto:nokira1024@gmail.com?subject=[이메일수집거부]">이메일 수집 거부</a>
     </p>
-    <p style="margin-top:6px; font-size:13px; color:#9a9081;">유튜브·X·인스타그램 영상과 소식은 각 서비스에서 제공됩니다 · 본 사이트는 비공식 팬 편의 사이트입니다</p>
+    <p class="fine">유튜브·X·인스타그램 영상과 소식은 각 서비스에서 제공됩니다 · 본 사이트는 비공식 팬 편의 사이트입니다</p>
   </footer>
+</main>
+
+<!-- ===== 가수 상세 모달 ===== -->
+<div class="modal" id="singerModal" role="dialog" aria-modal="true" aria-labelledby="mdName" hidden>
+  <div class="modal-box" id="singerBox"></div>
 </div>
 
-<!-- 뉴스 읽기 모달 -->
-<div class="modal" id="newsModal" onclick="closeNewsModal()">
-  <div class="sd-box" style="max-width:640px;" onclick="event.stopPropagation()">
-    <div class="sd-head"><div class="sd-title">📰 기사 읽기</div>
-      <button class="sd-close" onclick="closeNewsModal()">✕</button></div>
-    <div id="newsModalBody" style="padding:20px;font-size:15px;line-height:1.8;"></div>
+<!-- ===== 소식 읽기 모달 ===== -->
+<div class="modal" id="newsModal" role="dialog" aria-modal="true" aria-labelledby="newsModalTitle" hidden>
+  <div class="modal-box">
+    <div class="md-head">
+      <span class="md-title" id="newsModalTitle">소식 읽기</span>
+      <button type="button" class="md-close" data-act="close-news" aria-label="닫기">✕</button>
+    </div>
+    <div id="newsModalBody"></div>
   </div>
 </div>
 
-<!-- 가수 상세 모달 -->
-<div class="singer-detail" id="singerModal" onclick="closeSingerModal()">
-  <div class="sd-box" onclick="event.stopPropagation()" id="singerBox"></div>
-</div>
-
-<!-- 미니 플레이어 — 영상 재생 + 연속 재생 -->
-<div class="player-bar" id="playerBar">
-  <div id="pbFrame" style="border-radius:10px;"></div>
-  <div class="pb-info">
-    <div class="pb-title" id="pbTitle"></div>
-    <div class="pb-btns">
-      <button class="pb-full" onclick="playerNext()">⏭ 다음 곡</button>
-      <button class="pb-full" onclick="openFullscreen()">⛶ 전체 화면</button>
-      <button class="pb-full" onclick="window.open('https://www.youtube.com/watch?v=' + currentVideoId, '_blank', 'noopener')">🔗 유튜브</button>
+<!-- ===== 미니 플레이어 ===== -->
+<div class="player" id="playerBar" role="region" aria-label="노래 재생기" hidden>
+  <div class="pv"><div id="pbFrame"></div></div>
+  <div class="pmeta">
+    <div class="ptitle" id="pbTitle"></div>
+    <div class="pbtns">
+      <button type="button" class="pbtn" data-act="p-next">⏭ 다음 곡</button>
+      <button type="button" class="pbtn" data-act="p-full">⛶ 크게 보기</button>
+      <button type="button" class="pbtn" data-act="p-yt">유튜브에서 보기</button>
     </div>
   </div>
-  <button class="pb-close" onclick="closePlayer()">✕</button>
+  <button type="button" class="pclose" data-act="p-close" aria-label="재생 닫기">✕</button>
 </div>
 
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
-// ============ 데이터 ============
-const ARTISTS = [
+/* =====================================================================
+   데이터
+   ===================================================================== */
+var ARTISTS = [
   // 트로트
-  { name: '임영웅', emoji: '🎤', cat: 'trot', yt: 'https://www.youtube.com/channel/UC3WZlO2Zl8NE1yIUgtwUtQw', x: 'https://x.com/search?q=' + encodeURIComponent('임영웅'), ig: 'https://www.instagram.com/explore/tags/임영웅/' , fb: 'https://www.facebook.com/search/top?q=임영웅' },
-  { name: '영탁', emoji: '😎', cat: 'trot', yt: 'https://www.youtube.com/channel/UCjL2bp7EDRIk7rwwEYeofeg', x: 'https://x.com/search?q=' + encodeURIComponent('영탁'), ig: 'https://www.instagram.com/explore/tags/영탁/' , fb: 'https://www.facebook.com/search/top?q=영탁' },
-  { name: '이찬원', emoji: '🌟', cat: 'trot', yt: 'https://www.youtube.com/channel/UC4UnP3v-iaFaLdtKwp84Pmw', x: 'https://x.com/search?q=' + encodeURIComponent('이찬원'), ig: 'https://www.instagram.com/explore/tags/이찬원/' , fb: 'https://www.facebook.com/search/top?q=이찬원' },
-  { name: '장민호', emoji: '🎩', cat: 'trot', yt: 'https://www.youtube.com/channel/UC00wMKeoF72UURd3WO9pZHw', x: 'https://x.com/search?q=' + encodeURIComponent('장민호'), ig: 'https://www.instagram.com/explore/tags/장민호/' , fb: 'https://www.facebook.com/search/top?q=장민호' },
-  { name: '김호중', emoji: '🎼', cat: 'trot', yt: 'https://www.youtube.com/channel/UC73yn5mmJSr3hh9jKe2AdWw', x: 'https://x.com/search?q=' + encodeURIComponent('김호중'), ig: 'https://www.instagram.com/explore/tags/김호중/' , fb: 'https://www.facebook.com/search/top?q=김호중' },
-  { name: '정동원', emoji: '🍀', cat: 'trot', yt: 'https://www.youtube.com/channel/UCrLQ0ovys23H9xBV6U-Sd4A', x: 'https://x.com/search?q=' + encodeURIComponent('정동원'), ig: 'https://www.instagram.com/explore/tags/정동원/' , fb: 'https://www.facebook.com/search/top?q=정동원' },
-  { name: '송가인', emoji: '🌸', cat: 'trot', yt: 'https://www.youtube.com/channel/UCJ-8qxJb6_YCLIS1Fwb0aZw', x: 'https://x.com/search?q=' + encodeURIComponent('송가인'), ig: 'https://www.instagram.com/explore/tags/송가인/' , fb: 'https://www.facebook.com/search/top?q=송가인' },
-  { name: '장윤정', emoji: '💃', cat: 'trot', yt: 'https://www.youtube.com/channel/UCcRLbgAux_pU8iGh112MSMg', x: 'https://x.com/search?q=' + encodeURIComponent('장윤정'), ig: 'https://www.instagram.com/explore/tags/장윤정/' , fb: 'https://www.facebook.com/search/top?q=장윤정' },
-  { name: '태진아', emoji: '🎸', cat: 'trot', yt: 'https://www.youtube.com/channel/UColyKaHN53uondb6PGrZsrA', x: 'https://x.com/search?q=' + encodeURIComponent('태진아'), ig: 'https://www.instagram.com/explore/tags/태진아/' , fb: 'https://www.facebook.com/search/top?q=태진아' },
-  { name: '설운도', emoji: '🤠', cat: 'trot', yt: 'https://www.youtube.com/channel/UCJV68FS4MQE9C5pc4co3vCw', x: 'https://x.com/search?q=' + encodeURIComponent('설운도'), ig: 'https://www.instagram.com/explore/tags/설운도/' , fb: 'https://www.facebook.com/search/top?q=설운도' },
-  { name: '진성', emoji: '🎻', cat: 'trot', yt: 'https://www.youtube.com/channel/UCg60mxpvfizWGCaP1R13JMg', x: 'https://x.com/search?q=' + encodeURIComponent('진성 가수'), ig: 'https://www.instagram.com/explore/tags/진성/' , fb: 'https://www.facebook.com/search/top?q=진성' },
-  { name: '나훈아', emoji: '👑', cat: 'trot', yt: 'https://www.youtube.com/channel/UCej9znwYQ2C2zRjroMjysRA', x: 'https://x.com/search?q=' + encodeURIComponent('나훈아'), ig: 'https://www.instagram.com/explore/tags/나훈아/' , fb: 'https://www.facebook.com/search/top?q=나훈아' },
-  { name: '박서진', emoji: '💗', cat: 'trot', yt: 'https://www.youtube.com/channel/UCyFY_W_igFW88D83ycjbtXA', x: 'https://x.com/search?q=' + encodeURIComponent('박서진'), ig: 'https://www.instagram.com/explore/tags/박서진/' , fb: 'https://www.facebook.com/search/top?q=박서진' },
-  { name: '홍진영', emoji: '🍒', cat: 'trot', yt: 'https://www.youtube.com/channel/UCQDS4PykMn66F-KFPDEgi5A', x: 'https://x.com/search?q=' + encodeURIComponent('홍진영'), ig: 'https://www.instagram.com/explore/tags/홍진영/' , fb: 'https://www.facebook.com/search/top?q=홍진영' },
-  { name: '조항조', emoji: '🎙️', cat: 'trot', yt: 'https://www.youtube.com/channel/UCuD9TkhoEA2ITbCwxaRvgDA', x: 'https://x.com/search?q=' + encodeURIComponent('조항조'), ig: 'https://www.instagram.com/explore/tags/조항조/' , fb: 'https://www.facebook.com/search/top?q=조항조' },
-  { name: '신유', emoji: '🎵', cat: 'trot', yt: 'https://www.youtube.com/channel/UCw9jx0jUXQdYXjuVjTw67HA', x: 'https://x.com/search?q=' + encodeURIComponent('신유 가수'), ig: 'https://www.instagram.com/explore/tags/신유/' , fb: 'https://www.facebook.com/search/top?q=신유' },
+  { name: '임영웅', emoji: '🎤', cat: 'trot', yt: 'https://www.youtube.com/channel/UC3WZlO2Zl8NE1yIUgtwUtQw' },
+  { name: '영탁', emoji: '😎', cat: 'trot', yt: 'https://www.youtube.com/channel/UCjL2bp7EDRIk7rwwEYeofeg' },
+  { name: '이찬원', emoji: '🌟', cat: 'trot', yt: 'https://www.youtube.com/channel/UC4UnP3v-iaFaLdtKwp84Pmw' },
+  { name: '장민호', emoji: '🎩', cat: 'trot', yt: 'https://www.youtube.com/channel/UC00wMKeoF72UURd3WO9pZHw' },
+  { name: '김호중', emoji: '🎼', cat: 'trot', yt: 'https://www.youtube.com/channel/UC73yn5mmJSr3hh9jKe2AdWw' },
+  { name: '정동원', emoji: '🍀', cat: 'trot', yt: 'https://www.youtube.com/channel/UCrLQ0ovys23H9xBV6U-Sd4A' },
+  { name: '송가인', emoji: '🌸', cat: 'trot', yt: 'https://www.youtube.com/channel/UCJ-8qxJb6_YCLIS1Fwb0aZw' },
+  { name: '장윤정', emoji: '💃', cat: 'trot', yt: 'https://www.youtube.com/channel/UCcRLbgAux_pU8iGh112MSMg' },
+  { name: '태진아', emoji: '🎸', cat: 'trot', yt: 'https://www.youtube.com/channel/UColyKaHN53uondb6PGrZsrA' },
+  { name: '설운도', emoji: '🤠', cat: 'trot', yt: 'https://www.youtube.com/channel/UCJV68FS4MQE9C5pc4co3vCw' },
+  { name: '진성', emoji: '🎻', cat: 'trot', yt: 'https://www.youtube.com/channel/UCg60mxpvfizWGCaP1R13JMg', q: '진성 가수' },
+  { name: '나훈아', emoji: '👑', cat: 'trot', yt: 'https://www.youtube.com/channel/UCej9znwYQ2C2zRjroMjysRA' },
+  { name: '박서진', emoji: '💗', cat: 'trot', yt: 'https://www.youtube.com/channel/UCyFY_W_igFW88D83ycjbtXA' },
+  { name: '홍진영', emoji: '🍒', cat: 'trot', yt: 'https://www.youtube.com/channel/UCQDS4PykMn66F-KFPDEgi5A' },
+  { name: '조항조', emoji: '🎙️', cat: 'trot', yt: 'https://www.youtube.com/channel/UCuD9TkhoEA2ITbCwxaRvgDA' },
+  { name: '신유', emoji: '🎵', cat: 'trot', yt: 'https://www.youtube.com/channel/UCw9jx0jUXQdYXjuVjTw67HA', q: '신유 가수' },
   // 아이돌
-  { name: 'BTS', emoji: '💜', cat: 'idol', yt: 'https://www.youtube.com/channel/UCJCAlMsCuld3v96t-9SffdA', x: 'https://x.com/bts_bighit', ig: 'https://www.instagram.com/bts.bighitofficial/', fb: 'https://www.facebook.com/search/top?q=BTS' },
-  { name: '블랙핑크', emoji: '🖤', cat: 'idol', yt: 'https://www.youtube.com/channel/UCQi67q4kGdmnJaRzX81uK5g', x: 'https://x.com/BLACKPINK', ig: 'https://www.instagram.com/blackpinkofficial/', fb: 'https://www.facebook.com/search/top?q=블랙핑크' },
-  { name: '뉴진스', emoji: '🐰', cat: 'idol', yt: 'https://www.youtube.com/channel/UCMki_UkHb4qSc0qyEcOHHJw', x: 'https://x.com/search?q=' + encodeURIComponent('뉴진스'), ig: 'https://www.instagram.com/newjeans_official/' , fb: 'https://www.facebook.com/search/top?q=뉴진스' },
-  { name: '아이브', emoji: '💖', cat: 'idol', yt: 'https://www.youtube.com/channel/UCpQUUKbKD4LIfsMH3Uj7YhQ', x: 'https://x.com/search?q=' + encodeURIComponent('아이브'), ig: 'https://www.instagram.com/ive.official/' , fb: 'https://www.facebook.com/search/top?q=아이브' },
-  { name: '에스파', emoji: '🚀', cat: 'idol', yt: 'https://www.youtube.com/channel/UC9GtSLeksfK4yuJ_g1lgQbg', x: 'https://x.com/search?q=' + encodeURIComponent('에스파'), ig: 'https://www.instagram.com/aespa_official/' , fb: 'https://www.facebook.com/search/top?q=에스파' },
-  { name: '트와이스', emoji: '🍭', cat: 'idol', yt: 'https://www.youtube.com/channel/UCzgxx_DM2Dcb9Y1spb9mUJA', x: 'https://x.com/JYPETWICE', ig: 'https://www.instagram.com/twicetagram/', fb: 'https://www.facebook.com/search/top?q=트와이스' },
-  { name: '세븐틴', emoji: '💎', cat: 'idol', yt: 'https://www.youtube.com/channel/UCfkXDY7vwkcJ8ddFGz8KusA', x: 'https://x.com/search?q=' + encodeURIComponent('세븐틴'), ig: 'https://www.instagram.com/saythename_17/' , fb: 'https://www.facebook.com/search/top?q=세븐틴' },
-  { name: '싸이', emoji: '🕶️', cat: 'idol', yt: 'https://www.youtube.com/channel/UCrDkAvwZum-UTjHmzDI2iIw', x: 'https://x.com/search?q=' + encodeURIComponent('싸이'), ig: 'https://www.instagram.com/psy_oppa/' , fb: 'https://www.facebook.com/search/top?q=싸이' },
-  { name: '엑소', emoji: '🌟', cat: 'idol', yt: 'https://www.youtube.com/channel/UCzCedBCSSltI1TFd3bKyN6g', x: 'https://x.com/search?q=' + encodeURIComponent('엑소'), ig: 'https://www.instagram.com/weareone.exo/' , fb: 'https://www.facebook.com/search/top?q=엑소' },
-  { name: '르세라핌', emoji: '🔥', cat: 'idol', yt: 'https://www.youtube.com/channel/UCs-QBT4qkj_YiQw1ZntDO3g', x: 'https://x.com/search?q=' + encodeURIComponent('르세라핌'), ig: 'https://www.instagram.com/le_sserafim/' , fb: 'https://www.facebook.com/search/top?q=르세라핌' },
-  { name: '아이유', emoji: '🌙', cat: 'idol', yt: 'https://www.youtube.com/channel/UC3SyT4_WLHzN7JmHQwKQZww', x: 'https://x.com/search?q=' + encodeURIComponent('아이유'), ig: 'https://www.instagram.com/dlwlrma/' , fb: 'https://www.facebook.com/search/top?q=아이유' },
+  { name: 'BTS', emoji: '💜', cat: 'idol', yt: 'https://www.youtube.com/channel/UCJCAlMsCuld3v96t-9SffdA', x: 'https://x.com/bts_bighit', ig: 'https://www.instagram.com/bts.bighitofficial/' },
+  { name: '블랙핑크', emoji: '🖤', cat: 'idol', yt: 'https://www.youtube.com/channel/UCQi67q4kGdmnJaRzX81uK5g', x: 'https://x.com/BLACKPINK', ig: 'https://www.instagram.com/blackpinkofficial/' },
+  { name: '뉴진스', emoji: '🐰', cat: 'idol', yt: 'https://www.youtube.com/channel/UCMki_UkHb4qSc0qyEcOHHJw', ig: 'https://www.instagram.com/newjeans_official/' },
+  { name: '아이브', emoji: '💖', cat: 'idol', yt: 'https://www.youtube.com/channel/UCpQUUKbKD4LIfsMH3Uj7YhQ', ig: 'https://www.instagram.com/ive.official/' },
+  { name: '에스파', emoji: '🚀', cat: 'idol', yt: 'https://www.youtube.com/channel/UC9GtSLeksfK4yuJ_g1lgQbg', ig: 'https://www.instagram.com/aespa_official/' },
+  { name: '트와이스', emoji: '🍭', cat: 'idol', yt: 'https://www.youtube.com/channel/UCzgxx_DM2Dcb9Y1spb9mUJA', x: 'https://x.com/JYPETWICE', ig: 'https://www.instagram.com/twicetagram/' },
+  { name: '세븐틴', emoji: '💎', cat: 'idol', yt: 'https://www.youtube.com/channel/UCfkXDY7vwkcJ8ddFGz8KusA', ig: 'https://www.instagram.com/saythename_17/' },
+  { name: '싸이', emoji: '🕶️', cat: 'idol', yt: 'https://www.youtube.com/channel/UCrDkAvwZum-UTjHmzDI2iIw', ig: 'https://www.instagram.com/psy_oppa/' },
+  { name: '엑소', emoji: '🌟', cat: 'idol', yt: 'https://www.youtube.com/channel/UCzCedBCSSltI1TFd3bKyN6g', ig: 'https://www.instagram.com/weareone.exo/' },
+  { name: '르세라핌', emoji: '🔥', cat: 'idol', yt: 'https://www.youtube.com/channel/UCs-QBT4qkj_YiQw1ZntDO3g', ig: 'https://www.instagram.com/le_sserafim/' },
+  { name: '아이유', emoji: '🌙', cat: 'idol', yt: 'https://www.youtube.com/channel/UC3SyT4_WLHzN7JmHQwKQZww', ig: 'https://www.instagram.com/dlwlrma/' }
 ];
+// SNS 링크는 상세 모달에서만 사용 — 없으면 검색으로 자동 생성
+ARTISTS.forEach(function(a){
+  var q = a.q || a.name;
+  if (!a.x)  a.x  = 'https://x.com/search?q=' + encodeURIComponent(q);
+  if (!a.ig) a.ig = 'https://www.instagram.com/explore/tags/' + encodeURIComponent(a.name) + '/';
+  if (!a.fb) a.fb = 'https://www.facebook.com/search/top?q=' + encodeURIComponent(a.name);
+});
 
-// 히트곡 차트 (30곡)
-const HITS = [
+var HITS = [
   { s: '임영웅', t: '이제 나만 믿어요' }, { s: '임영웅', t: '별빛 같은 나의 사랑아' }, { s: '임영웅', t: '사랑은 늘 도망가' },
   { s: '영탁', t: '찐이야' }, { s: '영탁', t: '니가 왜 거기서 나와' }, { s: '이찬원', t: '진또배기' },
   { s: '이찬원', t: '편의점' }, { s: '장민호', t: '남자는 배 여자는 항구' }, { s: '김호중', t: '바람이 불면' },
@@ -574,11 +782,10 @@ const HITS = [
   { s: '블랙핑크', t: 'DDU-DU DDU-DU' }, { s: '뉴진스', t: 'Super Shy' }, { s: '아이브', t: 'LOVE DIVE' },
   { s: '에스파', t: 'Next Level' }, { s: '트와이스', t: 'TT' }, { s: '세븐틴', t: '손오공' },
   { s: '싸이', t: '강남스타일' }, { s: '아이유', t: '좋은 날' }, { s: '아이유', t: '밤편지' },
-  { s: '엑소', t: 'Ko Ko Bop' }, { s: '르세라핌', t: 'ANTIFRAGILE' }, { s: '홍진영', t: '사랑의 배터리' },
+  { s: '엑소', t: 'Ko Ko Bop' }, { s: '르세라핌', t: 'ANTIFRAGILE' }, { s: '홍진영', t: '사랑의 배터리' }
 ];
 
-// 가수별 대표곡
-const HIT_SONGS = {
+var HIT_SONGS = {
   '임영웅': ['이제 나만 믿어요', '별빛 같은 나의 사랑아', '사랑은 늘 도망가', '무엇이든', 'HERO'],
   '영탁': ['찐이야', '니가 왜 거기서 나와', '막걸리 한잔', '소주 한 잔', '사랑은 눈물겹다'],
   '이찬원': ['진또배기', '편의점', '사랑의 트위스트', '한잔 더', '찬란한 하루'],
@@ -605,619 +812,836 @@ const HIT_SONGS = {
   '싸이': ['강남스타일', 'That That', 'Daddy', 'Gangnam Style', 'New Face'],
   '엑소': ['Ko Ko Bop', 'Love Shot', 'Growl', 'Monster', 'Tempo'],
   '르세라핌': ['ANTIFRAGILE', 'UNFORGIVEN', 'FEARLESS', 'Eve, Psyche', 'Perfect Night'],
-  '아이유': ['좋은 날', '밤편지', '너랑 나', '팔레트', 'Celebrity'],
+  '아이유': ['좋은 날', '밤편지', '너랑 나', '팔레트', 'Celebrity']
 };
 
-// 주간 방송 일정
-const SCHEDULE = [
-  { day: '일', title: '전국노래자랑', sub: 'KBS 1TV · 낮 12:10 · 노인들이 가장 사랑하는 프로그램', emoji: '🎤' },
+var SCHEDULE = [
+  { day: '일', title: '전국노래자랑', sub: 'KBS 1TV · 낮 12:10 · 노인분들이 가장 사랑하는 프로그램', emoji: '🎤' },
   { day: '월', title: '가요무대', sub: 'KBS 1TV · 밤 10시 · 트로트 가수 총출동', emoji: '🎶' },
   { day: '수', title: '미스터트롯3', sub: 'TV조선 · 밤 10시 · 트로트 서바이벌', emoji: '🏆' },
   { day: '금', title: '불후의 명곡', sub: 'KBS 2TV · 밤 8:30 · 가수들의 명곡 재해석', emoji: '🎼' },
-  { day: '토', title: '쇼! 음악중심', sub: 'MBC · 오후 3:30 · 아이돌 무대', emoji: '✨' },
+  { day: '토', title: '쇼! 음악중심', sub: 'MBC · 오후 3:30 · 아이돌 무대', emoji: '✨' }
 ];
 
-// 퀴즈
-const QUIZ = [
-  { q: '🎵 "어머나 세상에 이게 웬일이야~" 이 노래 가수는?', a: 0, opts: ['장윤정', '송가인', '태진아', '영탁'] },
-  { q: '🎵 "사랑은 늘 도망가~" (드라마 OST로 유명한) 이 노래 가수는?', a: 1, opts: ['이찬원', '임영웅', '김호중', '영탁'] },
-  { q: '🎵 "진진자라~" 이 유명한 노래의 가수는?', a: 2, opts: ['나훈아', '설운도', '진성', '장민호'] },
-  { q: '🎵 "트로트의 황제"라고 불리는, "님과 함께" 부른 가수는?', a: 1, opts: ['남진', '나훈아', '태진아', '설운도'] },
-  { q: '🎵 "미스터트롯" 우승으로 유명해진 "이제 나만 믿어요" 가수는?', a: 1, opts: ['영탁', '임영웅', '이찬원', '정동원'] },
-  { q: '🎵 "안동역에서"를 부른 가수는?', a: 2, opts: ['신유', '조항조', '진성', '박서진'] },
-  { q: '🎵 "사랑의 트위스트"를 부른 트로트 여왕은?', a: 2, opts: ['장윤정', '송가인', '설운도', '홍진영'] },
-  { q: '🎵 "Dynamite"로 세계를 사로잡은 그룹은?', a: 3, opts: ['블랙핑크', '세븐틴', '뉴진스', 'BTS'] },
-  { q: '🎵 "How You Like That" 부른 걸그룹은?', a: 0, opts: ['블랙핑크', '에스파', '아이브', '르세라핌'] },
-  { q: '🎵 "Super Shy"로 유행한 신인 걸그룹은?', a: 2, opts: ['아이브', '에스파', '뉴진스', '트와이스'] },
-];
-
-// ============ 렌더링 ============
-let currentTab = 'all';
-let playerVideos = {};
-
-function cardHTML(a) {
-  return '<div class="card">' +
-    '<div class="card-top" onclick="openSingerDetail(\'' + a.name + '\')">' +
-      '<div class="avatar">' + a.emoji + '</div>' +
-      '<div><div class="name">' + a.name + '</div><div class="cat">' + (a.cat === 'trot' ? '트로트 가수' : '아이돌 그룹') + ' · 눌러서 자세히</div></div>' +
-    '</div>' +
-    '<button class="play-btn" style="font-size:17px;padding:15px 0;background:#8a6d3b;" onclick="playLatest(\'' + a.name + '\')">🎵 여기서 바로 듣기 <span style="font-size:12px;font-weight:500;opacity:0.85;">(이 사이트에서)</span></button>' +
-    '<a class="big-btn" style="background:#f0e9dc;color:#2b2620;font-size:15px;padding:11px 0;" href="' + a.yt + '" target="_blank" rel="noopener">▶ 유튜브 채널 열기</a>' +
-    '<div class="sns-row">' +
-      '<a class="sns-btn" href="' + a.x + '" target="_blank" rel="noopener">𝕏 소식</a>' +
-      '<a class="sns-btn" href="' + a.ig + '" target="_blank" rel="noopener">📷 인스타</a>' +
-      '<a class="sns-btn" href="' + a.fb + '" target="_blank" rel="noopener">📘 페이스북</a>' +
-    '</div>' +
-    '<div class="latest">' +
-      '<div class="latest-title">🆕 최신 영상</div>' +
-      '<div class="vid-filter" id="vf-' + a.name + '">' +
-        '<button class="on" data-kind="all" onclick="setVidFilter(\'' + a.name + '\',\'all\')">전체</button>' +
-        '<button data-kind="live" onclick="setVidFilter(\'' + a.name + '\',\'live\')">🎤 무대</button>' +
-        '<button data-kind="mv" onclick="setVidFilter(\'' + a.name + '\',\'mv\')">🎥 뮤비</button>' +
-        '<button data-kind="shorts" onclick="setVidFilter(\'' + a.name + '\',\'shorts\')">🎬 쇼츠</button>' +
-        '<button data-kind="interview" onclick="setVidFilter(\'' + a.name + '\',\'interview\')">🎙️ 인터뷰</button>' +
-        '<button data-kind="behind" onclick="setVidFilter(\'' + a.name + '\',\'behind\')">📹 비하인드</button>' +
-        '<button data-kind="cover" onclick="setVidFilter(\'' + a.name + '\',\'cover\')">🎤 커버·듀엣</button>' +
-      '</div>' +
-      '<div id="vid-' + a.name + '" class="loading">불러오는 중...</div>' +
-      '<a class="more-link" href="https://www.youtube.com/results?search_query=' + encodeURIComponent(a.name + ' 뮤직비디오 인터뷰') + '" target="_blank" rel="noopener">🔎 더 많은 영상 보기 (유튜브)</a>' +
-    '</div>' +
-  '</div>';
-}
-
-function renderSingers() {
-  const list = currentTab === 'all' ? ARTISTS : ARTISTS.filter(a => a.cat === currentTab);
-  document.getElementById('singerGrid').innerHTML = list.map(cardHTML).join('');
-}
-
-function setTab(t) {
-  currentTab = t;
-  document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x.dataset.tab === t));
-  renderSingers();
-}
-
-// 히트곡 차트
-function loadChart() {
-  document.getElementById('chartList').innerHTML = HITS.map(function(h, i) {
-    return '<div class="chart-item">' +
-      '<div class="chart-rank">' + (i + 1) + '</div>' +
-      '<div class="chart-info" onclick="playHit(' + i + ')"><div class="chart-song">' + h.t + '</div><div class="chart-singer">' + h.s + '</div></div>' +
-      '<div class="chart-play" style="display:flex;flex-direction:column;gap:4px;">' +
-      '<button onclick="playHitSite(' + i + ')" style="background:#8a6d3b;color:#fff;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">🎵 여기서</button>' +
-      '<button onclick="playHit(' + i + ')" style="background:#f0e9dc;color:#2b2620;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">🔍 찾기</button></div></div>';
-  }).join('');
-}
-
-function playHitSite(i) {
-  var h = HITS[i];
-  // 해당 가수의 채널 최신 영상으로 사이트 내 재생
-  var v = (playerVideos[h.s] || [])[0];
-  if (v) {
-    currentQueue = (playerVideos[h.s] || []).slice(0, 10);
-    currentQIdx = 0;
-    playVideo(v.videoId, h.s + ' — ' + h.t);
-  } else {
-    alert('🎵 ' + h.s + '님의 영상을 아직 불러오지 못했어요. 잠시 후 다시 눌러주세요!');
-  }
-}
-function playHit(i) {
-  var h = HITS[i];
-  window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent(h.s + ' ' + h.t), '_blank', 'noopener');
-}
-
-// 방송 일정
-function loadSchedule() {
-  var days = ['일', '월', '화', '수', '목', '금', '토'];
-  var today = new Date().getDay();
-  document.getElementById('scheduleList').innerHTML = SCHEDULE.map(function(s) {
-    var isToday = days[today] === s.day;
-    return '<div class="schedule-item" style="' + (isToday ? 'border-color:#8a6d3b;background:#fdf9f0;' : '') + '">' +
-      '<div class="schedule-day">' + s.day + (isToday ? '<br><span style="font-size:10px;">오늘</span>' : '') + '</div>' +
-      '<div class="schedule-info"><div class="schedule-title">' + s.emoji + ' ' + s.title + '</div><div class="schedule-sub">' + s.sub + '</div></div></div>';
-  }).join('');
-}
-
-// 검색
-function doSearch(v) {
-  var el = document.getElementById('searchResults');
-  var q = (v || '').trim().toLowerCase();
-  if (!q) { el.classList.remove('on'); return; }
-  var singerHits = ARTISTS.filter(function(a) { return a.name.toLowerCase().indexOf(q) >= 0; }).slice(0, 4);
-  var songHits = HITS.filter(function(h) { return (h.s + h.t).toLowerCase().indexOf(q) >= 0; }).slice(0, 6);
-  var html = '';
-  singerHits.forEach(function(s) {
-    html += '<div class="sr-item" onmousedown="openSingerDetail(\'' + s.name + '\')"><span style="font-size:20px;">' + s.emoji + '</span><span><strong>' + s.name + '</strong> <span style="color:#7a7060;font-size:12px;">가수</span></span></div>';
-  });
-  songHits.forEach(function(s) {
-    html += '<div class="sr-item" onmousedown="playSongSearch(\'' + s.t + '\',\'' + s.s + '\')"><span style="font-size:18px;">🎵</span><span>' + s.t + ' <span style="color:#7a7060;font-size:12px;">' + s.s + '</span></span></div>';
-  });
-  if (!html) html = '<div class="sr-item" style="color:#7a7060;">찾는 가수나 노래가 없어요. 다른 이름으로 검색해보세요.</div>';
-  el.innerHTML = html;
-  el.classList.add('on');
-}
-
-function playSongSearch(song, singer) {
-  window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent(singer + ' ' + song), '_blank', 'noopener');
-}
-
-// 가수 상세 모달
-function openSingerDetail(name) {
-  var a = ARTISTS.filter(function(x) { return x.name === name; })[0];
-  if (!a) return;
-  var songs = HIT_SONGS[name] || [];
-  var cmHtml = '<div class="sd-cm-empty">첫 댓글을 남겨보세요! 💬</div>';
-  loadComments(name);
-  loadSingerSNS(name);
-  var follows = JSON.parse(localStorage.getItem('st_follows') || '[]');
-  var fb = document.getElementById('followBtn');
-  if (fb) fb.textContent = follows.indexOf(name) >= 0 ? '💛 팔로우 중' : '🤍 팔로우';
-  var songsHtml = songs.map(function(s, i) {
-    return '<div class="sd-song" onclick="playSongSearch(\'' + s + '\',\'' + name + '\')"><span class="n">' + (i + 1) + '</span><span class="t">' + s + '</span><span class="p">▶</span></div>';
-  }).join('');
-  document.getElementById('singerBox').innerHTML =
-    '<div class="sd-head">' +
-    '<div class="sd-avatar">' + a.emoji + '</div>' +
-    '<div><div class="sd-name">' + a.name + '</div><div class="sd-cat">' + (a.cat === 'trot' ? '트로트 가수' : '아이돌 그룹') + '</div></div>' +
-    '<button id="followBtn" onclick="toggleFollow(\'' + name + '\')" style="padding:7px 14px;border-radius:999px;border:2px solid #8a6d3b;background:transparent;color:#8a6d3b;font-size:13px;font-weight:800;cursor:pointer;margin-left:auto;">🤍 팔로우</button>' +
-    '<button class="sd-close" onclick="closeSingerModal()">✕</button></div>' +
-    '<div style="font-size:14px;font-weight:800;color:#8a6d3b;margin-bottom:8px;">🎶 대표곡 (누르면 유튜브에서 들어요)</div>' +
-    '<div class="sd-songs">' + songsHtml + '</div>' +
-    '<div class="sd-links">' +
-    '<a href="' + a.yt + '" target="_blank" rel="noopener">▶ 유튜브</a>' +
-    '<a class="gold" href="' + a.x + '" target="_blank" rel="noopener">𝕏 트위터</a>' +
-    '<a class="gold" href="' + a.ig + '" target="_blank" rel="noopener">📷 인스타</a>' +
-    '<a class="gold" href="' + a.fb + '" target="_blank" rel="noopener">📘 페북</a></div>' +
-    '<div class="sd-concert"><a href="https://www.google.com/search?q=' + encodeURIComponent(name + ' 콘서트 티켓') + '" target="_blank" rel="noopener">🎟️ ' + name + ' 콘서트·공연 정보 보기 (자동 검색)</a></div>' +
-    '<div class="sd-concert" style="margin-top:14px;"><div style="font-size:14px;font-weight:800;color:#8a6d3b;margin-bottom:8px;">🔥 ' + name + ' SNS 화제</div><div id="sdSns" class="news-loading" style="font-size:13px;">불러오는 중...</div></div>' +
-    '<div class="sd-comments">' +
-      '<div class="sd-cm-title">💬 팬 댓글</div>' +
-      '<div class="sd-cm-input">' +
-        '<input id="cmName" placeholder="이름" maxlength="10" style="max-width:90px;">' +
-        '<input id="cmText" placeholder="응원 댓글을 남겨보세요" maxlength="100" onkeydown="if(event.key===\'Enter\')sendComment(\'' + name + '\')">' +
-        '<button class="sd-cm-send" onclick="sendComment(\'' + name + '\')">등록</button>' +
-      '</div>' +
-      '<div class="sd-cm-list" id="cmList">' + cmHtml + '</div>' +
-    '</div>';
-  document.getElementById('singerModal').classList.add('on');
-}
-function closeSingerModal() { document.getElementById('singerModal').classList.remove('on'); }
-
-// ===== 미니 플레이어 — YT Player 연속 재생 =====
-var ytPlayer = null, currentVideoId = '', currentQueue = [], currentQIdx = 0;
-function onYouTubeIframeAPIReady() {
-  ytPlayer = new YT.Player('pbFrame', {
-    width: '320', height: '180',
-    playerVars: { autoplay: 1, rel: 0, playsinline: 1 },
-    events: { onStateChange: onPlayerState }
-  });
-}
-function onPlayerState(e) {
-  if (e.data === YT.PlayerState.ENDED) playerNext();
-}
-function playLatest(name) {
-  var v = (playerVideos[name] || [])[0];
-  if (!v) { alert('재생할 영상을 찾지 못했어요. 유튜브 보기를 눌러주세요.'); return; }
-  currentQueue = (playerVideos[name] || []).slice(0, 10);
-  currentQIdx = 0;
-  playVideo(v.videoId, name + ' — ' + v.title);
-}
-function playVideo(videoId, title) {
-  var bar = document.getElementById('playerBar');
-  bar.classList.add('on');
-  currentVideoId = videoId;
-  document.getElementById('pbTitle').textContent = title;
-  if (ytPlayer) ytPlayer.loadVideoById(videoId);
-  try {
-    var recent = JSON.parse(localStorage.getItem('st_recent') || '[]');
-    recent = recent.filter(function(x) { return x.v !== videoId; });
-    recent.unshift({ v: videoId, t: title.slice(0, 60) });
-    localStorage.setItem('st_recent', JSON.stringify(recent.slice(0, 12)));
-    if (typeof renderRecent === 'function') renderRecent();
-  } catch (e) {}
-}
-function playShorts(videoId, title) {
-  playVideo(videoId, title);
-}
-function playerNext() {
-  if (currentQueue.length && currentQIdx < currentQueue.length - 1) {
-    currentQIdx++;
-    var v = currentQueue[currentQIdx];
-    playVideo(v.videoId, v.title);
-  } else {
-    alert('🎵 이 가수의 다른 영상이 없어요. 다른 가수를 선택해보세요!');
-  }
-}
-function closePlayer() {
-  document.getElementById('playerBar').classList.remove('on');
-  if (ytPlayer) ytPlayer.stopVideo();
-}
-function openFullscreen() {
-  var frame = document.getElementById('pbFrame').querySelector('iframe');
-  if (frame) {
-    if (frame.requestFullscreen) frame.requestFullscreen();
-    else if (frame.webkitRequestFullscreen) frame.webkitRequestFullscreen();
-  } else {
-    window.open('https://www.youtube.com/watch?v=' + currentVideoId, '_blank', 'noopener');
-  }
-}
-
-// ===== 최근 들은 곡 + 내 가수 팔로우 =====
-function renderRecent() {
-  var el = document.getElementById('recentList');
-  if (!el) return;
-  var recent = JSON.parse(localStorage.getItem('st_recent') || '[]');
-  if (!recent.length) { el.innerHTML = '<div class="news-loading">노래를 들으면 여기에 표시돼요</div>'; return; }
-  el.innerHTML = recent.slice(0, 6).map(function(x) {
-    return '<div class="chart-item" onclick="playRecent(\'' + x.v + '\',\'' + x.t.replace(/\'/g, '') + '\')">' +
-      '<div class="chart-rank">🎵</div><div class="chart-info"><div class="chart-song">' + x.t + '</div><div class="chart-singer">다시 듣기</div></div><div class="chart-play">▶</div></div>';
-  }).join('');
-}
-function playRecent(v, t) { playVideo(v, t); }
-function toggleFollow(name) {
-  var follows = JSON.parse(localStorage.getItem('st_follows') || '[]');
-  var idx = follows.indexOf(name);
-  if (idx >= 0) { follows.splice(idx, 1); alert('💔 ' + name + ' 팔로우를 해제했어요'); }
-  else { follows.push(name); alert('💛 ' + name + '님을 팔로우했어요! 최신 소식을 계속 볼 수 있어요'); }
-  localStorage.setItem('st_follows', JSON.stringify(follows));
-  var btn = document.getElementById('followBtn');
-  if (btn) btn.textContent = follows.indexOf(name) >= 0 ? '💛 팔로우 중' : '🤍 팔로우';
-}
-
-// 최신 영상 (백엔드 프록시 — 10분 캐시)
-
-// 영상 종류 필터 (카드별)
-function setVidFilter(name, kind) {
-  var btns = document.querySelectorAll('#vf-' + name + ' button');
-  btns.forEach(function(b) { b.classList.toggle('on', b.dataset.kind === kind); });
-  var el = document.getElementById('vid-' + name);
-  var all = (playerVideos[name] || []);
-  var list = kind === 'all' ? all : all.filter(function(v) { return v.kind === kind; });
-  if (!list.length) {
-    var kq = { live: '무대 라이브', mv: '뮤직비디오', shorts: 'shorts', interview: '인터뷰', behind: '비하인드', cover: '커버' }[kind] || '';
-    el.innerHTML = '<div style="font-size:13px;color:#9a9081;padding:6px;">이 종류가 아직 없어요 — <a href="https://www.youtube.com/results?search_query=' + encodeURIComponent(name + ' ' + kq) + '" target="_blank" style="color:#8a6d3b;font-weight:800;">유튜브에서 ' + kq + ' 보기 →</a></div>';
-    return;
-  }
-  el.className = '';
-  el.innerHTML = list.slice(0, 5).map(function(v) {
-    var k = v.kind || 'other';
-    var label = { live: '🎤 무대', mv: '🎥 뮤비', shorts: '🎬 쇼츠', interview: '🎙️ 인터뷰', behind: '📹 비하인드', other: '🎵 영상' }[k] || '🎵 영상';
-    var q = kind === 'shorts' ? '' : (currentQueue.length ? '' : '');
-    return '<a class="vid" href="javascript:void(0)" onclick="playVideo(\'' + v.videoId + '\',\'' + v.title.replace(/\'/g, '') + '\')" title="이 사이트에서 재생">' +
-      '<img class="thumb" src="https://img.youtube.com/vi/' + v.videoId + '/mqdefault.jpg" alt="" loading="lazy" onerror="this.remove()">' +
-      '<span><span class="vid-kind vk-' + k + '">' + label + '</span><span class="t" style="display:block;">' + v.title + '</span></span></a>';
-  }).join('');
-}
-
-
-// 테마 플레이리스트 (유튜브 검색 재생)
-const PLAYLISTS = [
+var PLAYLISTS = [
   { emoji: '🎤', title: '부모님 세대 명곡 모음', query: '트로트 명곡 모음', sub: '임영웅·영탁·이찬원 대표곡' },
   { emoji: '💃', title: '신나는 트로트 댄스', query: '신나는 트로트 노래모음', sub: '흥겨운 노래로 기분 전환' },
   { emoji: '🌙', title: '감성 발라드 힐링', query: '감성 발라드 히트곡 모음', sub: '마음이 편안해지는 노래' },
   { emoji: '💜', title: '아이돌 인기곡 모음', query: '케이팝 히트곡 모음 2026', sub: 'BTS·뉴진스·아이브' },
   { emoji: '🎶', title: '노래자랑 인기곡', query: '전국노래자랑 인기곡', sub: 'TV에서 자주 나오는 노래' },
-  { emoji: '🎼', title: '가요무대 명곡', query: '가요무대 트로트 모음', sub: 'KBS 가요무대 레전드' },
+  { emoji: '🎼', title: '가요무대 명곡', query: '가요무대 트로트 모음', sub: 'KBS 가요무대 레전드' }
 ];
-function loadPlaylists() {
-  document.getElementById('playlistList').innerHTML = PLAYLISTS.map(function(p, i) {
-    return '<div class="chart-item" onclick="playPlaylist(' + i + ')">' +
-      '<div class="chart-rank">' + p.emoji + '</div>' +
-      '<div class="chart-info"><div class="chart-song">' + p.title + '</div><div class="chart-singer">' + p.sub + '</div></div>' +
-      '<div class="chart-play">▶</div></div>';
-  }).join('');
-}
-function playPlaylist(i) {
-  var p = PLAYLISTS[i];
-  window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent(p.query), '_blank', 'noopener');
-}
 
+var QUIZ = [
+  { q: '"어머나 세상에 이게 웬일이야~" 이 노래 가수는?', a: 0, opts: ['장윤정', '송가인', '태진아', '영탁'] },
+  { q: '"사랑은 늘 도망가~" (드라마 OST로 유명한) 이 노래 가수는?', a: 1, opts: ['이찬원', '임영웅', '김호중', '영탁'] },
+  { q: '"진진자라~" 이 유명한 노래의 가수는?', a: 2, opts: ['나훈아', '설운도', '진성', '장민호'] },
+  { q: '"트로트의 황제"라고 불리는, "님과 함께" 부른 가수는?', a: 1, opts: ['남진', '나훈아', '태진아', '설운도'] },
+  { q: '"미스터트롯" 우승으로 유명해진 "이제 나만 믿어요" 가수는?', a: 1, opts: ['영탁', '임영웅', '이찬원', '정동원'] },
+  { q: '"안동역에서"를 부른 가수는?', a: 2, opts: ['신유', '조항조', '진성', '박서진'] },
+  { q: '"사랑의 트위스트"를 부른 가수는?', a: 2, opts: ['장윤정', '송가인', '설운도', '홍진영'] },
+  { q: '"Dynamite"로 세계를 사로잡은 그룹은?', a: 3, opts: ['블랙핑크', '세븐틴', '뉴진스', 'BTS'] },
+  { q: '"How You Like That" 부른 걸그룹은?', a: 0, opts: ['블랙핑크', '에스파', '아이브', '르세라핌'] },
+  { q: '"Super Shy"로 유행한 신인 걸그룹은?', a: 2, opts: ['아이브', '에스파', '뉴진스', '트와이스'] }
+];
 
-// 글자 크기 토글 (노인 UX — localStorage 저장)
-function setFont(level) {
-  var sizes = [1, 1.2, 1.45];
-  localStorage.setItem('st_font', level);
-  document.body.style.fontSize = (sizes[level] * 100) + '%';
-  document.querySelectorAll('.font-btn').forEach(function(b, i) {
-    b.style.borderColor = i === level ? '#8a6d3b' : '#e5ded2';
-    b.style.background = i === level ? 'rgba(138,109,59,0.12)' : '#fffdf8';
+var API = 'https://api.pomyjo.com/api/singer';
+var HERO_PICK = ['임영웅', '송가인', '이찬원', '아이유', 'BTS', '뉴진스'];
+var KIND_LABEL = { live: '🎤 무대', mv: '🎥 뮤비', shorts: '🎬 쇼츠', interview: '🎙️ 인터뷰', behind: '📹 비하인드', cover: '🎤 커버', other: '🎵 영상' };
+var VID_FILTERS = [
+  { k: 'all', label: '전체', kinds: null, q: '' },
+  { k: 'live', label: '무대', kinds: ['live'], q: '무대 라이브' },
+  { k: 'mv', label: '뮤비', kinds: ['mv'], q: '뮤직비디오' },
+  { k: 'shorts', label: '쇼츠', kinds: ['shorts'], q: 'shorts' },
+  { k: 'talk', label: '인터뷰·비하인드', kinds: ['interview', 'behind', 'cover', 'other'], q: '인터뷰' }
+];
+
+/* =====================================================================
+   상태 & 유틸
+   ===================================================================== */
+var state = {
+  tab: 'singer', genre: 'all', singerLimit: 12, hitLimit: 8,
+  newsWhich: 'news', rankPeriod: 'week', loaded: {}, votedToday: false
+};
+var playerVideos = {};      // { 가수명: [ {videoId,title,kind}, ... ] }
+var NEWS_ITEMS = [], SNS_ITEMS = [];
+var todaySong = null, openSinger = null, vidFilter = 'all', lastFocus = null;
+
+function $(id) { return document.getElementById(id); }
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
   });
 }
-function initFont() {
-  var level = parseInt(localStorage.getItem('st_font') || '0');
-  setFont(level);
+function artist(name) {
+  for (var i = 0; i < ARTISTS.length; i++) if (ARTISTS[i].name === name) return ARTISTS[i];
+  return null;
+}
+function ytSearch(q) { return 'https://www.youtube.com/results?search_query=' + encodeURIComponent(q); }
+function openTab(url) { window.open(url, '_blank', 'noopener'); }
+function store(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key) || fallback); } catch (e) { return JSON.parse(fallback); }
+}
+function save(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+// 'Tue, 11 Aug 2026' 같은 영문 날짜를 '8월 11일'로 — 못 읽으면 원문 그대로
+function fmtDate(s) {
+  if (!s) return '';
+  var t = new Date(s);
+  return isNaN(t.getTime()) ? String(s) : (t.getMonth() + 1) + '월 ' + t.getDate() + '일';
 }
 
-
-async function loadSingerSNS(name) {
-  var el = document.getElementById('sdSns');
-  if (!el) return;
-  try {
-    var r = await fetch('https://api.pomyjo.com/api/singer/sns?name=' + encodeURIComponent(name));
-    var d = await r.json();
-    var items = d.sns || [];
-    if (!items.length) { el.innerHTML = '<div style="font-size:13px;color:#9a9081;">SNS 소식이 아직 없어요</div>'; return; }
-    el.innerHTML = items.slice(0, 3).map(function(s) {
-      return '<a class="sns-item" style="padding:9px 12px;" href="' + s.link + '" target="_blank" rel="noopener">' +
-        '<div><div class="snt" style="font-size:13px;">' + s.title + '</div></div></a>';
-    }).join('');
-  } catch (e) { el.innerHTML = ''; }
-}
-async function loadSNS(name) {
-  var el = document.getElementById('snsList');
-  if (!el) return;
-  try {
-    var r = await fetch('https://api.pomyjo.com/api/singer/sns?name=' + encodeURIComponent(name));
-    var d = await r.json();
-    var items = d.sns || [];
-    if (!items.length) { el.innerHTML = '<div class="news-loading">SNS 소식이 아직 없어요</div>'; return; }
-    el.innerHTML = items.map(function(s) {
-      return '<a class="sns-item" href="javascript:void(0)" onclick="openNewsModal(\'' + s.title.replace(/\'/g, '') + '\',\'' + s.link.replace(/\'/g, '') + '\',\'SNS 화제\')">' +
-        '<div><div class="snt">' + s.title + '</div><div class="snd">' + s.date + '</div></div></a>';
-    }).join('');
-  } catch (e) { el.innerHTML = '<div class="news-loading">SNS 소식을 불러오지 못했어요</div>'; }
+var toastTimer = null;
+function toast(msg) {
+  var t = $('toast');
+  if (!t) { t = document.createElement('div'); t.id = 'toast'; t.className = 'toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
+  t.textContent = msg;
+  t.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { t.hidden = true; }, 2600);
 }
 
-// 뉴스 읽기 모달 (사이트 내 열람)
-function openNewsModal(title, link, singer) {
-  document.getElementById('newsModalBody').innerHTML =
-    '<div style="font-size:13px;color:#8a6d3b;font-weight:800;margin-bottom:6px;">' + singer + ' 최신 소식</div>' +
-    '<div style="font-size:18px;font-weight:900;margin-bottom:16px;">' + title + '</div>' +
-    '<div style="background:#f7f2e9;padding:14px;border-radius:12px;font-size:14px;color:#6b6355;margin-bottom:16px;">' +
-    '💡 기사 전문은 언론사 사이트에 있어요. 아래 버튼을 누르면 기사가 열립니다.' +
-    '</div>' +
-    '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
-    '<a href="' + link + '" target="_blank" rel="noopener" style="flex:1;background:#8a6d3b;color:#fff;text-align:center;padding:13px;border-radius:10px;font-size:15px;font-weight:800;text-decoration:none;">📖 기사 전체 보기</a>' +
-    '<button onclick="closeNewsModal()" style="background:#f0e9dc;color:#2b2620;padding:13px 20px;border-radius:10px;font-size:15px;font-weight:800;border:none;cursor:pointer;">닫기</button></div>';
-  document.getElementById('newsModal').classList.add('on');
+/* =====================================================================
+   글자 크기
+   ===================================================================== */
+function setFont(level) {
+  var sizes = [1, 1.2, 1.45];
+  level = Math.max(0, Math.min(2, level | 0));
+  document.documentElement.style.setProperty('--fs', sizes[level]);
+  save('st_font', level);
+  document.querySelectorAll('.fs-btn').forEach(function (b) {
+    b.setAttribute('aria-pressed', String(Number(b.dataset.level) === level));
+  });
 }
-function closeNewsModal() { document.getElementById('newsModal').classList.remove('on'); }
-// 오늘의 노래 — 랜덤 명곡 (사이트 내 재생)
+
+/* =====================================================================
+   탭 이동
+   ===================================================================== */
+function setTab(tab) {
+  state.tab = tab;
+  ['singer', 'music', 'news', 'play'].forEach(function (t) {
+    $('panel-' + t).hidden = (t !== tab);
+    $('tab-' + t).setAttribute('aria-selected', String(t === tab));
+  });
+  $('heroLead').hidden = (tab !== 'singer');
+  ensureTab(tab);
+  var top = $('panel-' + tab).getBoundingClientRect().top + window.pageYOffset - 130;
+  window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+}
+
+function ensureTab(tab) {
+  if (state.loaded[tab]) return;
+  state.loaded[tab] = true;
+  if (tab === 'music') { renderChart(); renderPlaylists(); renderRecent(); renderShows(); }
+  if (tab === 'news') { loadNews(); }
+  if (tab === 'play') { renderStamps(); showQuiz(); loadRank(); }
+}
+
+/* =====================================================================
+   히어로 — 썸네일 콜라주 / 오늘의 노래
+   ===================================================================== */
+function renderCollage() {
+  var picks = [];
+  HERO_PICK.forEach(function (n) { if ((playerVideos[n] || []).length) picks.push(n); });
+  if (picks.length < 6) {
+    ARTISTS.forEach(function (a) {
+      if (picks.length < 6 && picks.indexOf(a.name) < 0 && (playerVideos[a.name] || []).length) picks.push(a.name);
+    });
+  }
+  if (!picks.length) picks = HERO_PICK.slice(0, 6);
+  $('collage').innerHTML = picks.slice(0, 6).map(function (n) {
+    var a = artist(n) || { emoji: '🎵', name: n };
+    var v = (playerVideos[n] || [])[0];
+    var img = v ? '<img src="https://i.ytimg.com/vi/' + esc(v.videoId) + '/mqdefault.jpg" alt="' + esc(n) + ' 최신 영상 미리보기" loading="lazy" onerror="this.remove()">' : '';
+    return '<button type="button" class="col-tile" data-act="play-singer" data-name="' + esc(n) + '" aria-label="' + esc(n) + ' 최신 영상 듣기">' +
+      '<span class="ph" aria-hidden="true">' + a.emoji + '</span>' + img +
+      '<span class="veil" aria-hidden="true"></span><span class="nm">' + esc(n) + '</span></button>';
+  }).join('');
+}
+
 function loadTodaySong() {
-  var h = HITS[Math.floor(Math.random() * HITS.length)];
-  document.getElementById('todaySongTitle').textContent = h.t + ' — ' + h.s;
-  document.getElementById('todaySongSub').textContent = '🎤 ' + h.s + ' · 이 사이트에서 바로 감상';
+  var d = new Date();
+  var seed = d.getFullYear() * 400 + (d.getMonth() + 1) * 31 + d.getDate();
+  todaySong = HITS[seed % HITS.length];
+  $('todayTitle').textContent = todaySong.t;
+  $('todaySub').textContent = todaySong.s + ' · 이 사이트에서 바로 감상';
 }
 function playTodaySong() {
-  var t = document.getElementById('todaySongTitle').textContent;
-  var singer = t.split(' — ').pop();
-  var v = (playerVideos[singer] || [])[0];
-  if (v) {
-    currentQueue = (playerVideos[singer] || []).slice(0, 10);
-    currentQIdx = 0;
-    playVideo(v.videoId, singer + ' — ' + t);
-  } else {
-    alert('🎵 ' + singer + '님의 영상을 불러오는 중이에요. 잠시 후 다시 눌러주세요!');
-  }
+  if (!todaySong) return;
+  playSingerLatest(todaySong.s, todaySong.s + ' — ' + todaySong.t, ytSearch(todaySong.s + ' ' + todaySong.t));
 }
-async function loadVideos() {
-  try {
-    var r = await fetch('https://api.pomyjo.com/api/singer/feed');
-    var d = await r.json();
-    var artists = d.artists || {};
-    playerVideos = artists;
-    ARTISTS.forEach(function(a) {
-      var el = document.getElementById('vid-' + a.name);
-      if (!el) return;
-      var vids = artists[a.name] || [];
-      if (vids.length === 0) { el.style.color = '#7a7060'; el.style.fontSize = '13px'; el.textContent = '최근 올라온 영상이 없어요'; return; }
-      el.className = '';
-      el.innerHTML = vids.slice(0, 5).map(function(v) {
-        var k = v.kind || 'other';
-        var label = { live: '🎤 무대', mv: '🎥 뮤비', shorts: '🎬 쇼츠', interview: '🎙️ 인터뷰', behind: '📹 비하인드', other: '🎵 영상' }[k] || '🎵 영상';
-        var fn = k === 'shorts' ? 'playShorts' : 'playVideo';
-        var arg = k === 'shorts' ? ('\'' + v.videoId + '\',\'' + v.title.replace(/\'/g, '') + '\'') : ('\'' + v.videoId + '\',\'' + v.title.replace(/\'/g, '') + '\'');
-        return '<a class="vid" href="javascript:void(0)" onclick="' + fn + '(' + arg + ')" title="이 사이트에서 재생">' +
-          '<img class="thumb" src="https://img.youtube.com/vi/' + v.videoId + '/mqdefault.jpg" alt="" loading="lazy" onerror="this.style.display=\'none\'">' +
-          '<span><span class="vid-kind vk-' + k + '">' + label + '</span><span class="t" style="display:block;">' + v.title + '</span></span></a>';
-      }).join('');
-    });
-  } catch (e) {
-    document.querySelectorAll('[id^="vid-"]').forEach(function(el) {
-      if (el.textContent === '불러오는 중...') { el.textContent = '최신 영상을 불러오지 못했어요'; }
-    });
+
+/* =====================================================================
+   가수 카드
+   ===================================================================== */
+function visibleArtists() {
+  return state.genre === 'all' ? ARTISTS : ARTISTS.filter(function (a) { return a.cat === state.genre; });
+}
+function cardHTML(a) {
+  var v = (playerVideos[a.name] || [])[0];
+  var img = v ? '<img src="https://i.ytimg.com/vi/' + esc(v.videoId) + '/mqdefault.jpg" alt="' + esc(a.name) + ' 최신 영상 미리보기" loading="lazy" onerror="this.remove()">' : '';
+  var cat = a.cat === 'trot' ? '트로트 가수' : '아이돌 그룹';
+  return '<article class="card">' +
+    '<button type="button" class="cover" data-act="play-singer" data-name="' + esc(a.name) + '" aria-label="' + esc(a.name) + ' 최신 영상 바로 듣기">' +
+      '<span class="ph" aria-hidden="true">' + a.emoji + '</span>' + img +
+      '<span class="veil" aria-hidden="true"></span>' +
+      '<span class="cta"><span class="pl" aria-hidden="true">▶</span>바로 듣기</span>' +
+    '</button>' +
+    '<div class="card-body">' +
+      '<div class="card-id"><span class="avatar" aria-hidden="true">' + a.emoji + '</span>' +
+      '<span><span class="name">' + esc(a.name) + '</span><span class="cat" style="display:block;">' + cat + '</span></span></div>' +
+      '<div class="card-acts">' +
+        '<a class="btn" href="' + esc(a.yt) + '" target="_blank" rel="noopener" aria-label="' + esc(a.name) + ' 유튜브 채널 열기 (새 창)">📺 유튜브</a>' +
+        '<button type="button" class="btn" data-act="open-singer" data-name="' + esc(a.name) + '" aria-label="' + esc(a.name) + ' 노래·소식 더보기">🔍 더보기</button>' +
+      '</div>' +
+    '</div>' +
+  '</article>';
+}
+function renderSingers() {
+  var list = visibleArtists();
+  $('singerGrid').innerHTML = list.slice(0, state.singerLimit).map(cardHTML).join('');
+  var more = $('moreSingers');
+  var rest = list.length - state.singerLimit;
+  more.hidden = rest <= 0;
+  if (rest > 0) more.textContent = '가수 ' + rest + '명 더 보기';
+}
+function setGenre(g) {
+  state.genre = g;
+  state.singerLimit = 12;
+  document.querySelectorAll('[data-act="genre"]').forEach(function (b) {
+    b.setAttribute('aria-pressed', String(b.dataset.genre === g));
+  });
+  renderSingers();
+}
+
+/* =====================================================================
+   음악 탭 — 차트 / 플레이리스트 / 최근 / 방송
+   ===================================================================== */
+function renderChart() {
+  var rows = HITS.slice(0, state.hitLimit).map(function (h, i) {
+    return '<button type="button" class="row' + (i < 3 ? ' top' : '') + '" data-act="play-hit" data-i="' + i + '" ' +
+      'aria-label="' + esc(h.t) + ' — ' + esc(h.s) + ' 듣기">' +
+      '<span class="rk" aria-hidden="true">' + (i + 1) + '</span>' +
+      '<span class="info"><span class="t1">' + esc(h.t) + '</span><span class="t2">' + esc(h.s) + '</span></span>' +
+      '<span class="go" aria-hidden="true">▶</span></button>';
+  }).join('');
+  $('chartList').innerHTML = rows;
+  $('moreHits').hidden = state.hitLimit >= HITS.length;
+}
+function playHit(i) {
+  var h = HITS[i];
+  if (!h) return;
+  playSingerLatest(h.s, h.s + ' — ' + h.t, ytSearch(h.s + ' ' + h.t));
+}
+function renderPlaylists() {
+  $('playlistList').innerHTML = PLAYLISTS.map(function (p, i) {
+    return '<button type="button" class="row" data-act="play-list" data-i="' + i + '" aria-label="' + esc(p.title) + ' 유튜브에서 듣기 (새 창)">' +
+      '<span class="rk" aria-hidden="true">' + p.emoji + '</span>' +
+      '<span class="info"><span class="t1">' + esc(p.title) + '</span><span class="t2">' + esc(p.sub) + '</span></span>' +
+      '<span class="go" aria-hidden="true">▶</span></button>';
+  }).join('');
+}
+function renderRecent() {
+  var el = $('recentList');
+  if (!el) return;
+  var recent = store('st_recent', '[]');
+  if (!recent.length) { el.innerHTML = '<p class="empty">노래를 들으면 여기에 표시돼요.</p>'; return; }
+  el.innerHTML = recent.slice(0, 6).map(function (x, i) {
+    return '<button type="button" class="row" data-act="play-recent" data-i="' + i + '" aria-label="' + esc(x.t) + ' 다시 듣기">' +
+      '<span class="rk" aria-hidden="true">🎵</span>' +
+      '<span class="info"><span class="t1">' + esc(x.t) + '</span><span class="t2">다시 듣기</span></span>' +
+      '<span class="go" aria-hidden="true">▶</span></button>';
+  }).join('');
+}
+function renderShows() {
+  var days = ['일', '월', '화', '수', '목', '금', '토'];
+  var today = days[new Date().getDay()];
+  $('showList').innerHTML = SCHEDULE.map(function (s) {
+    var on = today === s.day;
+    return '<div class="show' + (on ? ' today-on' : '') + '">' +
+      '<div class="day">' + s.day + (on ? '<br><span style="font-size:.62rem;">오늘</span>' : '') + '</div>' +
+      '<div><div class="st">' + s.emoji + ' ' + esc(s.title) + '</div><div class="ss">' + esc(s.sub) + '</div></div></div>';
+  }).join('');
+}
+
+/* =====================================================================
+   검색
+   ===================================================================== */
+function doSearch(v) {
+  var el = $('searchResults');
+  var input = $('searchInput');
+  var q = (v || '').trim().toLowerCase();
+  if (!q) { el.classList.remove('on'); input.setAttribute('aria-expanded', 'false'); return; }
+  var singers = ARTISTS.filter(function (a) { return a.name.toLowerCase().indexOf(q) >= 0; }).slice(0, 4);
+  var songs = HITS.filter(function (h) { return (h.s + h.t).toLowerCase().indexOf(q) >= 0; }).slice(0, 6);
+  var html = singers.map(function (s) {
+    return '<div class="sr-item" role="option" tabindex="-1" data-act="open-singer" data-name="' + esc(s.name) + '">' +
+      '<span aria-hidden="true" style="font-size:1.1rem;">' + s.emoji + '</span>' +
+      '<span><strong>' + esc(s.name) + '</strong> <span style="color:var(--muted);font-size:.75rem;">가수</span></span></div>';
+  }).join('');
+  html += songs.map(function (s) {
+    var i = HITS.indexOf(s);
+    return '<div class="sr-item" role="option" tabindex="-1" data-act="play-hit" data-i="' + i + '">' +
+      '<span aria-hidden="true" style="font-size:1rem;">🎵</span>' +
+      '<span>' + esc(s.t) + ' <span style="color:var(--muted);font-size:.75rem;">' + esc(s.s) + '</span></span></div>';
+  }).join('');
+  if (!html) html = '<div class="sr-item" style="color:var(--muted);">찾는 가수나 노래가 없어요. 다른 이름으로 검색해보세요.</div>';
+  el.innerHTML = html;
+  el.classList.add('on');
+  input.setAttribute('aria-expanded', 'true');
+}
+function closeSearch() {
+  $('searchResults').classList.remove('on');
+  $('searchInput').setAttribute('aria-expanded', 'false');
+}
+
+/* =====================================================================
+   가수 상세 모달 — 영상·대표곡·SNS·콘서트·댓글·팔로우
+   ===================================================================== */
+function openSingerDetail(name) {
+  var a = artist(name);
+  if (!a) return;
+  openSinger = name;
+  vidFilter = 'all';
+  lastFocus = document.activeElement;
+  closeSearch();
+
+  var songs = (HIT_SONGS[name] || []).map(function (s, i) {
+    return '<button type="button" class="song" data-act="play-song" data-song="' + esc(s) + '" data-name="' + esc(name) + '" aria-label="' + esc(s) + ' 유튜브에서 듣기 (새 창)">' +
+      '<span class="n" aria-hidden="true">' + (i + 1) + '</span><span class="t">' + esc(s) + '</span><span class="p" aria-hidden="true">▶</span></button>';
+  }).join('');
+
+  var filters = VID_FILTERS.map(function (f) {
+    return '<button type="button" data-act="vfilter" data-kind="' + f.k + '" aria-pressed="' + (f.k === 'all') + '">' + f.label + '</button>';
+  }).join('');
+
+  var follows = store('st_follows', '[]');
+  var following = follows.indexOf(name) >= 0;
+
+  $('singerBox').innerHTML =
+    '<div class="md-head">' +
+      '<span class="md-avatar" aria-hidden="true">' + a.emoji + '</span>' +
+      '<span><span class="md-name" id="mdName">' + esc(name) + '</span>' +
+      '<span class="md-cat" style="display:block;">' + (a.cat === 'trot' ? '트로트 가수' : '아이돌 그룹') + '</span></span>' +
+      '<button type="button" class="follow-btn' + (following ? ' on' : '') + '" id="followBtn" data-act="follow" data-name="' + esc(name) + '">' +
+        (following ? '팔로우 중' : '팔로우') + '</button>' +
+      '<button type="button" class="md-close" data-act="close-singer" aria-label="닫기">✕</button>' +
+    '</div>' +
+
+    '<div class="md-2col">' +
+      '<button type="button" class="btn gold" data-act="play-singer" data-name="' + esc(name) + '">▶ 바로 듣기</button>' +
+      '<a class="btn solid" href="' + esc(a.yt) + '" target="_blank" rel="noopener">📺 유튜브 채널</a>' +
+    '</div>' +
+
+    '<p class="md-sub">최신 영상</p>' +
+    '<div class="vfilter" id="vfilter" role="group" aria-label="영상 종류 고르기">' + filters + '</div>' +
+    '<div id="vidList"><p class="empty">불러오는 중...</p></div>' +
+    '<a class="link-line" style="margin-top:.5rem;" href="' + ytSearch(name + ' 무대 영상') + '" target="_blank" rel="noopener">유튜브에서 더 많은 영상 보기</a>' +
+
+    '<p class="md-sub">대표곡</p>' +
+    '<div>' + (songs || '<p class="empty">등록된 대표곡이 없어요.</p>') + '</div>' +
+
+    '<p class="md-sub">' + esc(name) + ' 화제 소식</p>' +
+    '<div id="mdSns"><p class="empty">불러오는 중...</p></div>' +
+
+    '<p class="md-sub">공식 소식 · 공연</p>' +
+    '<div class="md-3col">' +
+      '<a class="btn" href="' + esc(a.x) + '" target="_blank" rel="noopener" aria-label="' + esc(name) + ' X(트위터) 열기 (새 창)">𝕏 트위터</a>' +
+      '<a class="btn" href="' + esc(a.ig) + '" target="_blank" rel="noopener" aria-label="' + esc(name) + ' 인스타그램 열기 (새 창)">📷 인스타</a>' +
+      '<a class="btn" href="' + esc(a.fb) + '" target="_blank" rel="noopener" aria-label="' + esc(name) + ' 페이스북 열기 (새 창)">📘 페이스북</a>' +
+    '</div>' +
+    '<a class="link-line" style="margin-top:.5rem;" href="https://www.google.com/search?q=' + encodeURIComponent(name + ' 콘서트 티켓') + '" target="_blank" rel="noopener">🎟️ ' + esc(name) + ' 콘서트·공연 정보 찾기</a>' +
+
+    '<p class="md-sub">팬 댓글</p>' +
+    '<div class="cm-form">' +
+      '<label class="skip" for="cmName">이름</label><input id="cmName" placeholder="이름" maxlength="10">' +
+      '<label class="skip" for="cmText">응원 댓글</label><input id="cmText" placeholder="응원 댓글을 남겨보세요" maxlength="100">' +
+      '<button type="button" class="cm-send" data-act="send-comment" data-name="' + esc(name) + '">등록</button>' +
+    '</div>' +
+    '<div class="cm-list" id="cmList"><p class="empty">댓글을 불러오는 중...</p></div>';
+
+  $('singerModal').hidden = false;
+  document.body.style.overflow = 'hidden';
+  renderVidList();
+  loadSingerSNS(name);
+  loadComments(name);
+  var cl = $('singerBox').querySelector('.md-close');
+  if (cl) cl.focus();
+  $('cmText').addEventListener('keydown', function (e) { if (e.key === 'Enter') sendComment(name); });
+}
+function closeSingerModal() {
+  $('singerModal').hidden = true;
+  document.body.style.overflow = '';
+  openSinger = null;
+  if (lastFocus && lastFocus.focus) lastFocus.focus();
+}
+function setVidFilter(kind) {
+  vidFilter = kind;
+  document.querySelectorAll('#vfilter button').forEach(function (b) {
+    b.setAttribute('aria-pressed', String(b.dataset.kind === kind));
+  });
+  renderVidList();
+}
+function renderVidList() {
+  var el = $('vidList');
+  if (!el || !openSinger) return;
+  var f = VID_FILTERS.filter(function (x) { return x.k === vidFilter; })[0] || VID_FILTERS[0];
+  var all = playerVideos[openSinger] || [];
+  var list = f.kinds ? all.filter(function (v) { return f.kinds.indexOf(v.kind || 'other') >= 0; }) : all;
+  if (!list.length) {
+    el.innerHTML = '<p class="empty">' + (all.length ? '이 종류의 영상이 아직 없어요.' : '최신 영상을 불러오지 못했어요.') + '<br>' +
+      '<a class="link-line" style="margin-top:.5rem;" href="' + ytSearch(openSinger + ' ' + f.q) + '" target="_blank" rel="noopener">유튜브에서 찾아보기</a></p>';
+    return;
+  }
+  el.innerHTML = list.slice(0, 5).map(function (v) {
+    var k = v.kind || 'other';
+    return '<button type="button" class="vid" data-act="play-video" data-vid="' + esc(v.videoId) + '" data-title="' + esc(v.title) + '" aria-label="' + esc(v.title) + ' 재생">' +
+      '<img class="thumb" src="https://i.ytimg.com/vi/' + esc(v.videoId) + '/mqdefault.jpg" alt="' + esc(v.title) + ' 미리보기 이미지" loading="lazy" onerror="this.remove()">' +
+      '<span><span class="vkind vk-' + k + '">' + (KIND_LABEL[k] || KIND_LABEL.other) + '</span>' +
+      '<span class="vt" style="display:block;">' + esc(v.title) + '</span></span></button>';
+  }).join('');
+}
+function toggleFollow(name) {
+  var follows = store('st_follows', '[]');
+  var i = follows.indexOf(name);
+  if (i >= 0) { follows.splice(i, 1); toast(name + ' 팔로우를 해제했어요'); }
+  else { follows.push(name); toast('💛 ' + name + '님을 팔로우했어요'); }
+  save('st_follows', follows);
+  var btn = $('followBtn');
+  if (btn) {
+    var on = follows.indexOf(name) >= 0;
+    btn.textContent = on ? '팔로우 중' : '팔로우';
+    btn.classList.toggle('on', on);
   }
 }
 
-// 출석 체크
+/* =====================================================================
+   미니 플레이어 (YouTube IFrame API — 연속 재생)
+   ===================================================================== */
+var ytPlayer = null, ytReady = false, currentVideoId = '', currentQueue = [], currentQIdx = 0, pendingPlay = null;
+
+function onYouTubeIframeAPIReady() {
+  ytPlayer = new YT.Player('pbFrame', {
+    width: '320', height: '180',
+    playerVars: { autoplay: 1, rel: 0, playsinline: 1 },
+    events: {
+      onReady: function () {
+        ytReady = true;
+        if (pendingPlay) { ytPlayer.loadVideoById(pendingPlay); pendingPlay = null; }
+      },
+      onStateChange: function (e) { if (e.data === YT.PlayerState.ENDED) playerNext(true); }
+    }
+  });
+}
+window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+
+// 재생기 실제 높이를 CSS 변수로 — 본문 하단이 가려지지 않게
+function syncPlayerHeight() {
+  var pb = $('playerBar');
+  document.documentElement.style.setProperty('--player-h', pb.hidden ? '0px' : pb.offsetHeight + 'px');
+}
+window.addEventListener('resize', syncPlayerHeight);
+
+function playVideo(videoId, title) {
+  if (!videoId) return;
+  currentVideoId = videoId;
+  $('playerBar').hidden = false;
+  document.body.classList.add('playing');
+  $('pbTitle').textContent = title || '';
+  requestAnimationFrame(syncPlayerHeight);
+  if (ytPlayer && ytReady) ytPlayer.loadVideoById(videoId);
+  else pendingPlay = videoId;
+  var recent = store('st_recent', '[]').filter(function (x) { return x.v !== videoId; });
+  recent.unshift({ v: videoId, t: String(title || '').slice(0, 60) });
+  save('st_recent', recent.slice(0, 12));
+  renderRecent();
+}
+// 가수의 최신 영상을 사이트 안에서 재생 (없으면 유튜브로 안내)
+function playSingerLatest(name, label, fallbackUrl) {
+  var list = playerVideos[name] || [];
+  if (!list.length) {
+    toast(name + '님의 영상을 아직 못 불러왔어요. 유튜브에서 열어드릴게요.');
+    openTab(fallbackUrl || ytSearch(name + ' 노래'));
+    return;
+  }
+  currentQueue = list.slice(0, 10);
+  currentQIdx = 0;
+  playVideo(list[0].videoId, label || (name + ' — ' + list[0].title));
+}
+function playerNext(auto) {
+  if (currentQueue.length && currentQIdx < currentQueue.length - 1) {
+    currentQIdx++;
+    var v = currentQueue[currentQIdx];
+    playVideo(v.videoId, v.title);
+  } else if (!auto) {
+    toast('이어서 들을 영상이 없어요. 다른 가수를 골라보세요.');
+  }
+}
+function closePlayer() {
+  $('playerBar').hidden = true;
+  document.body.classList.remove('playing');
+  syncPlayerHeight();
+  if (ytPlayer && ytReady) ytPlayer.stopVideo();
+}
+function openFullscreen() {
+  var frame = $('pbFrame');
+  var el = (frame && frame.tagName === 'IFRAME') ? frame : (frame ? frame.querySelector('iframe') : null);
+  if (el && (el.requestFullscreen || el.webkitRequestFullscreen)) {
+    (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+  } else if (currentVideoId) {
+    openTab('https://www.youtube.com/watch?v=' + currentVideoId);
+  }
+}
+
+/* =====================================================================
+   소식 (뉴스 · SNS 화제)
+   ===================================================================== */
+function newsItemHTML(item, meta, kind, idx) {
+  return '<button type="button" class="news-item' + (kind === 'sns' ? ' hot' : '') + '" data-act="open-news" data-kind="' + kind + '" data-i="' + idx + '">' +
+    '<span class="nt">' + esc(item.title) + '<span class="nd" style="display:block;">' + esc(meta) + '</span></span></button>';
+}
+function renderNewsBody() {
+  var el = $('newsBody');
+  if (state.newsWhich === 'news') {
+    if (!NEWS_ITEMS.length) { el.innerHTML = '<p class="empty">소식을 불러오는 중...</p>'; return; }
+    el.innerHTML = NEWS_ITEMS.map(function (x, i) { return newsItemHTML(x, x.singer + ' · ' + fmtDate(x.date), 'news', i); }).join('');
+  } else {
+    if (!SNS_ITEMS.length) { el.innerHTML = '<p class="empty">화제 소식을 불러오는 중...</p>'; return; }
+    el.innerHTML = SNS_ITEMS.map(function (x, i) { return newsItemHTML(x, '오늘의 화제 · ' + fmtDate(x.date), 'sns', i); }).join('');
+  }
+}
+function setNewsTab(which) {
+  state.newsWhich = which;
+  document.querySelectorAll('[data-act="news-tab"]').forEach(function (b) {
+    b.setAttribute('aria-pressed', String(b.dataset.which === which));
+  });
+  renderNewsBody();
+  if (which === 'sns' && !SNS_ITEMS.length) loadSNS('임영웅');
+}
+function loadNews() {
+  var names = ['임영웅', '영탁', '이찬원', '장민호', '송가인', 'BTS', '블랙핑크', '뉴진스', '아이브', '아이유'];
+  Promise.all(names.map(function (name) {
+    return fetch(API + '/news?name=' + encodeURIComponent(name))
+      .then(function (r) { return r.json(); })
+      .then(function (d) { var it = (d.news || [])[0]; return it ? { title: it.title, link: it.link, date: it.date, singer: name } : null; })
+      .catch(function () { return null; });
+  })).then(function (rows) {
+    NEWS_ITEMS = rows.filter(Boolean);
+    if (state.newsWhich === 'news') {
+      if (NEWS_ITEMS.length) renderNewsBody();
+      else $('newsBody').innerHTML = '<p class="empty">소식을 불러오지 못했어요. 잠시 후 다시 열어주세요.</p>';
+    }
+  });
+}
+function loadSNS(name) {
+  fetch(API + '/sns?name=' + encodeURIComponent(name))
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      SNS_ITEMS = d.sns || [];
+      if (state.newsWhich === 'sns') {
+        if (SNS_ITEMS.length) renderNewsBody();
+        else $('newsBody').innerHTML = '<p class="empty">화제 소식이 아직 없어요.</p>';
+      }
+    })
+    .catch(function () {
+      if (state.newsWhich === 'sns') $('newsBody').innerHTML = '<p class="empty">화제 소식을 불러오지 못했어요.</p>';
+    });
+}
+function loadSingerSNS(name) {
+  fetch(API + '/sns?name=' + encodeURIComponent(name))
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      var el = $('mdSns');
+      if (!el) return;
+      var items = (d.sns || []).slice(0, 3);
+      if (!items.length) { el.innerHTML = '<p class="empty">화제 소식이 아직 없어요.</p>'; return; }
+      el.innerHTML = items.map(function (s) {
+        return '<a class="news-item hot" href="' + esc(s.link) + '" target="_blank" rel="noopener">' +
+          '<span class="nt">' + esc(s.title) + '</span></a>';
+      }).join('');
+    })
+    .catch(function () { var el = $('mdSns'); if (el) el.innerHTML = '<p class="empty">화제 소식을 불러오지 못했어요.</p>'; });
+}
+function openNewsModal(kind, i) {
+  var item = (kind === 'sns' ? SNS_ITEMS : NEWS_ITEMS)[i];
+  if (!item) return;
+  lastFocus = document.activeElement;
+  $('newsModalBody').innerHTML =
+    '<p style="font-size:.78rem;color:var(--gold);font-weight:800;">' + esc(item.singer || '오늘의 화제') + '</p>' +
+    '<p style="font-size:1.05rem;font-weight:900;line-height:1.6;margin:.3rem 0 .9rem;">' + esc(item.title) + '</p>' +
+    '<p style="background:var(--wash);padding:.8rem;border-radius:.7rem;font-size:.82rem;color:var(--muted);line-height:1.7;">' +
+      '기사 전문은 언론사 사이트에 있어요. 아래 버튼을 누르면 기사가 열립니다.</p>' +
+    '<div class="md-2col" style="margin-top:.9rem;">' +
+      '<a class="btn gold" href="' + esc(item.link) + '" target="_blank" rel="noopener">📖 기사 전체 보기</a>' +
+      '<button type="button" class="btn" data-act="close-news">닫기</button>' +
+    '</div>';
+  $('newsModal').hidden = false;
+  document.body.style.overflow = 'hidden';
+  var cl = $('newsModal').querySelector('.md-close');
+  if (cl) cl.focus();
+}
+function closeNewsModal() {
+  $('newsModal').hidden = true;
+  document.body.style.overflow = '';
+  if (lastFocus && lastFocus.focus) lastFocus.focus();
+}
+
+/* =====================================================================
+   댓글
+   ===================================================================== */
+function loadComments(singer) {
+  fetch(API + '/comments?singer=' + encodeURIComponent(singer))
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      var el = $('cmList');
+      if (!el) return;
+      var list = d.comments || [];
+      if (!list.length) { el.innerHTML = '<p class="empty">첫 댓글을 남겨보세요.</p>'; return; }
+      el.innerHTML = list.map(function (cm) {
+        var ds = fmtDate(cm.created_at);
+        return '<div class="cm-item"><div class="who">' + esc(cm.name) + (ds ? ' · ' + esc(ds) : '') + '</div><div class="txt">' + esc(cm.text) + '</div></div>';
+      }).join('');
+    })
+    .catch(function () { var el = $('cmList'); if (el) el.innerHTML = '<p class="empty">댓글을 불러오지 못했어요.</p>'; });
+}
+function sendComment(singer) {
+  var name = ($('cmName').value || '').trim();
+  var text = ($('cmText').value || '').trim();
+  if (!name) { toast('이름을 입력해주세요'); $('cmName').focus(); return; }
+  if (!text) { toast('댓글 내용을 입력해주세요'); $('cmText').focus(); return; }
+  fetch(API + '/comments', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ singer: singer, name: name, text: text })
+  }).then(function (r) { return r.json(); })
+    .then(function (d) {
+      if (d && d.ok) { $('cmText').value = ''; toast('댓글이 등록됐어요'); loadComments(singer); }
+      else toast('댓글 등록에 실패했어요.');
+    })
+    .catch(function () { toast('댓글 등록에 실패했어요. 다시 시도해주세요.'); });
+}
+
+/* =====================================================================
+   놀이터 — 출석 / 퀴즈 / 랭킹
+   ===================================================================== */
 function attend() {
   var today = new Date().toDateString();
-  var data = JSON.parse(localStorage.getItem('st_days') || '[]');
-  if (data.indexOf(today) >= 0) { document.getElementById('attendMsg').textContent = '오늘은 이미 출석하셨어요! 내일 또 만나요 😊'; return; }
+  var data = store('st_days', '[]');
+  if (data.indexOf(today) >= 0) { $('attendMsg').textContent = '오늘은 이미 출석하셨어요! 내일 또 만나요 😊'; return; }
   data.push(today);
-  localStorage.setItem('st_days', JSON.stringify(data));
-  document.getElementById('attendBtn').textContent = '✅ 오늘 출석 완료!';
-  document.getElementById('attendBtn').classList.add('done');
-  document.getElementById('attendMsg').textContent = '🎉 출석 체크! ' + (data.length % 7 === 0 ? '7일 연속 — 대단해요! 건강 배지 획득!' : (data.length % 7) + '일째 모으는 중');
+  save('st_days', data);
+  $('attendMsg').textContent = data.length % 7 === 0
+    ? '🎉 7일 연속 출석 — 대단해요! 건강 배지 획득!'
+    : '🎉 출석 완료! ' + (data.length % 7) + '일째 모으는 중';
   renderStamps();
 }
 function renderStamps() {
-  var data = JSON.parse(localStorage.getItem('st_days') || '[]');
+  var data = store('st_days', '[]');
   var today = new Date().toDateString();
-  var el = document.getElementById('stamps');
   var html = '';
   for (var i = 1; i <= 7; i++) {
     var day = new Date(); day.setDate(day.getDate() - (7 - i));
     var on = data.indexOf(day.toDateString()) >= 0;
     html += '<div class="stamp' + (on ? ' on' : '') + '">' + (on ? '✓' : i) + '</div>';
   }
-  el.innerHTML = html;
-  var btn = document.getElementById('attendBtn');
+  $('stamps').innerHTML = html;
+  var btn = $('attendBtn');
   if (data.indexOf(today) >= 0) { btn.textContent = '✅ 오늘 출석 완료!'; btn.classList.add('done'); }
+  else { btn.textContent = '오늘 출석하기'; btn.classList.remove('done'); }
 }
 
-// 퀴즈
 var qIdx = 0, qScore = 0, qAnswered = false;
 function showQuiz() {
   var item = QUIZ[qIdx];
-  document.getElementById('quizQ').textContent = item.q;
-  var el = document.getElementById('quizOpts');
-  el.innerHTML = item.opts.map(function(o, i) { return '<button class="quiz-opt" onclick="quizPick(' + i + ')">' + o + '</button>'; }).join('');
-  document.getElementById('quizNext').style.display = 'none';
-  document.getElementById('quizScore').textContent = qScore > 0 ? '점수: ' + qScore + ' / 10' : '';
+  $('quizQ').textContent = item.q;
+  $('quizOpts').innerHTML = item.opts.map(function (o, i) {
+    return '<button type="button" class="quiz-opt" data-act="quiz-pick" data-i="' + i + '">' + esc(o) + '</button>';
+  }).join('');
+  $('quizNext').hidden = true;
+  $('quizScore').textContent = qScore > 0 ? '점수 ' + qScore + ' / 10' : '';
   qAnswered = false;
 }
 function quizPick(i) {
   if (qAnswered) return;
   qAnswered = true;
   var item = QUIZ[qIdx];
-  var btns = document.querySelectorAll('.quiz-opt');
-  btns.forEach(function(b, j) {
+  document.querySelectorAll('.quiz-opt').forEach(function (b, j) {
     b.disabled = true;
     if (j === item.a) b.classList.add('correct');
     else if (j === i) b.classList.add('wrong');
   });
-  if (i === item.a) { qScore++; document.getElementById('quizScore').textContent = '정답! 🎉 점수: ' + qScore + ' / 10'; }
-  else document.getElementById('quizScore').textContent = '아쉬워요! 정답은 ' + item.opts[item.a] + ' — 점수: ' + qScore + ' / 10';
-  document.getElementById('quizNext').style.display = 'inline-block';
-  if (qIdx >= QUIZ.length - 1) document.getElementById('quizNext').textContent = '결과 보기';
+  if (i === item.a) { qScore++; $('quizScore').textContent = '정답이에요! 🎉 점수 ' + qScore + ' / 10'; }
+  else $('quizScore').textContent = '아쉬워요! 정답은 ' + item.opts[item.a] + ' — 점수 ' + qScore + ' / 10';
+  $('quizNext').hidden = false;
+  if (qIdx >= QUIZ.length - 1) $('quizNext').textContent = '결과 보기';
 }
 function nextQuiz() {
   qIdx++;
   if (qIdx >= QUIZ.length) {
-    document.getElementById('quizQ').textContent = '🎉 오늘의 퀴즈 완료!';
-    document.getElementById('quizOpts').innerHTML = '<div style="font-size:22px;font-weight:900;">' + qScore + ' / 10점</div>';
-    document.getElementById('quizScore').textContent = qScore >= 7 ? '두뇌가 아주 건강하세요! 🧠✨' : qScore >= 4 ? '좋아요! 내일 또 도전하세요!' : '다음엔 더 잘할 수 있어요! 화이팅!';
-    document.getElementById('quizNext').style.display = 'none';
+    $('quizQ').textContent = '오늘의 퀴즈 완료!';
+    $('quizOpts').innerHTML = '<p style="font-size:1.3rem;font-weight:900;grid-column:1/-1;">' + qScore + ' / 10점</p>';
+    $('quizScore').textContent = qScore >= 7 ? '두뇌가 아주 건강하세요! 🧠' : qScore >= 4 ? '좋아요! 내일 또 도전하세요!' : '다음엔 더 잘할 수 있어요!';
+    $('quizNext').hidden = true;
     return;
   }
   showQuiz();
 }
 
-// 랭킹 (서버 전역 집계 — 진짜 실시간)
-var votedToday = false;
-var rankPeriod = 'week';
 function setRankPeriod(p) {
-  rankPeriod = p;
+  state.rankPeriod = p;
+  document.querySelectorAll('[data-act="rank-period"]').forEach(function (b) {
+    b.setAttribute('aria-pressed', String(b.dataset.period === p));
+  });
   loadRank();
 }
-async function loadRank() {
-  try {
-    var r = await fetch('https://api.pomyjo.com/api/singer/rank?period=' + rankPeriod);
-    var d = await r.json();
-    var votes = {};
-    (d.rank || []).forEach(function(x) { votes[x.singer] = x.c; });
-    var list = ARTISTS.slice().sort(function(a, b) { return (votes[b.name] || 0) - (votes[a.name] || 0); }).slice(0, 10);
-    document.getElementById('rankList').innerHTML = list.map(function(a, i) {
-      var n = votes[a.name] || 0;
-      return '<div class="rank-item"><div class="rank-num">' + (i + 1) + '</div><div class="avatar" style="width:40px;height:40px;font-size:20px;">' + a.emoji + '</div><div style="font-size:17px;font-weight:800;">' + a.name + '</div><div class="rank-like"><span class="rc">' + n + '</span><button onclick="vote(\'' + a.name + '\')" title="응원">❤️</button></div></div>';
-    }).join('');
-  } catch (e) {}
+function loadRank() {
+  fetch(API + '/rank?period=' + state.rankPeriod)
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      var votes = {};
+      (d.rank || []).forEach(function (x) { votes[x.singer] = x.c; });
+      var list = ARTISTS.slice().sort(function (a, b) { return (votes[b.name] || 0) - (votes[a.name] || 0); }).slice(0, 10);
+      $('rankList').innerHTML = list.map(function (a, i) {
+        return '<div class="rank-item"><span class="rank-num" aria-hidden="true">' + (i + 1) + '</span>' +
+          '<span class="avatar" aria-hidden="true">' + a.emoji + '</span>' +
+          '<span class="rank-name">' + esc(a.name) + '</span>' +
+          '<span class="rank-like"><span class="rc">' + (votes[a.name] || 0) + '</span>' +
+          '<button type="button" class="like-btn" data-act="vote" data-name="' + esc(a.name) + '" aria-label="' + esc(a.name) + ' 응원하기">❤️</button>' +
+          '</span></div>';
+      }).join('');
+    })
+    .catch(function () { $('rankList').innerHTML = '<p class="empty">랭킹을 불러오지 못했어요.</p>'; });
 }
-async function vote(name) {
-  if (votedToday) { alert('오늘은 이미 응원하셨어요! 내일 다시 눌러주세요 😊'); return; }
-  try {
-    var r = await fetch('https://api.pomyjo.com/api/singer/vote', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ singer: name })
-    });
-    var d = await r.json();
-    votedToday = true;
-    alert('❤️ ' + name + '님을 응원했어요! (전국 집계에 반영)');
-    loadRank();
-  } catch (e) { alert('응원에 실패했어요. 다시 시도해주세요.'); }
+function vote(name) {
+  if (state.votedToday) { toast('오늘은 이미 응원하셨어요! 내일 다시 눌러주세요'); return; }
+  fetch(API + '/vote', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ singer: name })
+  }).then(function (r) { return r.json(); })
+    .then(function () { state.votedToday = true; toast('❤️ ' + name + '님을 응원했어요'); loadRank(); })
+    .catch(function () { toast('응원에 실패했어요. 다시 시도해주세요.'); });
 }
 
-// ============ 공유 ============
+/* =====================================================================
+   공유
+   ===================================================================== */
 function shareNaver() {
-  var url = encodeURIComponent(location.href);
-  var title = encodeURIComponent('가수튜브 — 부모님께 노래 선물하기 🎵');
-  window.open('https://share.naver.com/web/shareView?url=' + url + '&title=' + title, '_blank', 'noopener');
+  openTab('https://share.naver.com/web/shareView?url=' + encodeURIComponent(location.href) +
+    '&title=' + encodeURIComponent('가수튜브 — 부모님께 노래 선물하기'));
 }
-function shareKakao() {
-  var url = encodeURIComponent(location.href);
-  window.open('https://share.kakao.com/compose?url=' + url, '_blank', 'noopener');
-}
+function shareKakao() { openTab('https://share.kakao.com/compose?url=' + encodeURIComponent(location.href)); }
 function copyLink() {
   var url = location.href;
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(url).then(function() { alert('✅ 주소가 복사됐어요! 카카오톡이나 문자로 붙여넣어 보내세요.'); });
+    navigator.clipboard.writeText(url).then(function () { toast('주소가 복사됐어요! 카카오톡·문자로 붙여넣어 보내세요.'); });
   } else {
-    var ta = document.createElement('textarea'); ta.value = url; document.body.appendChild(ta); ta.select();
-    document.execCommand('copy'); document.body.removeChild(ta);
-    alert('✅ 주소가 복사됐어요!');
+    var ta = document.createElement('textarea');
+    ta.value = url; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    toast('주소가 복사됐어요!');
   }
 }
 function shareNative() {
   if (navigator.share) {
-    navigator.share({ title: '가수튜브 — 가수 유튜브 바로가기', text: '부모님께 보내기 좋은 가수 노래 모음 사이트예요!', url: location.href })
-      .catch(function() {});
-  } else {
-    copyLink();
+    navigator.share({ title: '가수튜브 — 가수 유튜브 바로가기', text: '부모님께 보내기 좋은 가수 노래 모음 사이트예요!', url: location.href }).catch(function () {});
+  } else copyLink();
+}
+
+/* =====================================================================
+   최신 영상 불러오기 (백엔드 프록시 — 10분 캐시)
+   ===================================================================== */
+function loadVideos() {
+  fetch(API + '/feed')
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      playerVideos = d.artists || {};
+      renderSingers();
+      renderCollage();
+      if (openSinger) renderVidList();
+    })
+    .catch(function () { renderCollage(); });
+}
+
+/* =====================================================================
+   이벤트 위임
+   ===================================================================== */
+function handleAction(el, e) {
+  var act = el.dataset.act;
+  var name = el.dataset.name;
+  var i = Number(el.dataset.i);
+  switch (act) {
+    case 'font': setFont(Number(el.dataset.level)); break;
+    case 'tab': setTab(el.dataset.tab); break;
+    case 'genre': setGenre(el.dataset.genre); break;
+    case 'more-singers': state.singerLimit = ARTISTS.length; renderSingers(); break;
+    case 'more-hits': state.hitLimit = HITS.length; renderChart(); break;
+    case 'play-singer': playSingerLatest(name); closeSearch(); break;
+    case 'open-singer': openSingerDetail(name); break;
+    case 'close-singer': closeSingerModal(); break;
+    case 'today': playTodaySong(); break;
+    case 'play-hit': playHit(i); closeSearch(); break;
+    case 'play-list': openTab(ytSearch(PLAYLISTS[i].query)); break;
+    case 'play-recent': var r = store('st_recent', '[]')[i]; if (r) playVideo(r.v, r.t); break;
+    case 'play-video': playVideo(el.dataset.vid, el.dataset.title); break;
+    case 'play-song': openTab(ytSearch(name + ' ' + el.dataset.song)); break;
+    case 'vfilter': setVidFilter(el.dataset.kind); break;
+    case 'follow': toggleFollow(name); break;
+    case 'send-comment': sendComment(name); break;
+    case 'news-tab': setNewsTab(el.dataset.which); break;
+    case 'open-news': openNewsModal(el.dataset.kind, i); break;
+    case 'close-news': closeNewsModal(); break;
+    case 'attend': attend(); break;
+    case 'quiz-pick': quizPick(i); break;
+    case 'quiz-next': nextQuiz(); break;
+    case 'rank-period': setRankPeriod(el.dataset.period); break;
+    case 'vote': vote(name); break;
+    case 'p-next': playerNext(false); break;
+    case 'p-full': openFullscreen(); break;
+    case 'p-yt': if (currentVideoId) openTab('https://www.youtube.com/watch?v=' + currentVideoId); break;
+    case 'p-close': closePlayer(); break;
+    case 'share-kakao': shareKakao(); break;
+    case 'share-naver': shareNaver(); break;
+    case 'share-copy': copyLink(); break;
+    case 'share-native': shareNative(); break;
+    default: return false;
   }
+  return true;
 }
 
-// ============ 초기화 ============
+document.addEventListener('click', function (e) {
+  var el = e.target.closest ? e.target.closest('[data-act]') : null;
+  if (!el) return;
+  if (el.tagName === 'A' && el.getAttribute('href')) return;   // 링크는 그대로
+  if (handleAction(el, e)) e.preventDefault();
+});
+// 검색 결과는 blur 보다 먼저 반응해야 해서 mousedown 으로 처리
+$('searchResults').addEventListener('mousedown', function (e) {
+  var el = e.target.closest('[data-act]');
+  if (!el) return;
+  e.preventDefault();
+  handleAction(el, e);
+  closeSearch();
+});
+$('searchInput').addEventListener('input', function () { doSearch(this.value); });
+$('searchInput').addEventListener('blur', function () { setTimeout(closeSearch, 180); });
+$('searchInput').addEventListener('keydown', function (e) { if (e.key === 'Escape') closeSearch(); });
 
-// ===== 댓글 + 뉴스 =====
-async function loadComments(singer) {
-  try {
-    var r = await fetch('https://api.pomyjo.com/api/singer/comments?singer=' + encodeURIComponent(singer));
-    var d = await r.json();
-    var list = d.comments || [];
-    var el = document.getElementById('cmList');
-    if (!el) return;
-    if (list.length === 0) { el.innerHTML = '<div class="sd-cm-empty">첫 댓글을 남겨보세요! 💬</div>'; return; }
-    el.innerHTML = list.map(function(cm) {
-      var t = new Date(cm.created_at);
-      var dstr = (t.getMonth() + 1) + '월 ' + t.getDate() + '일';
-      return '<div class="sd-cm-item"><div class="who">' + cm.name + ' · ' + dstr + '</div><div class="txt">' + cm.text + '</div></div>';
-    }).join('');
-  } catch (e) {}
-}
-async function sendComment(singer) {
-  var name = (document.getElementById('cmName').value || '').trim();
-  var text = (document.getElementById('cmText').value || '').trim();
-  if (!name) { alert('이름을 입력해주세요'); return; }
-  if (!text) { alert('댓글 내용을 입력해주세요'); return; }
-  try {
-    var r = await fetch('https://api.pomyjo.com/api/singer/comments', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ singer: singer, name: name, text: text })
-    });
-    var d = await r.json();
-    if (d.ok) {
-      document.getElementById('cmText').value = '';
-      alert('✅ 댓글이 등록됐어요!');
-      loadComments(singer);
-    }
-  } catch (e) { alert('댓글 등록에 실패했어요. 다시 시도해주세요.'); }
-}
-async function loadNews() {
-  var names = ['임영웅', '영탁', '이찬원', '장민호', '송가인', 'BTS', '블랙핑크', '뉴진스', '아이브', '아이유'];
-  var el = document.getElementById('newsList');
-  try {
-    var results = await Promise.all(names.map(function(name) {
-      return fetch('https://api.pomyjo.com/api/singer/news?name=' + encodeURIComponent(name))
-        .then(function(r) { return r.json(); })
-        .then(function(d) { return { name: name, items: (d.news || []).slice(0, 1) }; })
-        .catch(function() { return { name: name, items: [] }; });
-    }));
-    var html = '';
-    results.forEach(function(grp) {
-      if (!grp.items.length) return;
-      var item = grp.items[0];
-      html += '<a class="news-item" href="javascript:void(0)" onclick="openNewsModal(\'' + item.title.replace(/\'/g, '') + '\',\'' + item.link.replace(/\'/g, '') + '\',\'' + grp.name + '\')">' +
-        '<div><div class="nt">' + item.title + '</div><div class="nd">' + grp.name + ' · ' + item.date + '</div></div></a>';
-    });
-    if (html) el.innerHTML = html;
-    else el.innerHTML = '<div class="news-loading">소식을 불러오지 못했어요.</div>';
-  } catch (e) {
-    el.innerHTML = '<div class="news-loading">소식을 불러오지 못했어요.</div>';
-  }
-}
+// 모달 바깥 클릭 · ESC 로 닫기
+$('singerModal').addEventListener('click', function (e) { if (e.target === this) closeSingerModal(); });
+$('newsModal').addEventListener('click', function (e) { if (e.target === this) closeNewsModal(); });
+document.addEventListener('keydown', function (e) {
+  if (e.key !== 'Escape') return;
+  if (!$('singerModal').hidden) closeSingerModal();
+  else if (!$('newsModal').hidden) closeNewsModal();
+});
 
-initFont();
+/* =====================================================================
+   초기화
+   ===================================================================== */
+setFont(parseInt(store('st_font', '0'), 10) || 0);
 renderSingers();
+renderCollage();
 loadTodaySong();
-loadChart();
-loadSchedule();
-loadNews();
-loadSNS("임영웅");
-loadPlaylists();
-renderRecent();
-renderStamps();
-showQuiz();
-loadRank();
+state.loaded.singer = true;
 loadVideos();
 </script>
 <script>
