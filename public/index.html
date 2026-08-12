@@ -755,7 +755,7 @@
     <h3>가족·친구에게 알려주세요</h3>
     <p>부모님이나 할머니·할아버지가 좋아하실 노래가 여기 다 있어요.</p>
     <div class="share-row">
-      <button type="button" class="share-btn kakao" data-act="share-kakao">카카오톡으로 보내기</button>
+      <button type="button" class="share-btn kakao" data-act="share-kakao">카카오톡 보내기 (복사)</button>
       <button type="button" class="share-btn naver" data-act="share-naver">네이버로 보내기</button>
       <button type="button" class="share-btn copy" data-act="share-copy">주소 복사</button>
       <button type="button" class="share-btn nat" data-act="share-native">다른 앱으로 공유</button>
@@ -1858,7 +1858,14 @@ function shareNaver() {
   openTab('https://share.naver.com/web/shareView?url=' + encodeURIComponent(location.href) +
     '&title=' + encodeURIComponent('최애광장 — 부모님께 노래 선물하기'));
 }
-function shareKakao() { openTab('https://share.kakao.com/compose?url=' + encodeURIComponent(location.href)); }
+function shareKakao() {
+  var url = location.href;
+  navigator.clipboard.writeText(url).then(function () {
+    toast('✅ 주소가 복사됐어요! 카카오톡에 붙여넣어 보내세요');
+  }).catch(function () {
+    toast('주소 복사 실패 — 아래 주소를 길게 눌러 복사하세요');
+  });
+}
 function copyLink() {
   var url = location.href;
   if (navigator.clipboard && navigator.clipboard.writeText) {
