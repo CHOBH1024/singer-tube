@@ -103,6 +103,13 @@
   .tab-btn:hover{ background:var(--wash); }
   .tab-btn[aria-selected="true"]{ color:var(--ink); border-bottom-color:var(--gold); }
 
+  /* ---------- 영상 저장 버튼 ---------- */
+  .vid{ position:relative; display:flex; align-items:center; gap:.6rem; padding:.4rem; border-radius:.8rem; }
+  .vid-main{ flex:1; display:flex; align-items:center; gap:.6rem; min-width:0; }
+  .vid .save-btn{ position:absolute; right:.4rem; bottom:.4rem; width:2.2rem; height:2.2rem; border-radius:999px; border:0;
+    background:rgba(138,109,59,.92); color:#fff; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .vid .save-btn:hover{ background:var(--gold); }
+
   /* ---------- 히어로 ---------- */
   .hero{ padding:1.8rem 0 .4rem; text-align:center; position:relative; }
   .hero::before{
@@ -813,6 +820,7 @@
 // ===== 내 저장소 (구글 드라이브) =====
 var driveUser = localStorage.getItem('st_drive_user') || '';
 var driveData = { favorites: [], videos: [], songs: [], articles: [] };
+try { var _sd = JSON.parse(localStorage.getItem('st_drive_data') || 'null'); if (_sd) driveData = Object.assign(driveData, _sd); } catch (e) {}
 
 function openDrive() {
   var body = $('driveBody');
@@ -871,11 +879,12 @@ function driveToggleFavorite(name) {
   saveDrive();
 }
 function driveSaveItem(kind, title) {
-  if (!driveUser) { toast('구글 로그인 후 저장할 수 있어요'); return; }
   var list = driveData[kind];
   if (list.some(function (x) { return x.t === title; })) { toast('이미 저장된 항목이에요'); return; }
   list.push({ t: title, at: Date.now() });
-  saveDrive();
+  localStorage.setItem('st_drive_data', JSON.stringify(driveData));
+  if (driveUser) saveDrive();
+  else toast('💾 로컬에 저장했어요! 구글 로그인하면 드라이브에도 보관돼요');
 }
 
 function checkDriveLogin() {
@@ -1430,10 +1439,12 @@ function renderVidList() {
   }
   el.innerHTML = list.slice(0, 5).map(function (v) {
     var k = v.kind || 'other';
-    return '<button type="button" class="vid" data-act="play-video" data-vid="' + esc(v.videoId) + '" data-title="' + esc(v.title) + '" aria-label="' + esc(v.title) + ' 재생">' +
+    return '<div class="vid" role="group" aria-label="' + esc(v.title) + '">' +
+      '<button type="button" class="vid-main" data-act="play-video" data-vid="' + esc(v.videoId) + '" data-title="' + esc(v.title) + '" aria-label="' + esc(v.title) + ' 재생">' +
       '<img class="thumb" src="https://i.ytimg.com/vi/' + esc(v.videoId) + '/mqdefault.jpg" alt="' + esc(v.title) + ' 미리보기 이미지" loading="lazy" onerror="this.remove()">' +
       '<span><span class="vkind vk-' + k + '">' + (KIND_LABEL[k] || KIND_LABEL.other) + '</span>' +
-      '<span class="vt" style="display:block;">' + esc(v.title) + '</span></span></button>';
+      '<span class="vt" style="display:block;">' + esc(v.title) + '</span></span></button>' +
+      '<button type="button" class="save-btn" data-act="save-video" data-title="' + esc(v.title) + '" aria-label="영상 저장">💾</button></div>';
   }).join('');
 }
 function toggleFollow(name) {
@@ -1560,8 +1571,10 @@ function openSingerNews() {
    소식 (뉴스 · SNS 화제)
    ===================================================================== */
 function newsItemHTML(item, meta, kind, idx) {
-  return '<button type="button" class="news-item' + (kind === 'sns' ? ' hot' : '') + '" data-act="open-news" data-kind="' + kind + '" data-i="' + idx + '">' +
-    '<span class="nt">' + esc(item.title) + '<span class="nd" style="display:block;">' + esc(meta) + '</span></span></button>';
+  return '<div class="news-wrap" style="position:relative;">' +
+    '<button type="button" class="news-item' + (kind === 'sns' ? ' hot' : '') + '" data-act="open-news" data-kind="' + kind + '" data-i="' + idx + '">' +
+    '<span class="nt">' + esc(item.title) + '<span class="nd" style="display:block;">' + esc(meta) + '</span></span></button>' +
+    '<button type="button" class="save-btn" data-act="save-article" data-title="' + esc(item.title) + '" aria-label="기사 저장" style="right:.6rem;bottom:.6rem;">💾</button></div>';
 }
 function renderNewsBody() {
   var el = $('newsBody');
@@ -1875,6 +1888,7 @@ case 'close-singer': closeSingerModal(); break;
     case 'play-hit': playHit(i); closeSearch(); break;
     case 'play-list': openTab(ytSearch(PLAYLISTS[i].query)); break;
     case 'play-recent': var r = store('st_recent', '[]')[i]; if (r) playVideo(r.v, r.t); break;
+    case 'save-video': driveSaveItem('videos', el.dataset.title); break;
     case 'play-video': playVideo(el.dataset.vid, el.dataset.title); break;
     case 'play-song': openTab(ytSearch(name + ' ' + el.dataset.song)); break;
     case 'vfilter': setVidFilter(el.dataset.kind); break;
@@ -1882,6 +1896,7 @@ case 'close-singer': closeSingerModal(); break;
     case 'follow': toggleFollow(name); break;
     case 'send-comment': sendComment(name); break;
     case 'news-tab': setNewsTab(el.dataset.which); break;
+    case 'save-article': driveSaveItem('articles', el.dataset.title); break;
     case 'open-news': openNewsModal(el.dataset.kind, i); break;
     case 'close-news': closeNewsModal(); break;
     case 'attend': attend(); break;
