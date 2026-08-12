@@ -609,6 +609,7 @@
   <div class="appbar-in">
     <div class="brand"><span class="dot" aria-hidden="true"></span>최애광장</div>
     <div class="fontsize" role="group" aria-label="글자 크기 조절">
+      <button type="button" class="fs-btn" data-act="drive" aria-label="내 저장소" style="padding:8px 12px;background:var(--gold,#8a6d3b);color:#fff;border-radius:999px;font-size:13px;font-weight:800;border:0;cursor:pointer;margin-left:6px;">💾 내 저장소</button>
       <span class="lbl">글자 크기</span>
       <button type="button" class="fs-btn" data-act="font" data-level="0" aria-pressed="true" aria-label="글자 크기 보통">가</button>
       <button type="button" class="fs-btn" data-act="font" data-level="1" aria-pressed="false" aria-label="글자 크기 크게">가</button>
@@ -766,6 +767,16 @@
 </main>
 
 <!-- ===== 가수 상세 모달 ===== -->
+<div class="modal" id="driveModal" role="dialog" aria-modal="true" aria-labelledby="driveTitle" hidden>
+  <div class="sd-box" style="max-width:640px;max-height:85vh;overflow-y:auto;">
+    <div class="sd-head"><div class="sd-title" id="driveTitle">💾 내 저장소</div>
+      <button type="button" class="sd-close" data-act="close-drive" aria-label="닫기">✕</button></div>
+    <div id="driveBody" style="padding:1.2rem;">
+      <p class="empty" id="driveHint">구글 로그인하면 최애 연예인과 저장한 영상·노래·기사가 어느 기기에서나 계속 보관돼요.</p>
+      <button type="button" class="btn solid" data-act="google-login" style="width:100%;padding:1rem;font-size:1.1rem;">🔑 구글 로그인</button>
+    </div>
+  </div>
+</div>
 <div class="modal" id="singerModal" role="dialog" aria-modal="true" aria-labelledby="mdName" hidden>
   <div class="modal-box" id="singerBox"></div>
 </div>
@@ -798,6 +809,86 @@
 
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
+
+// ===== 내 저장소 (구글 드라이브) =====
+var driveUser = localStorage.getItem('st_drive_user') || '';
+var driveData = { favorites: [], videos: [], songs: [], articles: [] };
+
+function openDrive() {
+  var body = $('driveBody');
+  if (driveUser) {
+    body.innerHTML = '<div class="empty">' + esc(driveUser) + '님의 저장소를 불러오는 중...</div>';
+    loadDrive();
+  } else {
+    body.innerHTML = '<p class="empty" id="driveHint">구글 로그인하면 최애 연예인과 저장한 영상·노래·기사가 어느 기기에서나 계속 보관돼요.</p>' +
+      '<button type="button" class="btn solid" data-act="google-login" style="width:100%;padding:1rem;font-size:1.1rem;">🔑 구글 로그인</button>';
+  }
+  $('driveModal').hidden = false;
+}
+function googleLogin() {
+  window.location.href = 'https://api.pomyjo.com/auth/google';
+}
+function loadDrive() {
+  fetch('https://api.pomyjo.com/api/drive/load?user=' + encodeURIComponent(driveUser))
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      if (d && d.data) driveData = Object.assign({ favorites: [], videos: [], songs: [], articles: [] }, d.data);
+      renderDrive();
+    })
+    .catch(function () { renderDrive(); });
+}
+function renderDrive() {
+  var body = $('driveBody');
+  var h = '<div class="empty" style="margin-bottom:.8rem;">👤 ' + esc(driveUser) + ' · 저장된 항목이 ' +
+    (driveData.favorites.length + driveData.videos.length + driveData.songs.length + driveData.articles.length) + '개</div>';
+  h += '<div style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap;">' +
+    '<button type="button" class="btn" data-act="drive-save-all" style="background:var(--gold,#8a6d3b);color:#fff;">💾 지금 저장</button>' +
+    '<button type="button" class="btn" data-act="drive-logout">로그아웃</button></div>';
+  h += '<div style="font-weight:900;margin:.8rem 0 .4rem;">❤️ 최애 연예인</div>';
+  h += driveData.favorites.length ? driveData.favorites.map(function (f) { return '<div class="row" style="padding:.6rem .8rem;">⭐ ' + esc(f) + '</div>'; }).join('') : '<p class="empty" style="font-size:.95rem;">가수 상세에서 ♥ 버튼을 누르면 여기에 저장돼요</p>';
+  h += '<div style="font-weight:900;margin:.8rem 0 .4rem;">🎬 저장한 영상</div>';
+  h += driveData.videos.length ? driveData.videos.map(function (v) { return '<div class="row" style="padding:.6rem .8rem;">🎬 ' + esc(v.t) + '</div>'; }).join('') : '<p class="empty" style="font-size:.95rem;">영상에 💾 버튼을 누르면 저장돼요</p>';
+  h += '<div style="font-weight:900;margin:.8rem 0 .4rem;">🎵 저장한 노래</div>';
+  h += driveData.songs.length ? driveData.songs.map(function (s) { return '<div class="row" style="padding:.6rem .8rem;">🎵 ' + esc(s.t) + '</div>'; }).join('') : '<p class="empty" style="font-size:.95rem;">노래에 💾 버튼을 누르면 저장돼요</p>';
+  h += '<div style="font-weight:900;margin:.8rem 0 .4rem;">📰 저장한 기사</div>';
+  h += driveData.articles.length ? driveData.articles.map(function (a) { return '<div class="row" style="padding:.6rem .8rem;">📰 ' + esc(a.t) + '</div>'; }).join('') : '<p class="empty" style="font-size:.95rem;">기사에 💾 버튼을 누르면 저장돼요</p>';
+  body.innerHTML = h;
+}
+function saveDrive(extra) {
+  if (!driveUser) { toast('구글 로그인 후 저장할 수 있어요'); return; }
+  if (extra) driveData = Object.assign({ favorites: [], videos: [], songs: [], articles: [] }, driveData, extra);
+  fetch('https://api.pomyjo.com/api/drive/save', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user: driveUser, data: driveData })
+  }).then(function (r) { return r.json(); })
+    .then(function (d) { toast(d.ok ? '💾 드라이브에 저장했어요!' : '저장 실패 — 다시 시도해주세요'); })
+    .catch(function () { toast('저장 실패 — 다시 시도해주세요'); });
+}
+function driveToggleFavorite(name) {
+  var idx = driveData.favorites.indexOf(name);
+  if (idx >= 0) { driveData.favorites.splice(idx, 1); toast('💔 최애에서 뺐어요'); }
+  else { driveData.favorites.push(name); toast('💛 ' + name + '님을 최애로 저장!'); }
+  saveDrive();
+}
+function driveSaveItem(kind, title) {
+  if (!driveUser) { toast('구글 로그인 후 저장할 수 있어요'); return; }
+  var list = driveData[kind];
+  if (list.some(function (x) { return x.t === title; })) { toast('이미 저장된 항목이에요'); return; }
+  list.push({ t: title, at: Date.now() });
+  saveDrive();
+}
+
+function checkDriveLogin() {
+  var p = new URLSearchParams(location.search);
+  if (p.get('login') === 'ok' && p.get('user')) {
+    driveUser = p.get('user');
+    localStorage.setItem('st_drive_user', driveUser);
+    history.replaceState(null, '', '/');
+    toast('🔑 구글 로그인 완료! 이제 💾 버튼으로 저장하세요');
+    openDrive();
+  }
+}
+
 /* =====================================================================
    데이터
    ===================================================================== */
@@ -1149,7 +1240,8 @@ function setGenre(g) {
   document.querySelectorAll('[data-act="genre"]').forEach(function (b) {
     b.setAttribute('aria-pressed', String(b.dataset.genre === g));
   });
-  renderSingers();
+  checkDriveLogin();
+renderSingers();
 }
 
 /* =====================================================================
@@ -1263,6 +1355,7 @@ function openSingerDetail(name) {
       '<span class="md-cat" style="display:block;">' + (a.cat === 'trot' ? '트로트 가수' : '아이돌 그룹') + '</span></span>' +
       '<button type="button" class="follow-btn' + (following ? ' on' : '') + '" id="followBtn" data-act="follow" data-name="' + esc(name) + '">' +
         (following ? '팔로우 중' : '팔로우') + '</button>' +
+      '<button type="button" class="follow-btn drive-fav" data-act="drive-fav" data-name="' + esc(name) + '" title="구글 드라이브에 최애로 저장">⭐ 최애 저장</button>' +
       '<button type="button" class="md-close" data-act="close-singer" aria-label="닫기">✕</button>' +
     '</div>' +
 
@@ -1772,7 +1865,12 @@ function handleAction(el, e) {
     case 'play-singer': playSingerLatest(name); closeSearch(); break;
     case 'open-singer': openSingerDetail(name); break;
     case 'open-singer-news': openSingerDetail(name); openSingerNews(); break;
-    case 'close-singer': closeSingerModal(); break;
+    case 'close-drive': $('driveModal').hidden = true; break;
+    case 'google-login': googleLogin(); break;
+    case 'drive': openDrive(); break;
+    case 'drive-save-all': saveDrive(); break;
+    case 'drive-logout': driveUser = ''; localStorage.removeItem('st_drive_user'); openDrive(); break;
+case 'close-singer': closeSingerModal(); break;
     case 'today': playTodaySong(); break;
     case 'play-hit': playHit(i); closeSearch(); break;
     case 'play-list': openTab(ytSearch(PLAYLISTS[i].query)); break;
@@ -1780,6 +1878,7 @@ function handleAction(el, e) {
     case 'play-video': playVideo(el.dataset.vid, el.dataset.title); break;
     case 'play-song': openTab(ytSearch(name + ' ' + el.dataset.song)); break;
     case 'vfilter': setVidFilter(el.dataset.kind); break;
+    case 'drive-fav': driveToggleFavorite(el.dataset.name); break;
     case 'follow': toggleFollow(name); break;
     case 'send-comment': sendComment(name); break;
     case 'news-tab': setNewsTab(el.dataset.which); break;
