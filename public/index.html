@@ -91,12 +91,13 @@
   }
   .tab-btn{
     min-height:52px; padding:6px 2px; border:0; background:transparent; cursor:pointer;
-    font-size:min(1rem, 19px); font-weight:800; color:var(--muted); border-radius:.7rem;
+    /* 글자 배율이 올라가도 4개가 항상 한 줄에: px 고정 max */
+    font-size:clamp(13px, min(1rem, 19px), 19px); font-weight:800; color:var(--muted); border-radius:.7rem;
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px;
-    line-height:1.35; white-space:nowrap;
+    line-height:1.2; white-space:nowrap; overflow:hidden;
     border-bottom:3px solid transparent; transition:color .15s, background .15s;
   }
-  .tab-btn .ic{ font-size:min(1.05rem, 20px); line-height:1; }
+  .tab-btn .ic{ font-size:clamp(14px, min(1.05rem, 20px), 20px); line-height:1; }
   .tab-btn:hover{ background:var(--wash); }
   .tab-btn[aria-selected="true"]{ color:var(--ink); border-bottom-color:var(--gold); }
 
@@ -142,20 +143,35 @@
   /* 오늘의 노래 */
   .today{
     width:100%; margin:1.1rem 0 0; border:0; cursor:pointer; text-align:left;
-    background:linear-gradient(135deg,#2b2620,#4a3f31); color:var(--cream);
-    border-radius:var(--r); padding:.9rem 1rem; display:flex; align-items:center; gap:.8rem;
-    box-shadow:var(--shadow); position:relative; min-height:var(--tap);
+    background:linear-gradient(135deg,#1e1a14 0%,#3d3222 50%,#4a3a24 100%);
+    color:var(--cream); border-radius:var(--r); padding:1rem 1.1rem;
+    display:flex; align-items:center; gap:.85rem;
+    box-shadow:0 .8rem 2rem rgba(43,38,32,.28), 0 0 0 1px rgba(138,109,59,.25);
+    position:relative; min-height:var(--tap); overflow:hidden;
+    transition:transform .18s, box-shadow .18s;
   }
-  .today .gift{ font-size:1.7rem; flex-shrink:0; }
+  .today::before{
+    content:''; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(90deg,rgba(138,109,59,.12) 0%,rgba(138,109,59,0) 60%);
+    border-radius:var(--r);
+  }
+  .today:hover{ transform:translateY(-2px); box-shadow:0 1rem 2.4rem rgba(43,38,32,.35), 0 0 0 1px rgba(138,109,59,.4); }
+  .today .gift{ font-size:2rem; flex-shrink:0; animation:gift-pulse 2.4s ease-in-out infinite; }
+  @keyframes gift-pulse{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.12)} }
   .today .tx{ flex:1; min-width:0; }
   .today .k, .today .v, .today .s{ display:block; }
-  .today .k{ font-size:.68rem; font-weight:800; letter-spacing:.12em; color:var(--gold-pale); }
-  .today .v{ font-size:1.05rem; font-weight:900; line-height:1.4; }
-  .today .s{ font-size:.75rem; color:#c9bda8; }
-  .today .go{
-    background:var(--gold); color:#fff; border-radius:999px; padding:.55rem .9rem;
-    font-size:.8rem; font-weight:800; white-space:nowrap; flex-shrink:0;
+  .today .k{
+    font-size:.65rem; font-weight:800; letter-spacing:.2em; color:var(--gold-pale);
+    text-transform:uppercase; margin-bottom:.15rem;
   }
+  .today .v{ font-size:1.08rem; font-weight:900; line-height:1.35; }
+  .today .s{ font-size:.73rem; color:#b8a99a; margin-top:.15rem; }
+  .today .go{
+    background:var(--gold); color:#fff; border-radius:999px; padding:.55rem 1rem;
+    font-size:.82rem; font-weight:800; white-space:nowrap; flex-shrink:0;
+    box-shadow:0 2px 8px rgba(138,109,59,.4); transition:background .15s;
+  }
+  .today:hover .go{ background:#9a7d4b; }
 
   /* 검색 */
   .search{ position:relative; margin:1rem auto 0; max-width:32rem; }
@@ -499,20 +515,23 @@
     display:flex; align-items:center; justify-content:center;
   }
   /* 재생기가 본문을 가리지 않도록 실제 높이만큼 아래 여백 확보 (JS가 --player-h 갱신) */
-  body.playing .wrap{ padding-bottom:calc(var(--player-h, 8rem) + 1.5rem); }
+  body.playing .wrap{
+    padding-bottom:calc(var(--player-h, 8rem) + 1.5rem + env(safe-area-inset-bottom));
+  }
 
   .toast{
-    position:fixed; left:50%; bottom:1.5rem; transform:translateX(-50%); z-index:120;
+    position:fixed; left:50%; bottom:calc(1.5rem + env(safe-area-inset-bottom)); transform:translateX(-50%); z-index:120;
     background:var(--darker); color:var(--cream); padding:.7rem 1.2rem; border-radius:999px;
     font-size:.85rem; font-weight:700; box-shadow:0 .6rem 1.6rem rgba(0,0,0,.3);
     max-width:90vw; text-align:center; animation:pop2 .2s ease;
   }
-  body.playing .toast{ bottom:8rem; }
+  /* 플레이어 활성 시 토스트는 플레이어 바로 위로 */
+  body.playing .toast{ bottom:calc(var(--player-h, 8rem) + .6rem + env(safe-area-inset-bottom)); }
 
   /* ---------- 모바일 ---------- */
   @media (max-width:640px){
     .wrap{ padding:0 .9rem 3rem; }
-    .appbar-in{ padding:.4rem .9rem; }
+    .appbar-in{ padding:.4rem .9rem; gap:.5rem; }
     .fontsize .lbl{ display:none; }
     .brand{ font-size:1rem; }
     h1{ font-size:1.75rem; }
@@ -522,12 +541,23 @@
     .collage{ grid-template-columns:repeat(2,1fr); }
     .col-tile:nth-child(n+5){ display:none; }
     .today{ flex-wrap:wrap; }
-    .today .go{ width:100%; text-align:center; }
+    .today .go{ width:100%; text-align:center; margin-top:.4rem; }
     .md-3col{ grid-template-columns:1fr; }
-    .player{ flex-wrap:wrap; }
-    .pv{ width:6.5rem; }
+    /* 플레이어: 375px에서 썸네일 + 제목 나란히, 콘텐츠 가림 방지 */
+    .player{ flex-wrap:nowrap; padding:.4rem .6rem; padding-bottom:calc(.4rem + env(safe-area-inset-bottom)); }
+    .pv{ width:5.6rem; }
+    .pmeta{ gap:.25rem; }
+    .pbtns{ gap:.25rem; }
+    .pbtn{ padding:.2rem .6rem; font-size:.7rem; }
     .cm-form input{ width:100%; }
     #cmName{ width:100%; }
+  }
+  /* 가++ 배율 (--fs:1.45) 에서도 appbar가 깨지지 않도록 */
+  @media (max-width:480px){
+    .fs-btn{ min-width:38px; height:38px; padding:0 6px; }
+    .tabbar{ gap:.15rem; }
+    .tab-btn{ font-size:clamp(11px,3.2vw,15px); }
+    .tab-btn .ic{ font-size:clamp(13px,3.8vw,17px); }
   }
   @media (prefers-reduced-motion:reduce){
     *{ animation:none !important; transition:none !important; }
@@ -1166,7 +1196,11 @@ function openSingerDetail(name) {
   loadComments(name);
   var cl = $('singerBox').querySelector('.md-close');
   if (cl) cl.focus();
-  $('cmText').addEventListener('keydown', function (e) { if (e.key === 'Enter') sendComment(name); });
+  /* cmText Enter 키 — 이전 리스너 제거 후 새로 등록 (모달을 여러 번 열어도 누적 안 됨) */
+  var cmTextEl = $('cmText');
+  if (cmTextEl._cmHandler) cmTextEl.removeEventListener('keydown', cmTextEl._cmHandler);
+  cmTextEl._cmHandler = function (e) { if (e.key === 'Enter') sendComment(name); };
+  cmTextEl.addEventListener('keydown', cmTextEl._cmHandler);
 }
 function closeSingerModal() {
   $('singerModal').hidden = true;
@@ -1314,8 +1348,13 @@ function setNewsTab(which) {
   document.querySelectorAll('[data-act="news-tab"]').forEach(function (b) {
     b.setAttribute('aria-pressed', String(b.dataset.which === which));
   });
-  renderNewsBody();
-  if (which === 'sns' && !SNS_ITEMS.length) loadSNS('임영웅');
+  if (which === 'sns' && !SNS_ITEMS.length) {
+    /* SNS 데이터가 아직 없으면 로딩 표시 후 패치 */
+    $('newsBody').innerHTML = '<p class="empty">화제 소식을 불러오는 중...</p>';
+    loadSNS('임영웅');
+  } else {
+    renderNewsBody();
+  }
 }
 function loadNews() {
   var names = ['임영웅', '영탁', '이찬원', '장민호', '송가인', 'BTS', '블랙핑크', '뉴진스', '아이브', '아이유'];
