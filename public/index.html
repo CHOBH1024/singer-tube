@@ -677,6 +677,9 @@ html{ font-size: calc(18px * var(--fs)); -webkit-text-size-adjust:100%; }
   <!-- ===== 1. 가수 ===== -->
   <div class="panel" id="panel-singer" role="tabpanel" aria-labelledby="tab-singer" tabindex="-1">
     <section>
+      <h2 class="sec-title">🔥 지금 인기 가수</h2>
+      <div id="popularList" class="pop-grid"><p class="empty" style="font-size:.85rem;">방문자들이 많이 찾는 가수를 집계 중이에요...</p></div>
+      <div class="rule"></div>
       <h2 class="sec-title">가수 둘러보기</h2>
       <p class="sec-desc">사진을 누르면 이 사이트에서 최신 영상이 바로 재생돼요.</p>
       <div class="seg" role="group" aria-label="장르 선택">
@@ -942,6 +945,21 @@ function installApp() {
     var bar = document.getElementById('installBar');
     if (bar) bar.hidden = true;
   });
+}
+
+function loadPopular() {
+  fetch('https://api.pomyjo.com/api/singer/popular')
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      var el = $('popularList');
+      if (!el || !d.popular || !d.popular.length) { if (el) el.innerHTML = '<p class="empty" style="font-size:.85rem;">아직 데이터가 쌓이는 중이에요. 가수를 눌러보세요!</p>'; return; }
+      var medals = ['🥇', '🥈', '🥉'];
+      el.innerHTML = '<div style="display:flex;gap:.4rem;flex-wrap:wrap;">' + d.popular.map(function (p, i) {
+        var a = ARTISTS.filter(function (x) { return x.name === p.singer; })[0];
+        return '<button type="button" class="btn" data-act="open-singer" data-name="' + esc(p.singer) + '" style="padding:.4rem .8rem;">' + (medals[i] || (i + 1) + '위') + ' ' + esc(p.singer) + '</button>';
+      }).join('') + '</div>';
+    })
+    .catch(function () {});
 }
 
 // ===== 🔊 뉴스 읽어주기 (TTS) =====
@@ -1975,7 +1993,11 @@ function handleAction(el, e) {
     case 'more-singers': state.singerLimit = ARTISTS.length; renderSingers(); break;
     case 'more-hits': state.hitLimit = HITS.length; renderChart(); break;
     case 'play-singer': playSingerLatest(name); closeSearch(); break;
-    case 'open-singer': openSingerDetail(name); break;
+    case 'open-singer':
+      openSingerDetail(name);
+      /* 인기 차트 집계 */
+      try { fetch('https://api.pomyjo.com/api/singer/click', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: name }) }); } catch (e) {}
+      break;
     case 'open-singer-news': openSingerDetail(name); openSingerNews(); break;
     case 'close-drive': $('driveModal').hidden = true; break;
     case 'google-login': googleLogin(); break;
@@ -2058,6 +2080,7 @@ checkDriveLogin();
 renderSingers();
 renderCollage();
 loadTodaySong();
+loadPopular();
 state.loaded.singer = true;
 loadVideos();
 </script>
