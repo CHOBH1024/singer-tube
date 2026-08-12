@@ -1,6 +1,6 @@
 {
-  "name": "가수튜브 — 트로트·아이돌 유튜브 바로가기",
-  "short_name": "가수튜브",
+  "name": "최애광장 — 트로트·아이돌 유튜브 바로가기",
+  "short_name": "최애광장",
   "description": "인기 트로트·아이돌 가수의 유튜브 채널, 최신 영상, X·인스타 소식.",
   "start_url": "/",
   "display": "standalone",
