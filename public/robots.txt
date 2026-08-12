@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://singer-tube.pomyjo.com/sitemap.xml
+Sitemap: https://choeae-plaza.pomyjo.com/sitemap.xml
