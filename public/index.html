@@ -92,13 +92,13 @@
   }
   .tab-btn{
     min-height:52px; padding:6px 2px; border:0; background:transparent; cursor:pointer;
-    /* 글자 배율이 올라가도 4개가 항상 한 줄에: px 고정 max */
-    font-size:clamp(13px, min(1rem, 19px), 19px); font-weight:800; color:var(--muted); border-radius:.7rem;
+    /* 글자 배율에 따라 커짐 — 가++에서도 4개 한 줄 (2줄 허용) */
+    font-size:clamp(13px, min(1.3rem, 24px), 24px); font-weight:800; color:var(--muted); border-radius:.7rem;
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px;
-    line-height:1.2; white-space:nowrap; overflow:hidden;
+    line-height:1.15; white-space:nowrap; overflow:hidden;
     border-bottom:3px solid transparent; transition:color .15s, background .15s;
   }
-  .tab-btn .ic{ font-size:clamp(14px, min(1.05rem, 20px), 20px); line-height:1; }
+  .tab-btn .ic{ font-size:clamp(14px, min(1.2rem, 22px), 22px); line-height:1; }
   .tab-btn:hover{ background:var(--wash); }
   .tab-btn[aria-selected="true"]{ color:var(--ink); border-bottom-color:var(--gold); }
 
@@ -752,6 +752,7 @@
   <div class="pmeta">
     <div class="ptitle" id="pbTitle"></div>
     <div class="pbtns">
+      <button type="button" class="pbtn" data-act="p-toggle">⏸ 일시정지</button>
       <button type="button" class="pbtn" data-act="p-next">⏭ 다음 곡</button>
       <button type="button" class="pbtn" data-act="p-full">⛶ 크게 보기</button>
       <button type="button" class="pbtn" data-act="p-yt">유튜브에서 보기</button>
@@ -1270,6 +1271,19 @@ function onYouTubeIframeAPIReady() {
 }
 window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
 
+// 재생/일시정지 토글
+function togglePlay() {
+  if (!ytPlayer || !currentVideoId) return;
+  var btn = document.querySelector('[data-act="p-toggle"]');
+  if (ytPlayer.getPlayerState && (ytPlayer.getPlayerState() === 1)) {
+    ytPlayer.pauseVideo();
+    if (btn) btn.textContent = '▶ 재생';
+  } else {
+    ytPlayer.playVideo();
+    if (btn) btn.textContent = '⏸ 일시정지';
+  }
+}
+
 // 재생기 실제 높이를 CSS 변수로 — 본문 하단이 가려지지 않게
 function syncPlayerHeight() {
   var pb = $('playerBar');
@@ -1543,11 +1557,18 @@ function nextQuiz() {
   qIdx++;
   if (qIdx >= QUIZ.length) {
     $('quizQ').textContent = '오늘의 퀴즈 완료!';
-    $('quizOpts').innerHTML = '<p style="font-size:1.3rem;font-weight:900;grid-column:1/-1;">' + qScore + ' / 10점</p>';
+    $('quizOpts').innerHTML = '<p style="font-size:1.3rem;font-weight:900;grid-column:1/-1;">' + qScore + ' / 10점</p>' +
+      '<button type="button" class="btn solid" data-act="quiz-restart" style="grid-column:1/-1;padding:1rem;font-size:1.1rem;">🔄 다시 풀기</button>';
     $('quizScore').textContent = qScore >= 7 ? '두뇌가 아주 건강하세요! 🧠' : qScore >= 4 ? '좋아요! 내일 또 도전하세요!' : '다음엔 더 잘할 수 있어요!';
     $('quizNext').hidden = true;
     return;
   }
+  showQuiz();
+}
+
+function quizRestart() {
+  qIdx = 0; qScore = 0; qAnswered = false;
+  $('quizScore').textContent = '0 / 10';
   showQuiz();
 }
 
@@ -1582,7 +1603,9 @@ function vote(name) {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ singer: name })
   }).then(function (r) { return r.json(); })
-    .then(function () { state.votedToday = true; toast('❤️ ' + name + '님을 응원했어요'); loadRank(); })
+    .then(function (d) {
+      if (d && d.already) { state.votedToday = true; toast('오늘은 이미 응원하셨어요! 내일 다시 눌러주세요'); return; }
+      state.votedToday = true; toast('❤️ ' + name + '님을 응원했어요'); loadRank(); })
     .catch(function () { toast('응원에 실패했어요. 다시 시도해주세요.'); });
 }
 
@@ -1658,9 +1681,11 @@ function handleAction(el, e) {
     case 'close-news': closeNewsModal(); break;
     case 'attend': attend(); break;
     case 'quiz-pick': quizPick(i); break;
+    case 'quiz-restart': quizRestart(); break;
     case 'quiz-next': nextQuiz(); break;
     case 'rank-period': setRankPeriod(el.dataset.period); break;
     case 'vote': vote(name); break;
+    case 'p-toggle': togglePlay(); break;
     case 'p-next': playerNext(false); break;
     case 'p-full': openFullscreen(); break;
     case 'p-yt': if (currentVideoId) openTab('https://www.youtube.com/watch?v=' + currentVideoId); break;
