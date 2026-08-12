@@ -1686,9 +1686,13 @@ function closeNewsModal() {
    댓글
    ===================================================================== */
 function loadYTComments(name) {
-  var artists = ARTISTS.filter(function (a) { return a.name === name; });
   var feed = window.__feed && window.__feed.artists ? window.__feed.artists[name] : null;
   var first = (feed && feed[0]) || null;
+  if (!first || !first.videoId) {
+    /* feed 캐시 없으면 화면에 렌더된 첫 영상 사용 */
+    var v = document.querySelector('[data-act="play-video"]');
+    if (v) first = { videoId: v.getAttribute('data-vid') };
+  }
   if (!first || !first.videoId) { var el = $('ytCmList'); if (el) el.innerHTML = '<p class="empty">최신 영상의 댓글이 없어요.</p>'; return; }
   fetch('https://api.pomyjo.com/api/singer/yt-comments?videoId=' + encodeURIComponent(first.videoId))
     .then(function (r) { return r.json(); })
